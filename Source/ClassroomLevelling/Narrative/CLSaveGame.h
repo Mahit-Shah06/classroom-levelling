@@ -25,4 +25,12 @@ public:
 	UPROPERTY() TMap<FName, float> TagHistory;
 	UPROPERTY() TMap<FName, FName> RoleBindings;
 	UPROPERTY() TSet<FName> Played;
+	UPROPERTY() FName Origin;
+	UPROPERTY() FName Homeroom;
+	UPROPERTY() int32 Level = 1;
+	UPROPERTY() float Xp = 0.f;
+	UPROPERTY() int32 PredHits = 0;
+	UPROPERTY() int32 PredTotal = 0;
+	UPROPERTY() int32 ChoicesMade = 0;
+	UPROPERTY() int32 Rushed = 0;
 };

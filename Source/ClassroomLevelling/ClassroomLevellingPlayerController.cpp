@@ -7,6 +7,7 @@
 #include "World/HubWorld.h"
 #include "UI/SMainMenu.h"
 #include "UI/GamePrefs.h"
+#include "UI/SEvalApp.h"
 #include "Engine/GameViewportClient.h"
 #include "Engine/Engine.h"
 #include "GameFramework/GameUserSettings.h"
@@ -53,6 +54,12 @@ public:
 			]
 			+ SOverlay::Slot().HAlign(HAlign_Right).VAlign(VAlign_Top).Padding(24, 16)
 			[ SAssignNew(Fps, STextBlock).Font(F("Mono", 12)).ColorAndOpacity(FLinearColor(0.8f, 0.8f, 0.8f)) ]
+			+ SOverlay::Slot().HAlign(HAlign_Left).VAlign(VAlign_Bottom).Padding(48, 0, 0, 40)
+			[
+				SNew(SVerticalBox)
+				+ SVerticalBox::Slot().AutoHeight()[ SAssignNew(Goal, STextBlock).Font(F("Bold", 15)).ColorAndOpacity(FLinearColor::White).ShadowOffset(FVector2D(1, 1)) ]
+				+ SVerticalBox::Slot().AutoHeight()[ SAssignNew(Status, STextBlock).Font(F("Regular", 13)).ColorAndOpacity(FLinearColor(0.8f, 0.8f, 0.8f)).ShadowOffset(FVector2D(1, 1)) ]
+			]
 			+ SOverlay::Slot().HAlign(HAlign_Center).VAlign(VAlign_Bottom).Padding(0, 0, 0, 120)
 			[
 				SAssignNew(PromptBox, SBorder).BorderImage(FCoreStyle::Get().GetBrush("WhiteBrush")).BorderBackgroundColor(FLinearColor(0, 0, 0, 0.7f)).Padding(FMargin(14, 8)).Visibility(EVisibility::Collapsed)
@@ -63,6 +70,7 @@ public:
 	void ShowArea(const FString& Title, const FString& Subtitle) { Area->SetText(FText::FromString(Title.ToUpper())); Sub->SetText(FText::FromString(Subtitle)); AreaT = 4.f; }
 	void SetPrompt(const FString& S) { PromptBox->SetVisibility(S.IsEmpty() ? EVisibility::Collapsed : EVisibility::HitTestInvisible); Prompt->SetText(FText::FromString(S)); }
 	void SetFps(const FString& S) { Fps->SetText(FText::FromString(S)); }
+	void SetStatus(const FString& G, const FString& S) { Goal->SetText(FText::FromString(G)); Status->SetText(FText::FromString(S)); }
 	virtual void Tick(const FGeometry& G, const double T, const float Dt) override
 	{
 		AreaT = FMath::Max(AreaT - Dt, 0.f);
@@ -70,7 +78,7 @@ public:
 		Area->SetRenderOpacity(A); Sub->SetRenderOpacity(A);
 	}
 private:
-	TSharedPtr<STextBlock> Area, Sub, Prompt, Fps;
+	TSharedPtr<STextBlock> Area, Sub, Prompt, Fps, Goal, Status;
 	TSharedPtr<SBorder> PromptBox;
 	float AreaT = 0.f;
 };
@@ -110,7 +118,12 @@ void AClassroomLevellingPlayerController::BeginPlay()
 		// (RunHardwareBenchmark hangs at frame 0 on some GPUs, so it is not used.)
 		if (UGameUserSettings* GS = GEngine->GetGameUserSettings(); GS && !P.bBenchmarked) { GS->SetOverallScalabilityLevel(2); GS->ApplySettings(false); bAutoTune = true; }
 		Story->OnPauseRequested = [this]() { TogglePause(); };
-		Story->OnSceneEnded = [this]() { Autosave(); };
+		Story->OnSceneEnded = [this]()
+		{
+			Autosave();
+			const UNarrativeSubsystem* N = GetGameInstance()->GetSubsystem<UNarrativeSubsystem>();
+			if (N && !N->EndingReached().IsNone()) ShowEnding();
+		};
 		ApplyPrefs();
 		ShowMenu(false);
 
@@ -127,9 +140,11 @@ void AClassroomLevellingPlayerController::BeginPlay()
 				UE_LOG(LogTemp, Log, TEXT("Autotest tick %d busy=%d awaiting=%d pawn=%s menu=%d moveIgnored=%d lookIgnored=%d"), N, Story->IsBusy(), Story->IsAwaitingChoice(), GetPawn() ? *GetPawn()->GetActorLocation().ToCompactString() : TEXT("none"), Menu.IsValid(), IsMoveInputIgnored(), IsLookInputIgnored());
 				if (N >= 12 && !Story->IsBusy())
 				{
-					const int32 T = N - 12;
+					static int32 StepI = 0; const int32 T = StepI++; // counts idle ticks only, so no step is skipped by a scene
 					if (T == 0) { SaveGame(TEXT("slot0")); UE_LOG(LogTemp, Log, TEXT("Autotest: saved slot0 -> %s"), UNarrativeSubsystem::PeekSlot(TEXT("slot0")) ? TEXT("ok") : TEXT("FAILED")); }
 					else if (T == 1) { if (AHubWorld* Hub = AHubWorld::Get(this)) if (const ANPCStandIn* Np = Hub->NearestNamed(GetPawn()->GetActorLocation(), 1e6f)) { GetPawn()->SetActorLocation(Np->GetActorLocation() + FVector(-150, 0, 20)); Story->StartTalk(Np->Id); } }
+					else if (T == 9 || T == 10) ToggleApp();
+					else if (T == 11 && FParse::Param(FCommandLine::Get(), TEXT("autoend"))) { GetGameInstance()->GetSubsystem<UNarrativeSubsystem>()->Flags.Add(TEXT("market_done")); Story->StartNext(); } // jump to the ending
 					else if (T - 2 < (int32)UE_ARRAY_COUNT(Tour)) { if (AHubWorld* Hub = AHubWorld::Get(this)) if (const FHubArea* A = Hub->Area(Tour[T - 2])) { GetPawn()->SetActorLocation(A->Center + FVector(-600, 0, 120)); SetControlRotation(FRotator(-10, 0, 0)); } }
 				}
 				else if (Story->IsAwaitingChoice()) Story->Choose(N % 3); else Story->Continue();
@@ -168,6 +183,8 @@ void AClassroomLevellingPlayerController::SetupInputComponent()
 	InputComponent->BindKey(EKeys::LeftShift, IE_Released, this, &AClassroomLevellingPlayerController::SprintUp);
 	InputComponent->BindKey(EKeys::Gamepad_LeftThumbstick, IE_Pressed, this, &AClassroomLevellingPlayerController::SprintDown);
 	InputComponent->BindKey(EKeys::Gamepad_LeftThumbstick, IE_Released, this, &AClassroomLevellingPlayerController::SprintUp);
+	InputComponent->BindKey(EKeys::Tab, IE_Pressed, this, &AClassroomLevellingPlayerController::ToggleApp);
+	InputComponent->BindKey(EKeys::Gamepad_Special_Left, IE_Pressed, this, &AClassroomLevellingPlayerController::ToggleApp);
 	InputComponent->BindKey(EKeys::E, IE_Pressed, this, &AClassroomLevellingPlayerController::Interact);
 	InputComponent->BindKey(EKeys::Gamepad_FaceButton_Left, IE_Pressed, this, &AClassroomLevellingPlayerController::Interact);
 
@@ -216,6 +233,7 @@ void AClassroomLevellingPlayerController::ShowMenu(bool bPause)
 	GEngine->GameViewport->AddViewportWidgetContent(Menu.ToSharedRef(), 50);
 	Story->bBlocked = true;
 	Story->SetHidden(true);
+	if (App.IsValid()) ToggleApp();
 	if (AHubWorld* Hub = AHubWorld::Get(this)) Hub->SetGrayscale(false, 0.8f); // menus are in full colour
 	if (Hud.IsValid()) Hud->SetVisibility(EVisibility::Collapsed);
 	SetShowMouseCursor(true);
@@ -278,6 +296,7 @@ void AClassroomLevellingPlayerController::LoadGame(const FString& Slot)
 	if (!G) return;
 	if (Story->IsBusy()) Story->Close();
 	EnterPlay();
+	if (!N->EndingReached().IsNone()) ShowEnding(); // a finished run reopens on its ending
 	if (APawn* P = GetPawn()) { P->SetActorLocation(G->PlayerLocation + FVector(0, 0, 20), false, nullptr, ETeleportType::TeleportPhysics); SetControlRotation(G->PlayerRotation); }
 }
 
@@ -344,6 +363,38 @@ void AClassroomLevellingPlayerController::Interact()
 	if (T) Story->StartTalk(T->Id);
 }
 
+void AClassroomLevellingPlayerController::ToggleApp()
+{
+	if (!GEngine || !GEngine->GameViewport) return;
+	if (App.IsValid()) { GEngine->GameViewport->RemoveViewportWidgetContent(App.ToSharedRef()); App.Reset(); return; }
+	if (!bInGame || Menu.IsValid() || EndScreen.IsValid()) return;
+	const bool bPad = FSlateApplication::IsInitialized() && FSlateApplication::Get().IsGamepadAttached();
+	SAssignNew(App, SEvalApp);
+	App->Refresh(GetGameInstance()->GetSubsystem<UNarrativeSubsystem>(), bPad ? TEXT("Back") : TEXT("Tab"));
+	GEngine->GameViewport->AddViewportWidgetContent(App.ToSharedRef(), 8);
+	if (UGameAudio* Au = UGameAudio::Get(this)) Au->PlaySfx(this, "ui_select");
+}
+
+void AClassroomLevellingPlayerController::ShowEnding()
+{
+	const UNarrativeSubsystem* N = GetGameInstance()->GetSubsystem<UNarrativeSubsystem>();
+	if (!N || EndScreen.IsValid() || !GEngine || !GEngine->GameViewport) return;
+	if (App.IsValid()) ToggleApp();
+	MarkEndingFound(N->EndingReached());
+	UE_LOG(LogTemp, Log, TEXT("Ending: %s (level %d, rank %d, predictability %.2f, uniqueness %.2f)"), *N->EndingReached().ToString(), N->Level, N->Rank(), N->Predictability(), N->Uniqueness());
+	auto Remove = [this]() { if (EndScreen.IsValid() && GEngine && GEngine->GameViewport) GEngine->GameViewport->RemoveViewportWidgetContent(EndScreen.ToSharedRef()); EndScreen.Reset(); };
+	SAssignNew(EndScreen, SEndScreen).Narrative(N)
+		.OnNewRun([this, Remove]() { Remove(); NewGame(); })
+		.OnTitle([this, Remove]() { Remove(); UGameplayStatics::OpenLevel(this, FName(*UGameplayStatics::GetCurrentLevelName(this))); });
+	GEngine->GameViewport->AddViewportWidgetContent(EndScreen.ToSharedRef(), 40);
+	if (Hud.IsValid()) Hud->SetVisibility(EVisibility::Collapsed);
+	if (AHubWorld* Hub = AHubWorld::Get(this)) Hub->SetGrayscale(N->EndingReached() == TEXT("puppet") || N->EndingReached() == TEXT("mocked"), 4.f); // your own cut gets its colour back
+	if (UGameAudio* Au = UGameAudio::Get(this)) Au->PlayMusic(this, "music_menu");
+	SetShowMouseCursor(false);
+	if (!IsMoveInputIgnored()) SetIgnoreMoveInput(true); if (!IsLookInputIgnored()) SetIgnoreLookInput(true);
+	FInputModeUIOnly M; M.SetWidgetToFocus(EndScreen); SetInputMode(M);
+}
+
 void AClassroomLevellingPlayerController::PlayerTick(float Dt)
 {
 	Super::PlayerTick(Dt);
@@ -382,6 +433,16 @@ void AClassroomLevellingPlayerController::PlayerTick(float Dt)
 		Hud->ShowArea(Area.ToString(), Sub ? *Sub : FString());
 	}
 	if (!Area.IsNone()) LastArea = Area;
+	if (const UNarrativeSubsystem* N = GetGameInstance()->GetSubsystem<UNarrativeSubsystem>(); N && Hud.IsValid())
+	{
+		// Objective = where the best eligible scene is waiting.
+		FString GoalText;
+		if (const FStorylet* S = N->FindStorylet(NAME_None, NAME_None); S && !S->Location.IsNone())
+			GoalText = FString::Printf(TEXT("%s  >  %s"), S->Kind == TEXT("exam") ? TEXT("EXAM PENDING") : TEXT("NEXT"), *S->Location.ToString().ToUpper());
+		Hud->SetStatus(GoalText, FString::Printf(TEXT("LV %d   RANK %d/%d   [%s] EVAL app"), N->Level, N->Rank(), N->CohortSize(),
+			FSlateApplication::Get().IsGamepadAttached() ? TEXT("Back") : TEXT("Tab")));
+		if (App.IsValid()) App->Refresh(N, FSlateApplication::Get().IsGamepadAttached() ? TEXT("Back") : TEXT("Tab"));
+	}
 	const ANPCStandIn* T = Hub->NearestNamed(C->GetActorLocation(), 260.f);
 	const bool bPad = FSlateApplication::IsInitialized() && FSlateApplication::Get().IsGamepadAttached();
 	if (Hud.IsValid()) Hud->SetPrompt(T ? FString::Printf(TEXT("[%s]  Talk"), bPad ? TEXT("X") : TEXT("E")) : FString());
@@ -390,6 +451,9 @@ void AClassroomLevellingPlayerController::PlayerTick(float Dt)
 void AClassroomLevellingPlayerController::EndPlay(const EEndPlayReason::Type Reason)
 {
 	HideMenu();
+	if (App.IsValid()) ToggleApp();
+	if (EndScreen.IsValid() && GEngine && GEngine->GameViewport) GEngine->GameViewport->RemoveViewportWidgetContent(EndScreen.ToSharedRef());
+	EndScreen.Reset();
 	Super::EndPlay(Reason);
 }
 

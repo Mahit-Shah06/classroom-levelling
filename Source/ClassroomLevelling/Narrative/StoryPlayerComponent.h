@@ -57,7 +57,7 @@ private:
 	TArray<FName> CachedWitnesses;
 	UPROPERTY() TObjectPtr<UAudioComponent> Voice;
 	float CachedPatience = 10.f, ChoiceTime = 0.f, Grace = 0.f, VoiceWait = 0.f;
-	float ShakeT = 0.f, ShakeAmp = 0.f, AutoT = 0.f;
-	int32 ChoiceWords = 0;
+	float ShakeT = 0.f, ShakeAmp = 0.f, AutoT = 0.f, PromptT = 0.f;
+	int32 ChoiceWords = 0, Forecast = -1;
 	bool bAwaitingChoice = false, bWarnedHesitation = false, bResolved = false, bVoicePending = false;
 };

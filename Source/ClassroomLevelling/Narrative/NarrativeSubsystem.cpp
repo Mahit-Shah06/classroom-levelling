@@ -35,8 +35,15 @@ float FStatBlock::Get(FName Key) const
 
 void FStatBlock::Add(FName SubKey, float Delta)
 {
-	float& V = Sub.FindOrAdd(SubKey);
-	V = FMath::Clamp(V + Delta, 0.f, 100.f);
+	float* V = Sub.Find(SubKey);
+	if (!V)
+	{
+		// A new sub-stat starts at its parent's level, so discovering one never drags the general down.
+		FString Parent, Leaf;
+		const float Base = SubKey.ToString().Split(TEXT("."), &Parent, &Leaf) ? Get(FName(*Parent)) : 0.f;
+		V = &Sub.Add(SubKey, Base);
+	}
+	*V = FMath::Clamp(*V + Delta, 0.f, 100.f);
 }
 
 ESecretClass FStatBlock::SecretClass() const
@@ -50,6 +57,101 @@ ESecretClass FStatBlock::SecretClass() const
 	int32 Best = 0;
 	for (int32 i = 1; i < 4; ++i) if (S[i] > S[Best]) Best = i;
 	return (ESecretClass)Best;
+}
+
+// ---------- Origins ----------
+struct FOriginDef { const TCHAR* Id; const TCHAR* Title; const TCHAR* Blurb; const TCHAR* Skill; float Base[8]; };
+// Base order: Intellect, Charisma, Physique, Sanity, Cunning, Reputation, Funds, Luck
+static const FOriginDef GOrigins[] = {
+	{ TEXT("scholar"),  TEXT("Scholarship Admit"),    TEXT("Top of a school nobody has heard of. Here, that makes you average."), TEXT("Cram: you think fastest when cornered."),      { 46, 30, 26, 36, 30, 24, 14, 30 } },
+	{ TEXT("legacy"),   TEXT("Legacy Heir"),          TEXT("Your surname is on a building. The building is being audited."),      TEXT("Allowance: money appears when you need it."),  { 30, 34, 26, 28, 28, 38, 50, 34 } },
+	{ TEXT("athlete"),  TEXT("Sports Transfer"),      TEXT("Recruited for a team that was dissolved the week you arrived."),      TEXT("Second Wind: you outlast everyone."),          { 24, 32, 50, 38, 24, 32, 22, 30 } },
+	{ TEXT("expelled"), TEXT("Second Chance"),        TEXT("Expelled elsewhere. The file is sealed. Everyone has read it."),      TEXT("Read the Room: you notice when people lie."),  { 32, 30, 32, 30, 48, 16, 22, 32 } },
+	{ TEXT("lottery"),  TEXT("Lottery Admit"),        TEXT("One seat a year is drawn at random. Nobody will tell you why."),      TEXT("Fluke: the dice like you."),                   { 28, 32, 28, 34, 26, 26, 24, 52 } },
+	{ TEXT("nobody"),   TEXT("Nobody In Particular"), TEXT("No story. No talent. The evaluation files you under 'baseline'."),   TEXT("Forgettable: people overlook you."),           { 32, 32, 32, 36, 32, 30, 28, 32 } },
+};
+static const TCHAR* GBaseSubs[8][3] = {
+	{ TEXT("Logic"), TEXT("Memory"), TEXT("Analysis") }, { TEXT("Presence"), TEXT("Persuasion"), TEXT("Charm") },
+	{ TEXT("Strength"), TEXT("Endurance"), TEXT("Agility") }, { TEXT("Focus"), TEXT("Resilience"), TEXT("Clarity") },
+	{ TEXT("Deception"), TEXT("Scheming"), TEXT("Insight") }, { TEXT("Prestige"), TEXT("Trust"), TEXT("Influence") },
+	{ TEXT("Liquidity"), TEXT("Credit"), TEXT("Assets") }, { TEXT("Timing"), TEXT("Serendipity"), TEXT("Odds") } };
+static const FOriginDef* FindOrigin(FName Id) { for (const FOriginDef& O : GOrigins) if (Id == O.Id) return &O; return nullptr; }
+
+FString UNarrativeSubsystem::OriginTitle() const { const FOriginDef* O = FindOrigin(Origin); return O ? O->Title : TEXT(""); }
+FString UNarrativeSubsystem::OriginBlurb() const { const FOriginDef* O = FindOrigin(Origin); return O ? O->Blurb : TEXT(""); }
+FString UNarrativeSubsystem::OriginSkill() const { const FOriginDef* O = FindOrigin(Origin); return O ? O->Skill : TEXT(""); }
+
+static float StatTotal(const FStatBlock& B) { float T = 0.f; for (int32 i = 0; i < (int32)EGeneralStat::Count; ++i) T += B.General((EGeneralStat)i); return T; }
+
+// Levels weigh heavily: the school ranks growth it caused, not talent it was handed.
+float UNarrativeSubsystem::Score() const { return StatTotal(Player) + (Level - 1) * 35.f; }
+
+int32 UNarrativeSubsystem::CohortSize() const
+{
+	int32 N = 1;
+	for (const auto& KV : NPCs) if (KV.Value.Kind == TEXT("student")) ++N;
+	return N;
+}
+
+int32 UNarrativeSubsystem::Rank() const
+{
+	const float Mine = Score();
+	int32 R = 1;
+	for (const auto& KV : NPCs) if (KV.Value.Kind == TEXT("student") && StatTotal(KV.Value.Stats) > Mine) ++R;
+	return R;
+}
+
+// The System's model of you: the built-in average student, replaced by your own record as it grows.
+int32 UNarrativeSubsystem::Predict(const FStorylet& S, const TArray<int32>& Visible) const
+{
+	if (Visible.Num() < 2) return -1;
+	float Total = 0.f;
+	for (const auto& KV : TagHistory) if (KV.Key != TEXT("hesitation")) Total += FMath::Max(0.f, KV.Value);
+	const float W = Total / (Total + 4.f);
+	int32 Best = -1; float BestScore = -MAX_flt;
+	for (int32 i = 0; i < Visible.Num(); ++i)
+	{
+		if (!S.Choices.IsValidIndex(Visible[i])) continue;
+		float Sc = 0.f;
+		for (const auto& T : S.Choices[Visible[i]].Tags)
+		{
+			const float Mine = Total > 0.f ? FMath::Max(0.f, TagHistory.FindRef(T.Key)) / Total : 0.f;
+			Sc += T.Value * (W * Mine + (1.f - W) * AverageProfile.FindRef(T.Key));
+		}
+		if (Sc > BestScore) { BestScore = Sc; Best = i; }
+	}
+	return Best;
+}
+
+float UNarrativeSubsystem::TagShare(FName Tag) const
+{
+	float Total = 0.f;
+	for (const auto& KV : TagHistory) if (KV.Key != TEXT("hesitation")) Total += FMath::Max(0.f, KV.Value);
+	return Total > 0.f ? FMath::Max(0.f, TagHistory.FindRef(Tag)) / Total : 0.f;
+}
+
+FName UNarrativeSubsystem::EndingReached() const
+{
+	for (const FName& F : Flags) { FString S = F.ToString(); if (S.RemoveFromStart(TEXT("ending_"))) return FName(*S); }
+	return NAME_None;
+}
+
+// What the System expects you to become: the best ending whose non-progress conditions already hold.
+FName UNarrativeSubsystem::ForecastEnding() const
+{
+	FName Best = "puppet"; float BestP = -MAX_flt;
+	for (const FStorylet& S : Storylets)
+	{
+		if (!S.Id.ToString().StartsWith(TEXT("end_y1_")) || !S.Choices.Num()) continue;
+		FString Id;
+		for (const FName& F : S.Choices[0].SetFlags) { FString T = F.ToString(); if (T.RemoveFromStart(TEXT("ending_"))) Id = T; }
+		if (Id.IsEmpty()) continue;
+		bool bOk = true;
+		for (const FString& C : S.Conditions) if (!C.Contains(TEXT("flag:")) && !CheckCondition(C)) { bOk = false; break; }
+		const float P = S.Priority + S.Conditions.Num() * 0.5f;
+		if (bOk && P > BestP) { BestP = P; Best = FName(*Id); }
+	}
+	return Best;
 }
 
 // ---------- Subsystem ----------
@@ -112,6 +214,15 @@ void UNarrativeSubsystem::NewRun(int32 Seed)
 	for (int32 i = Pool.Num() - 1; i > 0; --i) Pool.Swap(i, Rng.RandRange(0, i));
 	static const FName Staff[] = { "head", "homeroom", "proctor", "nurse", "coach", "counsellor" };
 	RollRoles(Pool, Staff, UE_ARRAY_COUNT(Staff));
+
+	// Origin: why you were admitted. Sets base stats (general +/- a little per sub-stat) and a skill flag.
+	Level = 1; Xp = 0.f; PredHits = PredTotal = 0; PendingLevelUps = 0; ChoicesMade = Rushed = 0;
+	const FOriginDef& O = GOrigins[Rng.RandRange(0, UE_ARRAY_COUNT(GOrigins) - 1)];
+	Origin = O.Id;
+	Homeroom = FName(*FString::Chr(TCHAR('A' + Rng.RandRange(0, 3))));
+	for (int32 s = 0; s < 8; ++s) for (int32 k = 0; k < 3; ++k)
+		Player.Sub.Add(FName(*FString::Printf(TEXT("%s.%s"), GStatNames[s], GBaseSubs[s][k])), FMath::Clamp(O.Base[s] + Rng.FRandRange(-6.f, 6.f), 1.f, 100.f));
+	Flags.Add(FName(*FString::Printf(TEXT("origin_%s"), O.Id)));
 }
 
 void UNarrativeSubsystem::RollRoles(TArray<FName>& Pool, const FName* Roles, int32 Count)
@@ -170,6 +281,11 @@ bool UNarrativeSubsystem::CheckCondition(const FString& InCond) const
 		}
 		else if (Kind == TEXT("tag")) { const float* T = TagHistory.Find(FName(Key)); L = T ? *T : 0.f; }
 		else if (Kind == TEXT("uniq")) L = Uniqueness();
+		else if (Kind == TEXT("pred")) L = Predictability();
+		else if (Kind == TEXT("share")) L = TagShare(FName(Key));
+		else if (Kind == TEXT("rush")) L = ChoicesMade ? float(Rushed) / ChoicesMade : 0.f;
+		else if (Kind == TEXT("level")) L = Level;
+		else if (Kind == TEXT("rank")) L = Rank();
 
 		switch (OpIdx)
 		{
@@ -298,9 +414,19 @@ FNPCReaction UNarrativeSubsystem::Interpret(FName NPC, const TMap<FName, float>&
 	return R;
 }
 
-TArray<FNPCReaction> UNarrativeSubsystem::ApplyChoice(const FNarrativeChoice& Choice, const TArray<FName>& Witnesses, float Hesitation)
+TArray<FNPCReaction> UNarrativeSubsystem::ApplyChoice(const FNarrativeChoice& Choice, const TArray<FName>& Witnesses, float Hesitation, bool bRushed)
 {
-	for (const auto& KV : Choice.StatDeltas) Player.Add(KV.Key, KV.Value);
+	++ChoicesMade; if (bRushed) ++Rushed;
+	// Authored deltas are small (0.5-3); scale them so a year of choices visibly moves the bars.
+	const float GainScale = 3.f;
+	float Gain = 6.f;
+	for (const auto& KV : Choice.StatDeltas) { Player.Add(KV.Key, KV.Value * GainScale); Gain += FMath::Abs(KV.Value) * GainScale * 4.f; }
+	Xp += Gain;
+	while (Xp >= XpForNext())
+	{
+		Xp -= XpForNext(); ++Level; ++PendingLevelUps;
+		Player.Add(TEXT("Sanity.Resilience"), -2.5f); // every level costs something
+	}
 	for (const auto& KV : Choice.Tags) TagHistory.FindOrAdd(KV.Key) += KV.Value;
 	TagHistory.FindOrAdd(TEXT("hesitation")) += Hesitation;
 	for (const FName& F : Choice.SetFlags) Flags.Add(F);
@@ -343,6 +469,7 @@ bool UNarrativeSubsystem::SaveSlot(const FString& Slot, const FVector& Loc, cons
 	G->PlayerLocation = Loc; G->PlayerRotation = Rot; G->PlayerGender = PlayerGender; G->Seed = RunSeed;
 	G->Player = Player; G->Relationship = Relationship; G->Flags = Flags; G->TagHistory = TagHistory;
 	G->RoleBindings = RoleBindings; G->Played = Played;
+	G->Origin = Origin; G->Homeroom = Homeroom; G->Level = Level; G->Xp = Xp; G->PredHits = PredHits; G->PredTotal = PredTotal; G->ChoicesMade = ChoicesMade; G->Rushed = Rushed;
 	return UGameplayStatics::SaveGameToSlot(G, Slot, 0);
 }
 
@@ -357,6 +484,8 @@ UCLSaveGame* UNarrativeSubsystem::LoadSlot(const FString& Slot)
 	if (!G) return nullptr;
 	NewRun(G->Seed);
 	PlayTime = G->PlayTime; PlayerGender = G->PlayerGender;
+	if (!G->Origin.IsNone()) { Origin = G->Origin; Homeroom = G->Homeroom; }
+	Level = FMath::Max(1, G->Level); Xp = G->Xp; PredHits = G->PredHits; PredTotal = G->PredTotal; ChoicesMade = G->ChoicesMade; Rushed = G->Rushed;
 	Player = G->Player; Flags = G->Flags; TagHistory = G->TagHistory; Played = G->Played;
 	for (const auto& KV : G->Relationship) Relationship.Add(KV.Key, KV.Value);
 	RoleBindings.Reset();

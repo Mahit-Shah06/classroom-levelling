@@ -44,12 +44,34 @@ public:
 	UFUNCTION(BlueprintCallable) FText ResolveText(const FText& In) const;
 
 	// Apply a choice; Witnesses interpret it. Hesitation = seconds the player took.
-	UFUNCTION(BlueprintCallable) TArray<FNPCReaction> ApplyChoice(const FNarrativeChoice& Choice, const TArray<FName>& Witnesses, float Hesitation);
+	UFUNCTION(BlueprintCallable) TArray<FNPCReaction> ApplyChoice(const FNarrativeChoice& Choice, const TArray<FName>& Witnesses, float Hesitation, bool bRushed = false);
 
 	UFUNCTION(BlueprintCallable) FNPCReaction Interpret(FName NPC, const TMap<FName, float>& Tags, float Hesitation);
 
 	// Distance of player behaviour from the built-in average profile (0 = typical).
 	UFUNCTION(BlueprintCallable) float Uniqueness() const;
+
+	// --- Levelling ---
+	// Origin = why you were admitted: base stats + a skill flag. Rolled per run.
+	UPROPERTY(BlueprintReadOnly) FName Origin;
+	UPROPERTY(BlueprintReadOnly) FName Homeroom = "A";
+	UPROPERTY(BlueprintReadOnly) int32 Level = 1;
+	UPROPERTY(BlueprintReadOnly) float Xp = 0.f;
+	int32 PredHits = 0, PredTotal = 0;   // how often the System called your choice in advance
+	int32 ChoicesMade = 0, Rushed = 0;   // Rushed = answered before the options could have been read
+	float TagShare(FName Tag) const;     // this tag's share of everything you have done (0..1)
+	int32 PendingLevelUps = 0;           // consumed by the UI (level-up toast)
+	float XpForNext() const { return 60.f + Level * 40.f; }
+	float Score() const;                 // evaluation score used for rank
+	int32 Rank() const;                  // 1 = top of the cohort
+	int32 CohortSize() const;
+	FString OriginTitle() const; FString OriginBlurb() const; FString OriginSkill() const;
+	// The System's forecast: index into Visible of the choice it expects (-1 = no forecast).
+	int32 Predict(const FStorylet& S, const TArray<int32>& Visible) const;
+	void RecordPrediction(bool bHit) { ++PredTotal; if (bHit) ++PredHits; }
+	float Predictability() const { return PredTotal ? float(PredHits) / PredTotal : 1.f; }
+	FName ForecastEnding() const;        // the ending the System currently expects for you
+	FName EndingReached() const;         // "puppet", "ghost"... (None while the run is live)
 
 	// --- Run / save ---
 	UPROPERTY(BlueprintReadOnly) FName PlayerGender = "m";

@@ -69,6 +69,10 @@ protected:
 	void EnterPlay();
 	void SprintDown(); void SprintUp();
 	void Interact();
+	void ToggleApp();
+	void ShowEnding();
+	TSharedPtr<class SEvalApp> App;
+	TSharedPtr<class SEndScreen> EndScreen;
 	void ApplyPlayerBody();
 	virtual void PlayerTick(float DeltaTime) override;
 	TSharedPtr<class SMainMenu> Menu;

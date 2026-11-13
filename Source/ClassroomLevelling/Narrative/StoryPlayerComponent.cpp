@@ -363,6 +363,7 @@ void UStoryPlayerComponent::ShowStep()
 		Labels.Add(N->ResolveText(Current.Choices[i].Text).ToString());
 	}
 	bAwaitingChoice = Labels.Num() > 0;
+	Forecast = N->Predict(Current, VisibleChoices); // the System commits to a guess before you answer
 	ChoiceWords = 0;
 	for (const FString& L : Labels) { TArray<FString> W; L.ParseIntoArrayWS(W); ChoiceWords += W.Num(); }
 	if (bAwaitingChoice) Window->SetChoices(Labels); else Window->SetContinue(TEXT("Continue"));
@@ -373,6 +374,7 @@ void UStoryPlayerComponent::ShowStep()
 	bWarnedHesitation = false;
 	ChoiceTime = 0.f;
 	Grace = -1.f; // set once typing finishes
+	PromptT = 0.f;
 }
 
 TArray<FName> UStoryPlayerComponent::Witnesses() const
@@ -398,9 +400,21 @@ void UStoryPlayerComponent::Choose(int32 Index)
 
 	const FNarrativeChoice& C = Current.Choices[VisibleChoices[Index]];
 	const float Hes = FGamePrefs::Get().bHesitation ? ChoiceTime : 0.f;
-	const TArray<FNPCReaction> Reactions = N->ApplyChoice(C, CachedWitnesses, Hes);
+	const TArray<FNPCReaction> Reactions = N->ApplyChoice(C, CachedWitnesses, Hes, PromptT < 0.6f + ChoiceWords * 0.05f);
 
 	FString Out = FString::Printf(TEXT("Decision logged (%.1fs)."), Hes);
+	if (Forecast >= 0)
+	{
+		const bool bHit = Forecast == Index;
+		N->RecordPrediction(bHit);
+		Out += FString::Printf(TEXT("\nForecast %s. You are %d%% predictable."), bHit ? TEXT("MATCHED") : TEXT("MISSED"), FMath::RoundToInt(N->Predictability() * 100.f));
+	}
+	if (N->PendingLevelUps > 0)
+	{
+		N->PendingLevelUps = 0;
+		Out += FString::Printf(TEXT("\nLEVEL UP  ->  LV %d   (Rank %d/%d)   Sanity -2.5"), N->Level, N->Rank(), N->CohortSize());
+		Shake(0.5f);
+	}
 	float Worst = 0.f;
 	for (const FNPCReaction& R : Reactions)
 	{
@@ -506,6 +520,7 @@ void UStoryPlayerComponent::TickComponent(float Dt, ELevelTick TickType, FActorC
 		if (AHubWorld* Hub = AHubWorld::Get(this)) if (StepSpeakers.IsValidIndex(Step)) Hub->SetTalking(StepSpeakers[Step], false);
 	}
 
+	if (bAwaitingChoice && !Window->IsTyping()) PromptT += Dt;
 	// Hesitation: only after the prompt is fully on screen + time to read it.
 	if (bAwaitingChoice && !Window->IsTyping() && FGamePrefs::Get().bHesitation)
 	{

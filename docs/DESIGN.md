@@ -129,3 +129,11 @@
 - Player body: random each run (user unsure about tying it to stats). Default = 50/50 coin flip, seeded and saved. Easy to tie to stats later if wanted.
 - Campus areas: station (bus stop/road outside), gate, courtyard, main building (corridor, hall, classroom, office), cafeteria, rooftop, store, library, gym, sports field, dorm, garden.
 - Talk to any named NPC (E / X): "talk" storylets bound to that NPC (slot talk_target).
+
+## Levelling, forecast, endings (2026-11-13, session 6)
+- Jam submission: packaged Windows build (from the user's Windows dual-boot), zip < 1 GB named TeamName_GameName, 30-60 s gameplay video, dev log link, tools list.
+- Scope: Year 1 is the complete game for the jam (3 exams, 9 endings). Y2/Y3 are stretch content.
+- Origins (rolled per run) give base stats ~14-52 and a skill; flags origin_<id>. Authored stat deltas are scaled x3. XP per choice = 6 + 12 per point of stat change; next level = 60 + 40 x level; each level costs 2.5 Sanity.Resilience. Rank score = sum of the 8 generals + 35 per level, ranked against the student pool.
+- Forecast: the System predicts each choice from tag history blended with the average profile (weight = total / (total + 4)). Conditions available to content: flag, stat, rel, tag, uniq, pred (forecast hit rate), share:<tag> (tag's share of all behaviour), rush (share of unread choices), level, rank.
+- Ending rules live in tools/tune_endings.py (run it after editing; check with tools/sim.py). Order: dead end (rush or betrayal) > Director (pred < 0.25) > Clown > Revolutionary > Kingmaker > Ghost > Dropout > Mirror (very predictable AND very atypical) > canon Puppet.
+- Ending screen labels: canon = Theatrical Cut, hidden = Director's Cut, dead end = Cut from the film.

@@ -91,11 +91,10 @@
   "Kind": "scene",
   "Conditions": [
    "flag:market_done",
-   "uniq>0.6",
-   "tag:cunning>=4",
+   "pred<0.25",
    "!flag:year1_complete"
   ],
-  "Priority": 200,
+  "Priority": 230,
   "bOnce": true,
   "Slots": {
    "rival": "rival",
@@ -180,10 +179,10 @@
   "Kind": "scene",
   "Conditions": [
    "flag:market_done",
-   "tag:withdrawal>=3",
+   "share:withdrawal>=0.18",
    "!flag:year1_complete"
   ],
-  "Priority": 200,
+  "Priority": 210,
   "bOnce": true,
   "Slots": {
    "ally": "ally",
@@ -268,11 +267,11 @@
   "Kind": "scene",
   "Conditions": [
    "flag:market_done",
-   "tag:chaos>=3",
-   "tag:empathy>=3",
+   "share:chaos>=0.17",
+   "share:empathy>=0.14",
    "!flag:year1_complete"
   ],
-  "Priority": 200,
+  "Priority": 220,
   "bOnce": true,
   "Slots": {
    "ally": "ally",
@@ -359,10 +358,11 @@
   "Kind": "scene",
   "Conditions": [
    "flag:market_done",
-   "stat:Sanity<=5",
+   "stat:Sanity<=28",
+   "share:withdrawal>=0.12",
    "!flag:year1_complete"
   ],
-  "Priority": 200,
+  "Priority": 205,
   "bOnce": true,
   "Slots": {
    "ally": "ally",
@@ -447,11 +447,11 @@
   "Kind": "scene",
   "Conditions": [
    "flag:market_done",
-   "tag:humor>=3",
-   "tag:chaos>=3",
+   "share:humor>=0.24",
+   "share:chaos>=0.24",
    "!flag:year1_complete"
   ],
-  "Priority": 200,
+  "Priority": 225,
   "bOnce": true,
   "Slots": {
    "gremlin": "gremlin",
@@ -543,10 +543,11 @@
   "Kind": "scene",
   "Conditions": [
    "flag:market_done",
-   "rel:@ally>40",
+   "rel:@ally>45",
+   "share:loyalty>=0.2",
    "!flag:year1_complete"
   ],
-  "Priority": 200,
+  "Priority": 215,
   "bOnce": true,
   "Slots": {
    "ally": "ally",
@@ -633,7 +634,8 @@
   "Kind": "scene",
   "Conditions": [
    "flag:market_done",
-   "uniq>0.8",
+   "pred>=0.72",
+   "uniq>0.42",
    "!flag:year1_complete"
   ],
   "Priority": 200,
@@ -722,11 +724,90 @@
   "Kind": "scene",
   "Conditions": [
    "flag:market_done",
-   "tag:betrayal>=3",
-   "rel:@ally<-20",
+   "share:betrayal>=0.1",
+   "rel:@ally<-10",
    "!flag:year1_complete"
   ],
-  "Priority": 200,
+  "Priority": 235,
+  "bOnce": true,
+  "Slots": {
+   "ally": "ally",
+   "rival": "rival",
+   "gremlin": "gremlin",
+   "president": "president"
+  },
+  "Location": "hall",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "You reach for help that is not there. The hall has become a jury with popcorn.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@ally",
+    "Text": "{ally} does not look at you. 'You spent the year sharpening knives on people who carried you. Sit with that.'",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@rival",
+    "Text": "{rival} laughs once. 'Even I don't partner with a sinkhole. Find another mark.'",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "@gremlin",
+    "Text": "{gremlin} boos with jazz hands. 'Dead end! Try again from orientation, traitor!'",
+    "Shot": "pan"
+   },
+   {
+    "Speaker": "@president",
+    "Text": "{president} seals a form. 'No study group will claim you. The gate is that way. So is the restart.'",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@homeroom",
+    "Text": "You optimized betrayal until the campus ran out of fools. That is not strategy. That is a loop.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "system",
+    "Text": "SOFTLOCK: Social capital depleted. Quest chain unsolvable. Restart recommended.",
+    "Shot": "low"
+   },
+   {
+    "Speaker": "narrator",
+    "Text": "Somewhere beyond the banners, the gate waits like a punchline you earned.",
+    "Shot": "low"
+   }
+  ],
+  "PromptSpeaker": "narrator",
+  "Text": "You thought like a razor with no handle—cut everyone, including the future that needed allies. The school laughs you back to zero.",
+  "Choices": [
+   {
+    "Id": "eat_mocked",
+    "Text": "Eat the mockery. Restart from the gate with empty pockets.",
+    "Requires": [],
+    "Tags": {
+     "betrayal": 0.5,
+     "withdrawal": 0.5
+    },
+    "StatDeltas": {},
+    "SetFlags": [
+     "year1_complete",
+     "ending_mocked"
+    ],
+    "Next": ""
+   }
+  ]
+ },
+ {
+  "Id": "end_y1_mocked_rush",
+  "Kind": "scene",
+  "Conditions": [
+   "flag:market_done",
+   "rush>0.6",
+   "!flag:year1_complete"
+  ],
+  "Priority": 240,
   "bOnce": true,
   "Slots": {
    "ally": "ally",
