@@ -65,3 +65,20 @@
 - Canon ending: "Puppet at the top". Player reaches #1 by betrayal or obedience to the System; wins alone/hated. The same ending gets slight twists based on behaviour.
 - Structure: all three. Chapters = special exams, inside a day-by-day calendar, with a free-roam school hub + quest board.
 - Secret endings (all approved): The Director (seize the AI, rewrite the school), The Ghost (invisible puppeteer, forgotten), The Revolutionary (abolish the ranking), The Dropout (walk away), The Clown (pure chaos, the school becomes a circus), The Kingmaker (puts an NPC at #1), The Mirror (the AI learned from you; you become the System).
+
+## World bible Q&A round 5 (user, 2026-11-13)
+- Core cast roles: Genius rival, Loyal-ish ally, Chaos gremlin (+ more TBD).
+- Teachers: minimal role, mainly relay information. But one secret ending could involve winning a teacher over or manipulating one.
+- The System appears as UI/voice only (quest windows, Solo Leveling-like).
+- Starting class: random each run. Each class comes with a backstory reason ("why you're here") that grants base stats + a unique skill.
+- More cast: Council president, Fallen ex-#1, and a shady random NPC (e.g. a store worker) who's secretly the best info broker. Random NPC interactions can hold key info.
+- Rich-kid route: manipulate school points <-> in-game real money. One of the hardest ways to graduate #1 (needs high Luck/Funds at birth + acing exams).
+- Teacher route: both a contributing key to other endings AND its own ending variant.
+- Classes: 4-5. Placement = the student's 2 highest base general stats, so the classes are balanced overall. Which class wins depends on its leader and their style (democratic, communal, dictatorial, from the shadows...).
+- TWO LAYERS of class (user-confirmed):
+  - Public homeroom classes A, B, C, D: balanced, so each has the same average stats.
+  - Hidden "secret class" (archetype) from each student's 2 highest general stats: Onyx (Intellect+Cunning), Slate (Physique+Sanity), Ash (Charisma+Reputation), Ivory (Funds+Luck).
+  - Every student (NPCs included) has their own 8 stats + secret class; each homeroom mixes the archetypes evenly.
+- Timeline: 3 school years to graduation (scope for the jam build TBD).
+- Scope (user): all 3 years compressed. Each year = 2-3 exam chapters, with time-skips + stat buffs between. Build as much as possible.
+- Gameplay (user): hybrid. Third-person walkable campus hub with visible NPCs to approach and talk to (feel reference: Pokemon S/V school/overworld, NOT its content). Exams + story = cinematic 3D scenes with choice menus + System UI windows.
