@@ -1,0 +1,1493 @@
+[
+ {
+  "Id": "y1_campus_library_quiet",
+  "Kind": "scene",
+  "Conditions": [
+   "flag:system_awake"
+  ],
+  "Priority": 28,
+  "bOnce": true,
+  "Slots": {},
+  "Location": "library",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "Dust hangs in the black-and-white stacks. A single accent lamp burns over a desk nobody booked.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@ally",
+    "Text": "Everyone asks what the ranking is for. I keep asking what I'm for.",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "system",
+    "Text": "Notification: Purpose Metric offline. Manual reflection recommended.",
+    "Shot": "pan"
+   },
+   {
+    "Speaker": "@ally",
+    "Text": "If you vanish into a number, who notices? Tell me you still want something that isn't points.",
+    "Shot": "over_shoulder"
+   }
+  ],
+  "PromptSpeaker": "@ally",
+  "Text": "{ally} waits. What do you answer when purpose itself feels graded?",
+  "Choices": [
+   {
+    "Id": "bond_purpose",
+    "Text": "We'll invent a reason together.",
+    "Requires": [],
+    "Tags": {
+     "empathy": 1,
+     "loyalty": 0.8
+    },
+    "StatDeltas": {
+     "Sanity.Resolve": 1,
+     "Charisma.Warmth": 0.5
+    },
+    "SetFlags": [
+     "y1_purpose_shared"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "nihilist_shrug",
+    "Text": "There is no reason. Climb anyway.",
+    "Requires": [],
+    "Tags": {
+     "withdrawal": 0.7,
+     "ambition": 0.5
+    },
+    "StatDeltas": {
+     "Sanity.Detachment": 1,
+     "Cunning.Coldness": 0.5
+    },
+    "SetFlags": [
+     "y1_nihilist_seed"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "system_faith",
+    "Text": "The app decides. That's enough.",
+    "Requires": [],
+    "Tags": {
+     "obedience": 1
+    },
+    "StatDeltas": {
+     "Reputation.Compliance": 1
+    },
+    "SetFlags": [
+     "y1_system_faith"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "absurd_joke",
+    "Text": "My purpose is cafeteria pudding.",
+    "Requires": [],
+    "Tags": {
+     "humor": 1,
+     "chaos": 0.4
+    },
+    "StatDeltas": {
+     "Charisma.Wit": 1,
+     "Sanity.Levity": 0.5
+    },
+    "SetFlags": [
+     "y1_absurdist_seed"
+    ],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "y1_campus_library_points",
+  "Kind": "quest",
+  "Conditions": [
+   "flag:system_awake"
+  ],
+  "Priority": 42,
+  "bOnce": true,
+  "Slots": {},
+  "Location": "library",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "A reserved booth blinks: Study Pool open. Deposit school points; withdraw knowledge—or nothing.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@president",
+    "Text": "Council tip: pooling points buys past papers. Solo hoarders starve at midterms.",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "system",
+    "Text": "Quest issued: Contribute or extract from the Study Pool. Fairness not guaranteed.",
+    "Shot": "pan"
+   },
+   {
+    "Speaker": "@gremlin",
+    "Text": "Or we empty it and blame the printers. Chaos scales beautifully.",
+    "Shot": "low"
+   }
+  ],
+  "PromptSpeaker": "system",
+  "Text": "Study Pool terminal awaits. How do you play the points economy?",
+  "Choices": [
+   {
+    "Id": "pool_donate",
+    "Text": "Deposit points for the class.",
+    "Requires": [
+     "stat:Funds.Liquidity>=2"
+    ],
+    "Tags": {
+     "loyalty": 1,
+     "empathy": 0.5
+    },
+    "StatDeltas": {
+     "Funds.Liquidity": -1,
+     "Reputation.Generosity": 1,
+     "Charisma.Trust": 0.5
+    },
+    "SetFlags": [
+     "y1_pool_donor"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "pool_extract",
+    "Text": "Withdraw papers. Pay later.",
+    "Requires": [],
+    "Tags": {
+     "cunning": 1,
+     "ambition": 0.6
+    },
+    "StatDeltas": {
+     "Intellect.Recall": 1,
+     "Reputation.Debt": 0.5,
+     "Cunning.Opportunism": 0.5
+    },
+    "SetFlags": [
+     "y1_pool_debtor"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "pool_sabotage",
+    "Text": "Crash the booth. No one profits.",
+    "Requires": [],
+    "Tags": {
+     "chaos": 1,
+     "betrayal": 0.4
+    },
+    "StatDeltas": {
+     "Cunning.Sabotage": 1,
+     "Sanity.Impulse": 0.5
+    },
+    "SetFlags": [
+     "y1_pool_sabotaged"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "pool_watch",
+    "Text": "Watch who feeds it. Log names.",
+    "Requires": [],
+    "Tags": {
+     "cunning": 0.8,
+     "withdrawal": 0.3
+    },
+    "StatDeltas": {
+     "Intellect.Observation": 1,
+     "Cunning.Intel": 0.5
+    },
+    "SetFlags": [
+     "y1_pool_watcher"
+    ],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "y1_campus_gym_test",
+  "Kind": "quest",
+  "Conditions": [
+   "flag:system_awake"
+  ],
+  "Priority": 45,
+  "bOnce": true,
+  "Slots": {},
+  "Location": "gym",
+  "Lines": [
+   {
+    "Speaker": "@coach",
+    "Text": "Baseline drill. No medals—only metrics. Fail quiet, pass quieter.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "narrator",
+    "Text": "The gym smells of rubber and chalk. Cones form a cruel little maze.",
+    "Shot": "pan"
+   },
+   {
+    "Speaker": "system",
+    "Text": "Physique check queued. Hesitation will be scored as frailty.",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@rival",
+    "Text": "Don't pace me. I'll know if you sandbag.",
+    "Shot": "over_shoulder"
+   }
+  ],
+  "PromptSpeaker": "@coach",
+  "Text": "Whistle up. How do you take the physical test?",
+  "Choices": [
+   {
+    "Id": "gym_allout",
+    "Text": "Sprint until the whistle breaks.",
+    "Requires": [],
+    "Tags": {
+     "ambition": 1,
+     "honesty": 0.5
+    },
+    "StatDeltas": {
+     "Physique.Endurance": 1.5,
+     "Sanity.Strain": 0.5
+    },
+    "SetFlags": [
+     "y1_gym_maxed"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "gym_sandbag",
+    "Text": "Look average. Hide your peak.",
+    "Requires": [],
+    "Tags": {
+     "cunning": 1,
+     "withdrawal": 0.4
+    },
+    "StatDeltas": {
+     "Physique.Control": 0.5,
+     "Cunning.Misdirection": 1
+    },
+    "SetFlags": [
+     "y1_gym_sandbag"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "gym_help",
+    "Text": "Steady a classmate mid-drill.",
+    "Requires": [],
+    "Tags": {
+     "empathy": 1,
+     "loyalty": 0.6
+    },
+    "StatDeltas": {
+     "Physique.Coordination": 0.5,
+     "Charisma.Solidarity": 1
+    },
+    "SetFlags": [
+     "y1_gym_helper"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "gym_refuse",
+    "Text": "Sit out. Reject the metric.",
+    "Requires": [],
+    "Tags": {
+     "withdrawal": 0.8,
+     "chaos": 0.3
+    },
+    "StatDeltas": {
+     "Sanity.Defiance": 1,
+     "Reputation.Compliance": -0.5
+    },
+    "SetFlags": [
+     "y1_gym_refused"
+    ],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "y1_campus_gym_rival",
+  "Kind": "scene",
+  "Conditions": [
+   "flag:system_awake"
+  ],
+  "Priority": 38,
+  "bOnce": true,
+  "Slots": {},
+  "Location": "gym",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "After hours, the lights stay half-on. {rival} runs laps like the floor owes them money.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@rival",
+    "Text": "You're early. Or late. Either way, you're in my lane.",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@rival",
+    "Text": "Train with me or watch. Watching is also a choice the System logs.",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "system",
+    "Text": "Rival proximity spike detected. Competitive bonding optional.",
+    "Shot": "pan"
+   }
+  ],
+  "PromptSpeaker": "@rival",
+  "Text": "{rival} tosses you a towel. Join the training?",
+  "Choices": [
+   {
+    "Id": "rival_spar",
+    "Text": "Match pace. No mercy.",
+    "Requires": [],
+    "Tags": {
+     "ambition": 1,
+     "honesty": 0.4
+    },
+    "StatDeltas": {
+     "Physique.Power": 1,
+     "Reputation.Rivalry": 0.5
+    },
+    "SetFlags": [
+     "y1_rival_trained"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "rival_learn",
+    "Text": "Ask for their form tips.",
+    "Requires": [],
+    "Tags": {
+     "empathy": 0.5,
+     "loyalty": 0.3
+    },
+    "StatDeltas": {
+     "Physique.Technique": 1,
+     "Charisma.Humility": 0.5
+    },
+    "SetFlags": [
+     "y1_rival_mentor"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "rival_trash",
+    "Text": "Mock their split times.",
+    "Requires": [],
+    "Tags": {
+     "cruelty": 0.8,
+     "humor": 0.4
+    },
+    "StatDeltas": {
+     "Charisma.Edge": 0.5,
+     "Cunning.Provocation": 1
+    },
+    "SetFlags": [
+     "y1_rival_needled"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "rival_leave",
+    "Text": "Leave them alone with ghosts.",
+    "Requires": [],
+    "Tags": {
+     "withdrawal": 1
+    },
+    "StatDeltas": {
+     "Sanity.Distance": 0.5
+    },
+    "SetFlags": [
+     "y1_rival_ignored_gym"
+    ],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "y1_campus_field_wind",
+  "Kind": "scene",
+  "Conditions": [
+   "flag:system_awake"
+  ],
+  "Priority": 32,
+  "bOnce": true,
+  "Slots": {},
+  "Location": "field",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "The track curves like a question mark. Wind cuts across empty lanes.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@ex1",
+    "Text": "I used to own this oval. Then the app blinked and I was 'former.'",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@ex1",
+    "Text": "Purpose isn't medals. It's surviving the demotion without becoming furniture.",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "system",
+    "Text": "Archive note: Fallen ranks retain spectator privileges.",
+    "Shot": "pan"
+   }
+  ],
+  "PromptSpeaker": "@ex1",
+  "Text": "{ex1} offers a starting block. What do you take from a fallen #1?",
+  "Choices": [
+   {
+    "Id": "ex_listen",
+    "Text": "Listen. Steal their survival tips.",
+    "Requires": [],
+    "Tags": {
+     "empathy": 0.6,
+     "cunning": 0.5
+    },
+    "StatDeltas": {
+     "Intellect.Strategy": 1,
+     "Sanity.Perspective": 0.5
+    },
+    "SetFlags": [
+     "y1_ex1_ally_seed"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "ex_pity",
+    "Text": "Pity them out loud.",
+    "Requires": [],
+    "Tags": {
+     "cruelty": 0.5,
+     "honesty": 0.3
+    },
+    "StatDeltas": {
+     "Charisma.Bluntness": 0.5,
+     "Reputation.Tact": -0.5
+    },
+    "SetFlags": [
+     "y1_ex1_scorned"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "ex_race",
+    "Text": "Race them. Prove you're next.",
+    "Requires": [],
+    "Tags": {
+     "ambition": 1
+    },
+    "StatDeltas": {
+     "Physique.Speed": 1,
+     "Sanity.Drive": 0.5
+    },
+    "SetFlags": [
+     "y1_ex1_raced"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "ex_absurd",
+    "Text": "Propose a three-legged race.",
+    "Requires": [],
+    "Tags": {
+     "humor": 1,
+     "chaos": 0.5
+    },
+    "StatDeltas": {
+     "Charisma.Absurdity": 1,
+     "Sanity.Levity": 0.5
+    },
+    "SetFlags": [
+     "y1_field_clown"
+    ],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "y1_campus_field_relay",
+  "Kind": "quest",
+  "Conditions": [
+   "flag:system_awake"
+  ],
+  "Priority": 50,
+  "bOnce": true,
+  "Slots": {},
+  "Location": "field",
+  "Lines": [
+   {
+    "Speaker": "@coach",
+    "Text": "Unofficial relay. Class points on the line if you finish under the ghost time.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@ally",
+    "Text": "I'll take baton two. Don't drop us for a selfie.",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@gremlin",
+    "Text": "Or do. I'll film the drop. Viral frailty.",
+    "Shot": "low"
+   },
+   {
+    "Speaker": "system",
+    "Text": "Quest: Field Relay. Team metric updates live.",
+    "Shot": "pan"
+   }
+  ],
+  "PromptSpeaker": "@coach",
+  "Text": "Baton in hand. Anchor leg or chaos?",
+  "Choices": [
+   {
+    "Id": "relay_anchor",
+    "Text": "Take the anchor. Carry them.",
+    "Requires": [
+     "stat:Physique.Speed>=3"
+    ],
+    "Tags": {
+     "loyalty": 1,
+     "ambition": 0.6
+    },
+    "StatDeltas": {
+     "Physique.Speed": 1,
+     "Reputation.Reliability": 1
+    },
+    "SetFlags": [
+     "y1_relay_hero"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "relay_fair",
+    "Text": "Rotate evenly. No stars.",
+    "Requires": [],
+    "Tags": {
+     "empathy": 0.8,
+     "loyalty": 0.8
+    },
+    "StatDeltas": {
+     "Charisma.Fairness": 1,
+     "Physique.Teamwork": 0.5
+    },
+    "SetFlags": [
+     "y1_relay_communal"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "relay_throw",
+    "Text": "Fumble on purpose. Tank the pool.",
+    "Requires": [],
+    "Tags": {
+     "betrayal": 1,
+     "chaos": 0.6
+    },
+    "StatDeltas": {
+     "Cunning.Sabotage": 1,
+     "Reputation.Trust": -1
+    },
+    "SetFlags": [
+     "y1_relay_sabotage"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "relay_scout",
+    "Text": "Time other classes instead.",
+    "Requires": [],
+    "Tags": {
+     "cunning": 1,
+     "withdrawal": 0.2
+    },
+    "StatDeltas": {
+     "Intellect.Analysis": 1,
+     "Cunning.Intel": 0.5
+    },
+    "SetFlags": [
+     "y1_relay_scout"
+    ],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "y1_campus_dorm_confession",
+  "Kind": "scene",
+  "Conditions": [
+   "flag:system_awake"
+  ],
+  "Priority": 55,
+  "bOnce": true,
+  "Slots": {},
+  "Location": "dorm",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "Midnight. Corridor lights flick to accent red for quiet hours. Someone knocks twice, soft.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@ally",
+    "Text": "I can't sleep. The app ranked my fear today. It called it 'motivation.'",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@ally",
+    "Text": "If I say I need you—not the points, you—does that get logged too?",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "system",
+    "Text": "Ambient audio flagged. Social vulnerability window open.",
+    "Shot": "pan"
+   }
+  ],
+  "PromptSpeaker": "@ally",
+  "Text": "{ally}'s confession hangs in the dorm dark. Answer?",
+  "Choices": [
+   {
+    "Id": "dorm_accept",
+    "Text": "Stay. You're not a metric.",
+    "Requires": [],
+    "Tags": {
+     "empathy": 1,
+     "loyalty": 1,
+     "honesty": 0.7
+    },
+    "StatDeltas": {
+     "Charisma.Intimacy": 1,
+     "Sanity.Warmth": 0.5
+    },
+    "SetFlags": [
+     "y1_dorm_bond"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "dorm_redirect",
+    "Text": "Sleep. Rankings wait at dawn.",
+    "Requires": [],
+    "Tags": {
+     "withdrawal": 0.6,
+     "obedience": 0.4
+    },
+    "StatDeltas": {
+     "Sanity.Composure": 0.5,
+     "Charisma.Distance": 0.5
+    },
+    "SetFlags": [
+     "y1_dorm_deferred"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "dorm_use",
+    "Text": "Trade comfort for their secrets.",
+    "Requires": [],
+    "Tags": {
+     "cunning": 1,
+     "betrayal": 0.5
+    },
+    "StatDeltas": {
+     "Cunning.Leverage": 1,
+     "Reputation.Warmth": -0.5
+    },
+    "SetFlags": [
+     "y1_dorm_exploiter"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "dorm_joke",
+    "Text": "Confess your fear of laundry.",
+    "Requires": [],
+    "Tags": {
+     "humor": 1,
+     "empathy": 0.3
+    },
+    "StatDeltas": {
+     "Charisma.Wit": 1,
+     "Sanity.Levity": 0.5
+    },
+    "SetFlags": [
+     "y1_dorm_defused"
+    ],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "y1_campus_dorm_curfew",
+  "Kind": "quest",
+  "Conditions": [
+   "flag:system_awake"
+  ],
+  "Priority": 40,
+  "bOnce": true,
+  "Slots": {},
+  "Location": "dorm",
+  "Lines": [
+   {
+    "Speaker": "@proctor",
+    "Text": "Curfew sweep. Lights out means hearts quieter than your scores.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@gremlin",
+    "Text": "Psst. Roof access card works if you bribe the vending machine with points.",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "narrator",
+    "Text": "Footsteps approach. Your door is still a choice.",
+    "Shot": "low"
+   },
+   {
+    "Speaker": "system",
+    "Text": "Quest: Survive curfew without a demerit—or earn one stylishly.",
+    "Shot": "pan"
+   }
+  ],
+  "PromptSpeaker": "@proctor",
+  "Text": "Knuckles on your door. How do you treat the night rule?",
+  "Choices": [
+   {
+    "Id": "curfew_obey",
+    "Text": "Lights out. Perfect compliance.",
+    "Requires": [],
+    "Tags": {
+     "obedience": 1
+    },
+    "StatDeltas": {
+     "Reputation.Compliance": 1,
+     "Sanity.Rest": 0.5
+    },
+    "SetFlags": [
+     "y1_curfew_good"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "curfew_roof",
+    "Text": "Sneak to the roof with {gremlin}.",
+    "Requires": [],
+    "Tags": {
+     "chaos": 0.8,
+     "loyalty": 0.4
+    },
+    "StatDeltas": {
+     "Cunning.Stealth": 1,
+     "Luck.Timing": 0.5
+    },
+    "SetFlags": [
+     "y1_roof_night"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "curfew_snitch",
+    "Text": "Report the roof plan.",
+    "Requires": [],
+    "Tags": {
+     "betrayal": 1,
+     "obedience": 0.6
+    },
+    "StatDeltas": {
+     "Reputation.Informant": 1,
+     "Charisma.Trust": -0.5
+    },
+    "SetFlags": [
+     "y1_curfew_snitch"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "curfew_bribe",
+    "Text": "Buy silence with school points.",
+    "Requires": [
+     "stat:Funds.Liquidity>=2"
+    ],
+    "Tags": {
+     "cunning": 0.7,
+     "ambition": 0.3
+    },
+    "StatDeltas": {
+     "Funds.Liquidity": -1,
+     "Cunning.Bribery": 1
+    },
+    "SetFlags": [
+     "y1_curfew_bribed"
+    ],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "y1_campus_store_broker",
+  "Kind": "quest",
+  "Conditions": [
+   "flag:system_awake"
+  ],
+  "Priority": 58,
+  "bOnce": true,
+  "Slots": {},
+  "Location": "store",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "Campus store fluorescents hum. Behind the snacks, {broker} rearranges nothing important.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@broker",
+    "Text": "Hot Seat outline. Fresh. Costs more than pride, less than expulsion.",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@broker",
+    "Text": "Pay in school points. Or owe me a favor the app can't see.",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "system",
+    "Text": "Unauthorized intel market detected. Purchase at own risk.",
+    "Shot": "pan"
+   }
+  ],
+  "PromptSpeaker": "@broker",
+  "Text": "{broker} slides a sealed folder. Buy the exam info?",
+  "Choices": [
+   {
+    "Id": "broker_buy",
+    "Text": "Pay points. Take the outline.",
+    "Requires": [
+     "stat:Funds.Liquidity>=3"
+    ],
+    "Tags": {
+     "cunning": 0.8,
+     "ambition": 0.6
+    },
+    "StatDeltas": {
+     "Funds.Liquidity": -2,
+     "Intellect.Prep": 1.5
+    },
+    "SetFlags": [
+     "y1_bought_hotseat"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "broker_favor",
+    "Text": "Owe a favor instead.",
+    "Requires": [],
+    "Tags": {
+     "cunning": 0.6,
+     "loyalty": -0.2
+    },
+    "StatDeltas": {
+     "Cunning.Debt": 1,
+     "Luck.Obligation": 0.5
+    },
+    "SetFlags": [
+     "y1_broker_owes"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "broker_refuse",
+    "Text": "Walk. Study clean.",
+    "Requires": [],
+    "Tags": {
+     "honesty": 1,
+     "obedience": 0.4
+    },
+    "StatDeltas": {
+     "Sanity.Integrity": 1,
+     "Reputation.Clean": 0.5
+    },
+    "SetFlags": [
+     "y1_broker_refused"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "broker_flip",
+    "Text": "Sell them a fake tip first.",
+    "Requires": [
+     "stat:Cunning.Bluff>=2"
+    ],
+    "Tags": {
+     "betrayal": 0.8,
+     "humor": 0.3
+    },
+    "StatDeltas": {
+     "Cunning.Bluff": 1,
+     "Funds.Liquidity": 1
+    },
+    "SetFlags": [
+     "y1_broker_conned"
+    ],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "y1_campus_store_rumor",
+  "Kind": "scene",
+  "Conditions": [
+   "flag:system_awake"
+  ],
+  "Priority": 26,
+  "bOnce": true,
+  "Slots": {},
+  "Location": "store",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "Two students argue over energy drinks and who 'vanished' last term.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@broker",
+    "Text": "People don't vanish. They get reassigned to silence. Different aisle.",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@president",
+    "Text": "Council hears nothing. Officially, retention is ninety-nine.",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "system",
+    "Text": "Rumor density high. Fact-check unavailable.",
+    "Shot": "pan"
+   }
+  ],
+  "PromptSpeaker": "@broker",
+  "Text": "The store goes quiet. How do you handle the vanished-student talk?",
+  "Choices": [
+   {
+    "Id": "rumor_probe",
+    "Text": "Ask who left. Pay for names.",
+    "Requires": [],
+    "Tags": {
+     "cunning": 0.7,
+     "ambition": 0.3
+    },
+    "StatDeltas": {
+     "Cunning.Intel": 1,
+     "Funds.Liquidity": -0.5
+    },
+    "SetFlags": [
+     "y1_store_probe"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "rumor_defend",
+    "Text": "Defend the ninety-nine percent.",
+    "Requires": [],
+    "Tags": {
+     "obedience": 1,
+     "loyalty": 0.3
+    },
+    "StatDeltas": {
+     "Reputation.Loyalty": 0.5,
+     "Sanity.Doubt": -0.5
+    },
+    "SetFlags": [
+     "y1_rate_believer"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "rumor_joke",
+    "Text": "Say they became vending stock.",
+    "Requires": [],
+    "Tags": {
+     "humor": 1,
+     "chaos": 0.4
+    },
+    "StatDeltas": {
+     "Charisma.Wit": 1
+    },
+    "SetFlags": [
+     "y1_store_clown"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "rumor_silence",
+    "Text": "Buy milk. Say nothing.",
+    "Requires": [],
+    "Tags": {
+     "withdrawal": 1
+    },
+    "StatDeltas": {
+     "Sanity.Caution": 0.5,
+     "Intellect.Observation": 0.5
+    },
+    "SetFlags": [
+     "y1_store_silent"
+    ],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "y1_campus_garden_exist",
+  "Kind": "scene",
+  "Conditions": [
+   "flag:system_awake"
+  ],
+  "Priority": 30,
+  "bOnce": true,
+  "Slots": {},
+  "Location": "garden",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "The garden is monochrome petals and one accent bloom nobody planted on purpose.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@counsellor",
+    "Text": "Students come here when the app feels louder than their pulse.",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@counsellor",
+    "Text": "Year one asks: if ranking is life, what dies when you stop climbing?",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "system",
+    "Text": "Wellness check optional. Non-participation noted.",
+    "Shot": "pan"
+   }
+  ],
+  "PromptSpeaker": "@counsellor",
+  "Text": "Petals drift. How do you answer the existential nudge?",
+  "Choices": [
+   {
+    "Id": "garden_friends",
+    "Text": "I'll live for the people here.",
+    "Requires": [],
+    "Tags": {
+     "empathy": 1,
+     "loyalty": 0.8
+    },
+    "StatDeltas": {
+     "Sanity.Belonging": 1,
+     "Charisma.Warmth": 0.5
+    },
+    "SetFlags": [
+     "y1_purpose_bonds"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "garden_climb",
+    "Text": "Climbing is the only life.",
+    "Requires": [],
+    "Tags": {
+     "ambition": 1,
+     "obedience": 0.5
+    },
+    "StatDeltas": {
+     "Sanity.Drive": 1,
+     "Reputation.Hunger": 0.5
+    },
+    "SetFlags": [
+     "y1_purpose_rank"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "garden_void",
+    "Text": "Nothing dies. Nothing mattered.",
+    "Requires": [],
+    "Tags": {
+     "withdrawal": 0.9,
+     "chaos": 0.2
+    },
+    "StatDeltas": {
+     "Sanity.Detachment": 1.5
+    },
+    "SetFlags": [
+     "y1_purpose_void"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "garden_circus",
+    "Text": "I'll make the garden a circus.",
+    "Requires": [],
+    "Tags": {
+     "chaos": 1,
+     "humor": 0.8
+    },
+    "StatDeltas": {
+     "Charisma.Spectacle": 1,
+     "Sanity.Impulse": 0.5
+    },
+    "SetFlags": [
+     "y1_purpose_clown"
+    ],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "y1_campus_garden_trade",
+  "Kind": "quest",
+  "Conditions": [
+   "flag:system_awake"
+  ],
+  "Priority": 36,
+  "bOnce": true,
+  "Slots": {},
+  "Location": "garden",
+  "Lines": [
+   {
+    "Speaker": "@gremlin",
+    "Text": "Secret garden swap meet. Points for cuttings. Cuttings for alibis.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@rival",
+    "Text": "If you're here to launder points through flowers, at least be elegant.",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "narrator",
+    "Text": "A crate of tagged seedlings sits between benches like contraband hope.",
+    "Shot": "low"
+   },
+   {
+    "Speaker": "system",
+    "Text": "Quest: Garden Exchange. Economic creativity scored.",
+    "Shot": "pan"
+   }
+  ],
+  "PromptSpeaker": "@gremlin",
+  "Text": "Seedling crate open. What's your move in the quiet market?",
+  "Choices": [
+   {
+    "Id": "garden_buy",
+    "Text": "Buy a rare cutting with points.",
+    "Requires": [
+     "stat:Funds.Liquidity>=2"
+    ],
+    "Tags": {
+     "ambition": 0.4,
+     "cunning": 0.3
+    },
+    "StatDeltas": {
+     "Funds.Liquidity": -1,
+     "Luck.Charm": 0.5,
+     "Reputation.Taste": 0.5
+    },
+    "SetFlags": [
+     "y1_garden_buyer"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "garden_launder",
+    "Text": "Route class points through petals.",
+    "Requires": [
+     "stat:Cunning.Finance>=2"
+    ],
+    "Tags": {
+     "cunning": 1,
+     "betrayal": 0.3
+    },
+    "StatDeltas": {
+     "Funds.Liquidity": 1,
+     "Cunning.Finance": 1
+    },
+    "SetFlags": [
+     "y1_garden_launder"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "garden_gift",
+    "Text": "Gift a cutting to {ally}.",
+    "Requires": [],
+    "Tags": {
+     "empathy": 1,
+     "loyalty": 0.7
+    },
+    "StatDeltas": {
+     "Charisma.Kindness": 1
+    },
+    "SetFlags": [
+     "y1_garden_gift"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "garden_trample",
+    "Text": "Kick the crate. End the market.",
+    "Requires": [],
+    "Tags": {
+     "cruelty": 0.7,
+     "chaos": 0.8
+    },
+    "StatDeltas": {
+     "Sanity.Spite": 0.5,
+     "Reputation.Fear": 0.5
+    },
+    "SetFlags": [
+     "y1_garden_ruined"
+    ],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "y1_campus_station_stranger",
+  "Kind": "scene",
+  "Conditions": [
+   "flag:system_awake"
+  ],
+  "Priority": 60,
+  "bOnce": true,
+  "Slots": {
+   "stranger": "random_npc"
+  },
+  "Location": "station",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "Outside the gate, the bus stop is wind and wet concrete. A stranger sits where students shouldn't linger.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@stranger",
+    "Text": "They told my parents I graduated early. Funny. I never walked a stage.",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@stranger",
+    "Text": "Ninety-nine percent means the one percent learns to disappear. Don't trust the brochure.",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "system",
+    "Text": "Off-campus contact. Advisory: return before metrics degrade.",
+    "Shot": "pan"
+   },
+   {
+    "Speaker": "@stranger",
+    "Text": "If you stay perfect, you stay owned. If you leave wrong, you become a ghost story.",
+    "Shot": "low"
+   }
+  ],
+  "PromptSpeaker": "@stranger",
+  "Text": "{stranger} waits for the bus that may never come. How do you answer?",
+  "Choices": [
+   {
+    "Id": "station_believe",
+    "Text": "Believe them. Ask how they left.",
+    "Requires": [],
+    "Tags": {
+     "empathy": 0.8,
+     "cunning": 0.5
+    },
+    "StatDeltas": {
+     "Intellect.Insight": 1,
+     "Sanity.Doubt": 0.5
+    },
+    "SetFlags": [
+     "y1_rate_doubt",
+     "y1_met_expelled"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "station_deny",
+    "Text": "Call it a scare story. Go back.",
+    "Requires": [],
+    "Tags": {
+     "obedience": 1,
+     "withdrawal": 0.3
+    },
+    "StatDeltas": {
+     "Reputation.Compliance": 0.5,
+     "Sanity.Certainty": 0.5
+    },
+    "SetFlags": [
+     "y1_rate_denier"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "station_record",
+    "Text": "Record everything for leverage.",
+    "Requires": [],
+    "Tags": {
+     "cunning": 1,
+     "betrayal": 0.2
+    },
+    "StatDeltas": {
+     "Cunning.Intel": 1.5
+    },
+    "SetFlags": [
+     "y1_expelled_tape"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "station_offer",
+    "Text": "Offer points for a way out map.",
+    "Requires": [
+     "stat:Funds.Liquidity>=2"
+    ],
+    "Tags": {
+     "ambition": 0.4,
+     "cunning": 0.6
+    },
+    "StatDeltas": {
+     "Funds.Liquidity": -1,
+     "Luck.Escape": 1
+    },
+    "SetFlags": [
+     "y1_dropout_map"
+    ],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "y1_campus_station_wait",
+  "Kind": "quest",
+  "Conditions": [
+   "flag:system_awake"
+  ],
+  "Priority": 34,
+  "bOnce": true,
+  "Slots": {},
+  "Location": "station",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "Rain needles the bus shelter. Inside the gate, rankings glow; out here, schedules lie.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@homeroom",
+    "Text": "Students who miss the last bus get logged as 'unstable attachment to campus.'",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@president",
+    "Text": "Council shuttle exists—for those who trade favors, not tears.",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "system",
+    "Text": "Quest: Resolve transit. Punctuality feeds Reputation.",
+    "Shot": "pan"
+   }
+  ],
+  "PromptSpeaker": "system",
+  "Text": "Last bus delayed. How do you handle the station limbo?",
+  "Choices": [
+   {
+    "Id": "wait_patient",
+    "Text": "Wait. Treat delay as training.",
+    "Requires": [],
+    "Tags": {
+     "obedience": 0.5,
+     "honesty": 0.4
+    },
+    "StatDeltas": {
+     "Sanity.Patience": 1,
+     "Physique.Stamina": 0.3
+    },
+    "SetFlags": [
+     "y1_station_patient"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "wait_favor",
+    "Text": "Call in a council shuttle favor.",
+    "Requires": [
+     "rel:@president>2"
+    ],
+    "Tags": {
+     "ambition": 0.5,
+     "cunning": 0.4
+    },
+    "StatDeltas": {
+     "Reputation.Connections": 1,
+     "Funds.Favor": -0.5
+    },
+    "SetFlags": [
+     "y1_station_shuttle"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "wait_walk",
+    "Text": "Walk back in the rain. Unranked.",
+    "Requires": [],
+    "Tags": {
+     "withdrawal": 0.5,
+     "chaos": 0.3
+    },
+    "StatDeltas": {
+     "Physique.Endurance": 1,
+     "Sanity.Defiance": 0.5
+    },
+    "SetFlags": [
+     "y1_station_walk"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "wait_hack",
+    "Text": "Hack the display to fake arrival.",
+    "Requires": [
+     "stat:Intellect.Logic>=3"
+    ],
+    "Tags": {
+     "cunning": 1,
+     "chaos": 0.5
+    },
+    "StatDeltas": {
+     "Intellect.Logic": 0.5,
+     "Cunning.Systems": 1
+    },
+    "SetFlags": [
+     "y1_station_spoof"
+    ],
+    "Next": "None"
+   }
+  ]
+ }
+]

@@ -33,3 +33,6 @@ UnrealEngine/
 .env
 *.key
 ThirdParty/Piper/
+Content/Characters/
+Content/Input/
+Content/LevelPrototyping/

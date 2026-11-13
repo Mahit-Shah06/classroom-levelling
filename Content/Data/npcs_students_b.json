@@ -39,7 +39,8 @@
    "chaos": 0.3
   },
   "Perception": 0.72,
-  "Patience": 6.5
+  "Patience": 6.5,
+  "Gender": "f"
  },
  {
   "Id": "stu_alamin",
@@ -80,7 +81,8 @@
    "obedience": -0.1
   },
   "Perception": 0.58,
-  "Patience": 11.0
+  "Patience": 11.0,
+  "Gender": "m"
  },
  {
   "Id": "stu_zhou",
@@ -122,7 +124,8 @@
    "empathy": 0.2
   },
   "Perception": 0.81,
-  "Patience": 14.0
+  "Patience": 14.0,
+  "Gender": "f"
  },
  {
   "Id": "stu_grant",
@@ -164,7 +167,8 @@
    "honesty": 0.6
   },
   "Perception": 0.44,
-  "Patience": 4.5
+  "Patience": 4.5,
+  "Gender": "m"
  },
  {
   "Id": "stu_bello",
@@ -206,7 +210,8 @@
    "withdrawal": -0.5
   },
   "Perception": 0.66,
-  "Patience": 9.0
+  "Patience": 9.0,
+  "Gender": "f"
  },
  {
   "Id": "stu_lund",
@@ -247,7 +252,8 @@
    "withdrawal": 0.3
   },
   "Perception": 0.77,
-  "Patience": 12.5
+  "Patience": 12.5,
+  "Gender": "m"
  },
  {
   "Id": "stu_dubois",
@@ -289,7 +295,8 @@
    "cruelty": -0.5
   },
   "Perception": 0.63,
-  "Patience": 10.0
+  "Patience": 10.0,
+  "Gender": "f"
  },
  {
   "Id": "stu_park",
@@ -331,7 +338,8 @@
    "empathy": 0.0
   },
   "Perception": 0.88,
-  "Patience": 7.5
+  "Patience": 7.5,
+  "Gender": "m"
  },
  {
   "Id": "stu_petrova",
@@ -374,7 +382,8 @@
    "loyalty": 0.4
   },
   "Perception": 0.71,
-  "Patience": 13.0
+  "Patience": 13.0,
+  "Gender": "f"
  },
  {
   "Id": "stu_brooks",
@@ -417,7 +426,8 @@
    "betrayal": -0.1
   },
   "Perception": 0.35,
-  "Patience": 5.0
+  "Patience": 5.0,
+  "Gender": "m"
  },
  {
   "Id": "stu_siddiqui",
@@ -459,7 +469,8 @@
    "withdrawal": 0.2
   },
   "Perception": 0.54,
-  "Patience": 4.0
+  "Patience": 4.0,
+  "Gender": "f"
  },
  {
   "Id": "stu_novak",
@@ -503,6 +514,7 @@
    "chaos": 0.1
   },
   "Perception": 0.92,
-  "Patience": 8.0
+  "Patience": 8.0,
+  "Gender": "m"
  }
 ]

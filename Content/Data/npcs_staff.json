@@ -41,7 +41,8 @@
    "humor": -0.4
   },
   "Perception": 0.9,
-  "Patience": 5.5
+  "Patience": 5.5,
+  "Gender": "f"
  },
  {
   "Id": "staff_haugen",
@@ -85,11 +86,12 @@
    "humor": 0.4
   },
   "Perception": 0.7,
-  "Patience": 10.0
+  "Patience": 10.0,
+  "Gender": "f"
  },
  {
   "Id": "staff_venkatesh",
-  "Name": "Priya Venkatesh",
+  "Name": "Arjun Venkatesh",
   "Kind": "teacher",
   "Voice": "481",
   "RoleFit": [
@@ -129,11 +131,12 @@
    "humor": -0.55
   },
   "Perception": 0.95,
-  "Patience": 4.0
+  "Patience": 4.0,
+  "Gender": "m"
  },
  {
   "Id": "staff_delgado",
-  "Name": "Carmen Delgado",
+  "Name": "Rafael Delgado",
   "Kind": "staff",
   "Voice": "112",
   "RoleFit": [
@@ -173,7 +176,8 @@
    "humor": 0.55
   },
   "Perception": 0.75,
-  "Patience": 12.0
+  "Patience": 12.0,
+  "Gender": "m"
  },
  {
   "Id": "staff_raukawa",
@@ -217,11 +221,12 @@
    "humor": 0.7
   },
   "Perception": 0.55,
-  "Patience": 7.0
+  "Patience": 7.0,
+  "Gender": "m"
  },
  {
   "Id": "staff_rashid",
-  "Name": "Layla Al-Rashid",
+  "Name": "Omar Al-Rashid",
   "Kind": "staff",
   "Voice": "337",
   "RoleFit": [
@@ -261,7 +266,8 @@
    "humor": 0.35
   },
   "Perception": 0.88,
-  "Patience": 14.0
+  "Patience": 14.0,
+  "Gender": "m"
  },
  {
   "Id": "staff_seo",
@@ -306,6 +312,7 @@
    "humor": 0.2
   },
   "Perception": 0.8,
-  "Patience": 6.5
+  "Patience": 6.5,
+  "Gender": "f"
  }
 ]

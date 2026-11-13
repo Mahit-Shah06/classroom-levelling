@@ -1,5 +1,6 @@
 #include "HubWorld.h"
 #include "NPCStandIn.h"
+#include "UI/GamePrefs.h"
 #include "Narrative/NarrativeSubsystem.h"
 #include "Narrative/StoryPlayerComponent.h"
 #include "Components/InstancedStaticMeshComponent.h"
@@ -139,16 +140,56 @@ void AHubWorld::AddArea(FName Name, const FVector& Center, const FVector2D& Size
 // X = north. Gate (south) -> courtyard -> main building (corridor + rooms). Cafeteria east, rooftop tower west.
 void AHubWorld::Build()
 {
-	Box(1, FVector(4000, 0, -10), FVector(16000, 16000, 20)); // ground
+	FRandomStream R(1337); // deterministic campus
+	Box(1, FVector(2000, 0, -10), FVector(40000, 40000, 20)); // ground
 
-	// Gate: pillars + arch + fence line
+	// ---- Outside: street, sidewalk, bus stop ("station"), city skyline ----
+	Box(3, FVector(-3000, 0, 1), FVector(1400, 40000, 2));                       // road
+	for (int32 i = -20; i <= 20; ++i) Box(0, FVector(-3000, i * 1000.f, 3), FVector(30, 400, 2)); // lane marks
+	Box(0, FVector(-1600, 0, 8), FVector(1200, 40000, 16));                      // sidewalk
+	Box(2, FVector(-2050, 1500, 260), FVector(400, 900, 20)); Box(2, FVector(-1900, 1500, 130), FVector(20, 900, 260)); // shelter
+	Box(1, FVector(-2050, 1500, 50), FVector(120, 700, 20)); Cyl(3, FVector(-2200, 2100, 0), 20, 300); Box(0, FVector(-2200, 2100, 300), FVector(10, 160, 80)); // bench + sign
+	AddArea("station", FVector(-1700, 1500, 16), FVector2D(1400, 2000));
+	for (int32 i = 0; i < 70; ++i) // skyline beyond the road and around the campus
+	{
+		const float Hh = R.FRandRange(1200.f, 7000.f);
+		FVector P;
+		switch (i % 4)
+		{
+		case 0: case 1: P = FVector(R.FRandRange(-12000.f, -5000.f), R.FRandRange(-18000.f, 18000.f), 0); break;
+		case 2: P = FVector(R.FRandRange(-3000.f, 19000.f), (R.FRand() < 0.5f ? -1.f : 1.f) * R.FRandRange(14500.f, 19000.f), 0); break;
+		default: P = FVector(R.FRandRange(17500.f, 22000.f), R.FRandRange(-16000.f, 16000.f), 0);
+		}
+		Box(R.FRand() < 0.6f ? 3 : 2, P + FVector(0, 0, Hh * 0.5f), FVector(R.FRandRange(900.f, 2200.f), R.FRandRange(900.f, 2200.f), Hh));
+	}
+
+	// ---- Perimeter wall + gate ----
+	const float WallH = 300.f;
+	Box(2, FVector(0, -6300, WallH * 0.5f), FVector(60, 11500, WallH)); Box(2, FVector(0, 6300, WallH * 0.5f), FVector(60, 11500, WallH));
+	Box(2, FVector(7500, -12050, WallH * 0.5f), FVector(15000, 60, WallH)); Box(2, FVector(7500, 12050, WallH * 0.5f), FVector(15000, 60, WallH));
+	Box(2, FVector(15000, 0, WallH * 0.5f), FVector(60, 24160, WallH));
 	Cyl(3, FVector(0, -450, 0), 120, 500); Cyl(3, FVector(0, 450, 0), 120, 500);
 	Box(3, FVector(0, 0, 540), FVector(140, 1100, 80));
-	for (int32 i = -1; i <= 1; i += 2) Box(2, FVector(0, i * 3800, 120), FVector(40, 6600, 240));
+	Box(0, FVector(0, 0, 640), FVector(40, 900, 120)); // crest plate
 	AddArea("gate", FVector(300, 0, 0), FVector2D(1400, 1400));
 
-	// Courtyard: paths, trees, benches, fountain
-	Box(0, FVector(2500, 0, 2), FVector(3600, 500, 4));
+	// ---- Paths ----
+	Box(0, FVector(2300, 0, 2), FVector(4600, 500, 4));         // gate -> main building
+	Box(0, FVector(4600, 0, 2), FVector(400, 22000, 4));        // east-west spine in front of the main building
+	Box(0, FVector(6500, 8000, 2), FVector(13000, 400, 4));     // east avenue (store, library, gym)
+	Box(0, FVector(6500, -8500, 2), FVector(13000, 400, 4));    // west avenue (garden, dorm, field)
+	Box(0, FVector(9500, 0, 2), FVector(400, 22000, 4));        // back path behind the main building
+	for (int32 i = 0; i < 14; ++i) // trees + lamps along the avenues
+	{
+		const float X = 800 + i * 900.f;
+		for (const float Y : { 7600.f, 8400.f, -8100.f, -8900.f })
+		{
+			if ((i + (int32)Y) % 2) { Cyl(3, FVector(X, Y + FMath::Sign(Y) * 150.f, 0), 40, 300); Spheres[0]->AddInstance(FTransform(FRotator::ZeroRotator, FVector(X, Y + FMath::Sign(Y) * 150.f, 390), FVector(2.2f)), true); }
+			else { Cyl(3, FVector(X, Y, 0), 16, 420); Spheres[0]->AddInstance(FTransform(FRotator::ZeroRotator, FVector(X, Y, 430), FVector(0.35f)), true); }
+		}
+	}
+
+	// ---- Courtyard ----
 	Cyl(0, FVector(2600, 0, 0), 600, 60); Cyl(1, FVector(2600, 0, 60), 120, 160);
 	for (int32 i = 0; i < 8; ++i)
 	{
@@ -158,21 +199,22 @@ void AHubWorld::Build()
 	}
 	AddArea("courtyard", FVector(2600, 900, 0), FVector2D(3000, 2600));
 
-	// Main building: corridor along Y with rooms north of it.
+	// ---- Main building: corridor + hall, classroom, office ----
 	const float H = 420.f;
 	Box(2, FVector(5300, 0, 5), FVector(700, 7600, 10));
-	Box(0, FVector(4950, -2400, H * 0.5f), FVector(30, 2800, H)); Box(0, FVector(4950, 2400, H * 0.5f), FVector(30, 2800, H)); // facade w/ entrance gap
+	Box(0, FVector(4950, -2400, H * 0.5f), FVector(30, 2800, H)); Box(0, FVector(4950, 2400, H * 0.5f), FVector(30, 2800, H));
 	Box(3, FVector(4950, 0, H - 40), FVector(30, 2000, 80));
 	for (int32 i = -5; i <= 5; ++i) if (FMath::Abs(i) > 1) Box(1, FVector(5000, i * 640.f, 100), FVector(50, 300, 200)); // lockers
+	for (int32 i = -3; i <= 3; ++i) Box(3, FVector(4935, i * 1000.f + 500.f, 260), FVector(10, 500, 140)); // facade windows
 	AddArea("corridor", FVector(5300, -1600, 0), FVector2D(600, 3000));
 
 	Room(FVector(6900, -2700, 0), FVector2D(2600, 2200), H + 100, 0); // hall
-	Box(3, FVector(7900, -2700, 50), FVector(500, 1600, 100)); Box(1, FVector(7750, -2700, 160), FVector(80, 160, 120)); // stage + podium
-	for (int32 r = 0; r < 5; ++r) for (int32 c = 0; c < 8; ++c) Box(2, FVector(6100 + r * 175.f, -3500 + c * 220.f, 45), FVector(80, 80, 90)); // seats
+	Box(3, FVector(7900, -2700, 50), FVector(500, 1600, 100)); Box(1, FVector(7750, -2700, 160), FVector(80, 160, 120));
+	for (int32 r = 0; r < 5; ++r) for (int32 c = 0; c < 8; ++c) Box(2, FVector(6100 + r * 175.f, -3500 + c * 220.f, 45), FVector(80, 80, 90));
 	AddArea("hall", FVector(7350, -2700, 0), FVector2D(1600, 1600));
 
 	Room(FVector(6600, 0, 0), FVector2D(2000, 1800), H, 0); // classroom
-	Box(3, FVector(7580, 0, 220), FVector(10, 1200, 260)); // chalkboard
+	Box(3, FVector(7580, 0, 220), FVector(10, 1200, 260));
 	for (int32 r = 0; r < 4; ++r) for (int32 c = 0; c < 5; ++c)
 	{
 		const FVector D(5850 + r * 240.f, -700 + c * 350.f, 0);
@@ -184,21 +226,70 @@ void AHubWorld::Build()
 	Box(3, FVector(7000, 2600, 40), FVector(200, 600, 80)); for (int32 i = 0; i < 4; ++i) Box(1, FVector(7500, 1900 + i * 450.f, 150), FVector(120, 400, 300));
 	AddArea("office", FVector(6400, 2600, 0), FVector2D(1400, 1400));
 
-	// Cafeteria pavilion (east): roof on pillars, tables
+	// ---- Cafeteria pavilion ----
 	Box(2, FVector(2600, 4200, 5), FVector(2600, 2200, 10));
 	for (int32 i = 0; i < 4; ++i) Cyl(0, FVector(1400 + (i % 2) * 2400.f, 3200 + (i / 2) * 2000.f, 0), 60, 450);
 	Box(0, FVector(2600, 4200, 470), FVector(2800, 2400, 40));
 	for (int32 r = 0; r < 3; ++r) for (int32 c = 0; c < 2; ++c) { const FVector T(1900 + r * 700.f, 3700 + c * 1000.f, 0); Box(0, T + FVector(0, 0, 75), FVector(500, 160, 10)); Box(3, T + FVector(0, 0, 35), FVector(460, 40, 70)); }
-	Box(3, FVector(3700, 5150, 110), FVector(120, 90, 220)); // vending machine
+	Box(3, FVector(3700, 5150, 110), FVector(120, 90, 220));
 	AddArea("cafeteria", FVector(2600, 4200, 0), FVector2D(2000, 1600));
 
-	// Rooftop (west tower): ramp up to a fenced platform
+	// ---- Rooftop tower ----
 	const FVector Top(2600, -4400, 600);
 	Box(1, Top - FVector(0, 0, 300), FVector(1800, 1800, 600));
-	for (int32 i = 0; i < 24; ++i) { const float Hh = (i + 1) * 25.f; Box(1, FVector(2600, -2540 - i * 40.f, Hh * 0.5f), FVector(400, 40, Hh)); } // stairs (25cm steps)
-	Box(0, Top + FVector(-900, 0, 60), FVector(20, 1800, 120)); Box(0, Top + FVector(900, 0, 60), FVector(20, 1800, 120)); Box(0, Top + FVector(0, -900, 60), FVector(1800, 20, 120)); // railings
-	Cyl(3, Top + FVector(500, -500, 0), 200, 250); // water tank
+	for (int32 i = 0; i < 24; ++i) { const float Hh = (i + 1) * 25.f; Box(1, FVector(2600, -2540 - i * 40.f, Hh * 0.5f), FVector(400, 40, Hh)); }
+	Box(0, Top + FVector(-900, 0, 60), FVector(20, 1800, 120)); Box(0, Top + FVector(900, 0, 60), FVector(20, 1800, 120)); Box(0, Top + FVector(0, -900, 60), FVector(1800, 20, 120));
+	Cyl(3, Top + FVector(500, -500, 0), 200, 250);
 	AddArea("rooftop", Top, FVector2D(1400, 1400));
+
+	// ---- Convenience store (east, by the gate) ----
+	Room(FVector(1600, 9600, 0), FVector2D(1600, 1400), 360, 2);
+	for (int32 i = 0; i < 3; ++i) Box(1, FVector(1300 + i * 300.f, 9800, 90), FVector(80, 700, 180)); // shelves
+	Box(3, FVector(2200, 9200, 55), FVector(200, 500, 110)); Box(0, FVector(1600, 8890, 330), FVector(800, 20, 60)); // counter + sign
+	AddArea("store", FVector(1600, 9400, 0), FVector2D(1200, 1000));
+
+	// ---- Library (east) ----
+	Room(FVector(5600, 9800, 0), FVector2D(2800, 2600), 520, 2);
+	for (int32 r = 0; r < 6; ++r) Box(3, FVector(4700 + r * 380.f, 10400, 130), FVector(60, 1200, 260)); // stacks
+	for (int32 t = 0; t < 3; ++t) { Box(0, FVector(4800 + t * 700.f, 9100, 75), FVector(400, 200, 10)); Box(2, FVector(4800 + t * 700.f, 9100, 37), FVector(360, 160, 74)); }
+	AddArea("library", FVector(5600, 9200, 0), FVector2D(2000, 1200));
+
+	// ---- Gym (north-east) ----
+	Room(FVector(11500, 6000, 0), FVector2D(4200, 3400), 700, 0);
+	Box(0, FVector(11500, 6000, 6), FVector(3000, 1800, 2)); // court lines
+	for (int32 s = -1; s <= 1; s += 2) { Cyl(3, FVector(11500 + s * 1650.f, 6000, 0), 20, 380); Box(0, FVector(11500 + s * 1600.f, 6000, 380), FVector(10, 180, 120)); }
+	for (int32 r = 0; r < 4; ++r) Box(2, FVector(11500, 7450 + r * 90.f, 30 + r * 60.f), FVector(3600, 90, 60 + r * 120.f)); // bleachers
+	AddArea("gym", FVector(10400, 6000, 0), FVector2D(1600, 2000));
+
+	// ---- Sports field + track (north-west) ----
+	Box(2, FVector(11500, -6000, 2), FVector(6400, 4400, 4));   // track
+	Box(1, FVector(11500, -6000, 4), FVector(5400, 3400, 4));   // infield
+	Box(0, FVector(11500, -6000, 6), FVector(20, 3400, 2));     // halfway line
+	for (int32 s = -1; s <= 1; s += 2) { Box(0, FVector(11500 + s * 2600.f, -6000, 120), FVector(40, 700, 240)); }
+	for (int32 r = 0; r < 3; ++r) Box(2, FVector(11500, -8450 - r * 90.f, 30 + r * 60.f), FVector(4000, 90, 60 + r * 120.f));
+	AddArea("field", FVector(10000, -6000, 4), FVector2D(2000, 2000));
+
+	// ---- Dorm (west) ----
+	Room(FVector(6000, -10000, 0), FVector2D(3200, 2600), 420, 3);
+	for (int32 i = 0; i < 6; ++i) { const float X = 4800 + i * 480.f; Box(0, FVector(X, -10700, 30), FVector(200, 400, 60)); Box(3, FVector(X, -10900, 70), FVector(200, 40, 140)); }
+	AddArea("dorm", FVector(6000, -9800, 0), FVector2D(2400, 1400));
+
+	// ---- Garden (south-west) ----
+	Cyl(3, FVector(2200, -9300, 0), 1200, 8); // pond
+	for (int32 i = 0; i < 10; ++i) { const float X = 900 + (i % 5) * 600.f, Y = -10600 + (i / 5) * 2600.f; Box(2, FVector(X, Y, 60), FVector(400, 120, 120)); } // hedges
+	for (int32 i = 0; i < 6; ++i) Cyl(1, FVector(3500 + (i % 2) * 400.f, -9800 + (i / 2) * 400.f, 0), 30, 280); // gazebo posts
+	Box(0, FVector(3700, -9400, 290), FVector(700, 1100, 30));
+	AddArea("garden", FVector(2400, -8900, 0), FVector2D(2400, 1600));
+
+	// Small props fade out with distance (low-spec).
+	for (auto* Arr : { &Cyls, &Spheres }) for (UInstancedStaticMeshComponent* C : *Arr) C->SetCullDistances(6000, 12000);
+}
+
+FName AHubWorld::AreaAt(const FVector& P) const
+{
+	for (const FHubArea& A : Areas)
+		if (FMath::Abs(P.X - A.Center.X) < A.Size.X && FMath::Abs(P.Y - A.Center.Y) < A.Size.Y) return A.Name;
+	return NAME_None;
 }
 
 FVector AHubWorld::PlayerSpawn() const { return FVector(-600, 0, 120); }
@@ -211,23 +302,32 @@ void AHubWorld::SpawnCast()
 {
 	UNarrativeSubsystem* N = GetGameInstance() ? GetGameInstance()->GetSubsystem<UNarrativeSubsystem>() : nullptr;
 	if (!N) return;
-	static const FName StudentAreas[] = { "courtyard", "corridor", "cafeteria", "courtyard", "classroom", "gate" };
+	static const FName StudentAreas[] = { "courtyard", "corridor", "cafeteria", "library", "field", "gym", "garden", "store", "classroom", "gate" };
+	static const FName StaffAreas[] = { "office", "hall", "library", "gym" };
+	FActorSpawnParameters SP; SP.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+	auto Spawn = [&](FName Id, const FString& Name, bool bStaff, bool bFemale, float Height, FName AreaName)
+	{
+		const FHubArea* A = Area(AreaName);
+		if (!A) return;
+		const FVector P = A->Center + FVector(FMath::FRandRange(-0.35f, 0.35f) * A->Size.X, FMath::FRandRange(-0.35f, 0.35f) * A->Size.Y, 110);
+		if (ANPCStandIn* S = GetWorld()->SpawnActor<ANPCStandIn>(P, FRotator(0, FMath::FRandRange(0.f, 360.f), 0), SP))
+		{
+			S->Init(Id, Name, bStaff, bFemale, Height, A->Center, A->Size);
+			if (!Id.IsNone()) Actors.Add(Id, S);
+		}
+	};
 	int32 i = 0;
 	for (const auto& KV : N->NPCs)
 	{
 		const bool bStaff = KV.Value.Kind != TEXT("student");
-		const FHubArea* A = Area(bStaff ? FName(i % 2 ? "office" : "hall") : StudentAreas[i % UE_ARRAY_COUNT(StudentAreas)]);
-		if (!A) continue;
-		const FVector P = A->Center + FVector(FMath::FRandRange(-A->Size.X, A->Size.X) * 0.35f, FMath::FRandRange(-A->Size.Y, A->Size.Y) * 0.35f, 0);
-		FActorSpawnParameters SP; SP.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-		if (ANPCStandIn* S = GetWorld()->SpawnActor<ANPCStandIn>(P, FRotator(0, FMath::FRandRange(0.f, 360.f), 0), SP))
-		{
-			const float Phys = KV.Value.Stats.General(EGeneralStat::Physique);
-			S->Init(KV.Key, KV.Value.Name.ToString(), bStaff, 165.f + FMath::Clamp(Phys, 0.f, 100.f) * 0.25f, A->Center, A->Size);
-			Actors.Add(KV.Key, S);
-		}
+		const float Phys = FMath::Clamp(KV.Value.Stats.General(EGeneralStat::Physique), 0.f, 100.f);
+		Spawn(KV.Key, KV.Value.Name.ToString(), bStaff, KV.Value.Gender == TEXT("f"), (KV.Value.Gender == TEXT("f") ? 165.f : 175.f) + Phys * 0.12f,
+			bStaff ? StaffAreas[i % UE_ARRAY_COUNT(StaffAreas)] : StudentAreas[i % UE_ARRAY_COUNT(StudentAreas)]);
 		++i;
 	}
+	// Unnamed background students so the campus feels alive.
+	for (int32 k = 0; k < 36; ++k)
+		Spawn(NAME_None, FString(), false, FMath::RandBool(), FMath::FRandRange(160.f, 188.f), StudentAreas[k % UE_ARRAY_COUNT(StudentAreas)]);
 }
 
 void AHubWorld::RefreshMarkers()
@@ -236,7 +336,7 @@ void AHubWorld::RefreshMarkers()
 	for (FHubArea& A : Areas)
 	{
 		A.bHasStory = N && N->Flags.Contains(TEXT("ceremony_done")) && N->FindStorylet(NAME_None, A.Name) != nullptr;
-		A.Marker->SetVisibility(A.bHasStory && !ANPCStandIn::bHideTags);
+		A.Marker->SetVisibility(A.bHasStory && !ANPCStandIn::bHideTags && FGamePrefs::Get().bMarkers);
 	}
 }
 
@@ -268,8 +368,10 @@ void AHubWorld::Tick(float Dt)
 	UStoryPlayerComponent* Story = PC ? PC->FindComponentByClass<UStoryPlayerComponent>() : nullptr;
 	const APawn* Pawn = PC ? PC->GetPawn() : nullptr;
 	if (!Story || !Pawn || Story->IsBusy()) return;
+	// Don't re-trigger the area you're standing in after a scene: re-arm once you walk away.
+	if (const FHubArea* L = Area(Rearm)) if (FVector::Dist2D(Pawn->GetActorLocation(), L->Center) > 700.f) Rearm = NAME_None;
 	for (const FHubArea& A : Areas)
-		if (A.bHasStory && FVector::Dist2D(Pawn->GetActorLocation(), A.Center) < 300.f && FMath::Abs(Pawn->GetActorLocation().Z - A.Center.Z) < 300.f)
+		if (A.bHasStory && A.Name != Rearm && FVector::Dist2D(Pawn->GetActorLocation(), A.Center) < 300.f && FMath::Abs(Pawn->GetActorLocation().Z - A.Center.Z) < 300.f)
 		{
 			Story->StartAt(A.Name);
 			break;
@@ -280,7 +382,20 @@ void AHubWorld::Tick(float Dt)
 void AHubWorld::Stage(FName Location, const TArray<FName>& NPCIds, APawn* Player)
 {
 	const FHubArea* A = Area(Location);
-	if (!A || !Player) return;
+	if (!Player) return;
+	if (!A) // in-place conversation (talk): freeze the speakers where they are and face each other
+	{
+		ANPCStandIn::bHideTags = true;
+		for (const FName& Id : NPCIds) if (ANPCStandIn* S = StandIn(Id))
+		{
+			S->SetStaged(true); S->FaceTowards(Player->GetActorLocation());
+			const FRotator Face = ((S->GetActorLocation() - Player->GetActorLocation()) * FVector(1, 1, 0)).Rotation();
+			Player->SetActorRotation(Face);
+			if (AController* C = Player->GetController()) C->SetControlRotation(Face);
+		}
+		PanLook = Player->GetActorLocation() + FVector(0, 0, 60);
+		return;
+	}
 	for (auto& KV : Actors) KV.Value->SetStaged(false);
 	ANPCStandIn::bHideTags = true;
 	const FVector Center = A->Center;
@@ -294,7 +409,7 @@ void AHubWorld::Stage(FName Location, const TArray<FName>& NPCIds, APawn* Player
 		const float Ang = (NPCIds.Num() == 1) ? 0.f : FMath::Lerp(-55.f, 55.f, i / float(NPCIds.Num() - 1));
 		const FVector Pos = Center + FRotator(0, Ang, 0).RotateVector(FVector(420, 0, 0)) - FVector(250, 0, 0);
 		S->SetStaged(true);
-		S->SetActorLocationAndRotation(FVector(Pos.X, Pos.Y, Center.Z), ((PPos - Pos) * FVector(1, 1, 0)).Rotation(), false, nullptr, ETeleportType::TeleportPhysics);
+		S->SetActorLocationAndRotation(FVector(Pos.X, Pos.Y, Center.Z + 95.f), ((PPos - Pos) * FVector(1, 1, 0)).Rotation(), false, nullptr, ETeleportType::TeleportPhysics);
 	}
 	PanLook = Center + FVector(0, 0, 150);
 }
@@ -326,6 +441,7 @@ void AHubWorld::EndCutscene(APlayerController* PC)
 {
 	bPan = false;
 	ANPCStandIn::bHideTags = false;
+	if (PC && PC->GetPawn()) Rearm = AreaAt(PC->GetPawn()->GetActorLocation());
 	for (auto& KV : Actors) { KV.Value->SetStaged(false); KV.Value->SetTalking(false); }
 	if (PC && PC->GetPawn()) PC->SetViewTargetWithBlend(PC->GetPawn(), 0.6f, VTBlend_EaseInOut, 2.f);
 }
@@ -338,4 +454,12 @@ void AHubWorld::MenuOrbit(APlayerController* PC, bool bOn)
 	if (!PC || !Cam) return;
 	if (bOn) PC->SetViewTarget(Cam);
 	else if (PC->GetPawn()) PC->SetViewTargetWithBlend(PC->GetPawn(), 1.0f, VTBlend_EaseInOut, 2.f);
+}
+
+ANPCStandIn* AHubWorld::NearestNamed(const FVector& P, float MaxDist) const
+{
+	ANPCStandIn* Best = nullptr; float BestD = MaxDist * MaxDist;
+	for (const auto& KV : Actors)
+		if (KV.Value) { const float D = FVector::DistSquared(KV.Value->GetActorLocation(), P); if (D < BestD) { BestD = D; Best = KV.Value; } }
+	return Best;
 }

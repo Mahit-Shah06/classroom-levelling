@@ -52,6 +52,7 @@ struct FNPCProfile
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FText Name;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FName Kind = "student"; // student | teacher | staff
 	UPROPERTY(BlueprintReadOnly) FName Role;                                  // rolled per run: rival, ally, gremlin, president, ex1, broker, bg
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) FName Gender = "m";        // m / f (picks Manny/Quinn body)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FString Voice;               // TTS voice id
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TArray<FName> RoleFit;       // roles this personality suits (empty = any)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FStatBlock Stats;

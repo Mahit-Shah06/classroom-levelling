@@ -65,6 +65,7 @@ protected:
 	void Move(const FInputActionValue& Value);
 
 	/** Called for looking input */
+	void LookMouse(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 
 public:

@@ -1,0 +1,1856 @@
+[
+ {
+  "Id": "talk_rank_whisper",
+  "Kind": "talk",
+  "Conditions": [],
+  "Priority": 12,
+  "bOnce": false,
+  "Slots": {
+   "npc": "talk_target"
+  },
+  "Location": "",
+  "Lines": [
+   {
+    "Speaker": "@npc",
+    "Text": "Heard the board refreshed overnight. Someone dropped twelve places and pretended it was a glitch.",
+    "Shot": "close"
+   }
+  ],
+  "PromptSpeaker": "@npc",
+  "Text": "You check your rank every morning, or do you like the surprise?",
+  "Choices": [
+   {
+    "Id": "check_daily",
+    "Text": "I check. Knowledge is armour.",
+    "Requires": [],
+    "Tags": {
+     "ambition": 1,
+     "cunning": 0.5
+    },
+    "StatDeltas": {
+     "Intellect.Analysis": 1,
+     "Reputation.Standing": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "ignore_board",
+    "Text": "Surprise keeps me honest.",
+    "Requires": [],
+    "Tags": {
+     "honesty": 1,
+     "withdrawal": 0.5
+    },
+    "StatDeltas": {
+     "Sanity.Composure": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "lie_about_rank",
+    "Text": "I never look. Promise.",
+    "Requires": [],
+    "Tags": {
+     "betrayal": 0.5,
+     "cunning": 1
+    },
+    "StatDeltas": {
+     "Cunning.Deceit": 2
+    },
+    "SetFlags": [],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "talk_points_debt",
+  "Kind": "talk",
+  "Conditions": [
+   "flag:system_awake"
+  ],
+  "Priority": 14,
+  "bOnce": false,
+  "Slots": {
+   "npc": "talk_target"
+  },
+  "Location": "",
+  "Lines": [
+   {
+    "Speaker": "@npc",
+    "Text": "School points feel like Monopoly money until you owe someone lunch for a week.",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "@npc",
+    "Text": "I saw a first-year trade three days of cafeteria credit for a rumour. Bad deal.",
+    "Shot": "close"
+   }
+  ],
+  "PromptSpeaker": "@npc",
+  "Text": "Would you sell points for a secret, or is that beneath you?",
+  "Choices": [
+   {
+    "Id": "sell_points",
+    "Text": "Secrets outrank lunch.",
+    "Requires": [],
+    "Tags": {
+     "cunning": 1,
+     "ambition": 0.5
+    },
+    "StatDeltas": {
+     "Cunning.Insight": 2,
+     "Funds.Budget": -1
+    },
+    "SetFlags": [
+     "met_points_trader"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "keep_points",
+    "Text": "I eat. Rumours wait.",
+    "Requires": [],
+    "Tags": {
+     "loyalty": 0.5,
+     "honesty": 1
+    },
+    "StatDeltas": {
+     "Sanity.Focus": 1,
+     "Funds.Budget": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "talk_exam_panic",
+  "Kind": "talk",
+  "Conditions": [],
+  "Priority": 10,
+  "bOnce": false,
+  "Slots": {
+   "npc": "talk_target"
+  },
+  "Location": "",
+  "Lines": [
+   {
+    "Speaker": "@npc",
+    "Text": "Next exam briefing dropped in the app. Title alone made three people cry in the corridor.",
+    "Shot": "wide"
+   }
+  ],
+  "PromptSpeaker": "@npc",
+  "Text": "Are you studying, or praying the proctor softens?",
+  "Choices": [
+   {
+    "Id": "grind_study",
+    "Text": "Studying until my eyes melt.",
+    "Requires": [],
+    "Tags": {
+     "ambition": 1,
+     "obedience": 0.5
+    },
+    "StatDeltas": {
+     "Intellect.Memory": 2,
+     "Sanity.Focus": -1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "pray_soft",
+    "Text": "Praying. Softly. Loudly.",
+    "Requires": [],
+    "Tags": {
+     "humor": 1,
+     "withdrawal": 0.5
+    },
+    "StatDeltas": {
+     "Luck.Chance": 1,
+     "Charisma.Wit": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "sabotage_hint",
+    "Text": "I have... other plans.",
+    "Requires": [],
+    "Tags": {
+     "cunning": 1,
+     "betrayal": 0.5
+    },
+    "StatDeltas": {
+     "Cunning.Deceit": 1,
+     "Reputation.Notoriety": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "talk_app_glitch",
+  "Kind": "talk",
+  "Conditions": [
+   "flag:system_awake"
+  ],
+  "Priority": 15,
+  "bOnce": false,
+  "Slots": {
+   "npc": "talk_target"
+  },
+  "Location": "",
+  "Lines": [
+   {
+    "Speaker": "@npc",
+    "Text": "My evaluation app blinked a quest I never accepted. Then it vanished. Like it was testing if I screamed.",
+    "Shot": "close"
+   }
+  ],
+  "PromptSpeaker": "@npc",
+  "Text": "You ever feel the app is watching you watch it?",
+  "Choices": [
+   {
+    "Id": "app_watching",
+    "Text": "Always. I stare back.",
+    "Requires": [],
+    "Tags": {
+     "ambition": 0.5,
+     "cunning": 1
+    },
+    "StatDeltas": {
+     "Cunning.Insight": 1,
+     "Sanity.Composure": 1
+    },
+    "SetFlags": [
+     "flag_app_paranoia"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "app_ignore",
+    "Text": "It's just software. Chill.",
+    "Requires": [],
+    "Tags": {
+     "honesty": 1,
+     "obedience": 0.5
+    },
+    "StatDeltas": {
+     "Sanity.Focus": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "app_joke",
+    "Text": "I rate it one star daily.",
+    "Requires": [],
+    "Tags": {
+     "humor": 1,
+     "chaos": 0.5
+    },
+    "StatDeltas": {
+     "Charisma.Wit": 2
+    },
+    "SetFlags": [],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "talk_rival_rumour",
+  "Kind": "talk",
+  "Conditions": [
+   "uniq>0.4"
+  ],
+  "Priority": 16,
+  "bOnce": false,
+  "Slots": {
+   "npc": "talk_target"
+  },
+  "Location": "",
+  "Lines": [
+   {
+    "Speaker": "@npc",
+    "Text": "People say {rival} never sleeps. Just drills mock rankings in a dark room like a villain origin montage.",
+    "Shot": "pan"
+   }
+  ],
+  "PromptSpeaker": "@npc",
+  "Text": "You competing with {rival}, or avoiding them?",
+  "Choices": [
+   {
+    "Id": "compete_rival",
+    "Text": "Competing. Loudly.",
+    "Requires": [],
+    "Tags": {
+     "ambition": 1,
+     "cruelty": 0.5
+    },
+    "StatDeltas": {
+     "Reputation.Standing": 1,
+     "Physique.Stamina": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "avoid_rival",
+    "Text": "Avoiding. Wisely.",
+    "Requires": [],
+    "Tags": {
+     "withdrawal": 1,
+     "cunning": 0.5
+    },
+    "StatDeltas": {
+     "Cunning.Insight": 1,
+     "Sanity.Composure": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "talk_president_aura",
+  "Kind": "talk",
+  "Conditions": [],
+  "Priority": 11,
+  "bOnce": false,
+  "Slots": {
+   "npc": "talk_target"
+  },
+  "Location": "",
+  "Lines": [
+   {
+    "Speaker": "@npc",
+    "Text": "{president} walked past and the hallway parted like the sea owed them rent.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@npc",
+    "Text": "Council badge or not, that posture is a weapon.",
+    "Shot": "close"
+   }
+  ],
+  "PromptSpeaker": "@npc",
+  "Text": "Would you follow {president}, or trip them?",
+  "Choices": [
+   {
+    "Id": "follow_pres",
+    "Text": "Follow. Smart orbit.",
+    "Requires": [],
+    "Tags": {
+     "obedience": 1,
+     "ambition": 0.5
+    },
+    "StatDeltas": {
+     "Charisma.Presence": 1,
+     "Reputation.Standing": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "trip_pres",
+    "Text": "Trip. Softly. Artfully.",
+    "Requires": [],
+    "Tags": {
+     "chaos": 1,
+     "betrayal": 0.5
+    },
+    "StatDeltas": {
+     "Cunning.Deceit": 1,
+     "Luck.Chance": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "ignore_pres",
+    "Text": "Neither. I'm busy.",
+    "Requires": [],
+    "Tags": {
+     "withdrawal": 1,
+     "honesty": 0.5
+    },
+    "StatDeltas": {
+     "Sanity.Focus": 2
+    },
+    "SetFlags": [],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "talk_broker_shadow",
+  "Kind": "talk",
+  "Conditions": [
+   "rel:@npc>20"
+  ],
+  "Priority": 18,
+  "bOnce": false,
+  "Slots": {
+   "npc": "talk_target"
+  },
+  "Location": "",
+  "Lines": [
+   {
+    "Speaker": "@npc",
+    "Text": "If you need dirt, ask {broker}. They price smiles like stocks.",
+    "Shot": "over_shoulder"
+   }
+  ],
+  "PromptSpeaker": "@npc",
+  "Text": "Want me to introduce you to {broker}?",
+  "Choices": [
+   {
+    "Id": "meet_broker",
+    "Text": "Yes. Quietly.",
+    "Requires": [],
+    "Tags": {
+     "cunning": 1,
+     "ambition": 0.5
+    },
+    "StatDeltas": {
+     "Cunning.Insight": 2
+    },
+    "SetFlags": [
+     "met_broker_intro"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "refuse_broker",
+    "Text": "No. Too shady.",
+    "Requires": [],
+    "Tags": {
+     "honesty": 1,
+     "loyalty": 0.5
+    },
+    "StatDeltas": {
+     "Reputation.Standing": 1,
+     "Sanity.Composure": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "talk_staff_homeroom",
+  "Kind": "talk",
+  "Conditions": [],
+  "Priority": 8,
+  "bOnce": false,
+  "Slots": {
+   "npc": "talk_target"
+  },
+  "Location": "",
+  "Lines": [
+   {
+    "Speaker": "@npc",
+    "Text": "Homeroom today was just attendance and a threat wrapped as encouragement. Classic.",
+    "Shot": "close"
+   }
+  ],
+  "PromptSpeaker": "@npc",
+  "Text": "You actually listen to staff speeches?",
+  "Choices": [
+   {
+    "Id": "listen_staff",
+    "Text": "Every word. Notes.",
+    "Requires": [],
+    "Tags": {
+     "obedience": 1,
+     "ambition": 0.5
+    },
+    "StatDeltas": {
+     "Intellect.Memory": 1,
+     "Reputation.Standing": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "zone_out",
+    "Text": "I invent better speeches.",
+    "Requires": [],
+    "Tags": {
+     "humor": 1,
+     "chaos": 0.5
+    },
+    "StatDeltas": {
+     "Charisma.Wit": 2,
+     "Sanity.Focus": -1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "talk_nurse_rumour",
+  "Kind": "talk",
+  "Conditions": [
+   "tag:chaos>=2"
+  ],
+  "Priority": 13,
+  "bOnce": false,
+  "Slots": {
+   "npc": "talk_target"
+  },
+  "Location": "",
+  "Lines": [
+   {
+    "Speaker": "@npc",
+    "Text": "Nurse's office ran out of ice packs after someone tried parkour off the stair rail 'for stats'.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "narrator",
+    "Text": "They glance at your shins like they expect a confession.",
+    "Shot": "close"
+   }
+  ],
+  "PromptSpeaker": "@npc",
+  "Text": "Was that you, or am I projecting?",
+  "Choices": [
+   {
+    "Id": "admit_chaos",
+    "Text": "Maybe. Legs still work.",
+    "Requires": [],
+    "Tags": {
+     "chaos": 1,
+     "humor": 0.5
+    },
+    "StatDeltas": {
+     "Physique.Stamina": 1,
+     "Reputation.Notoriety": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "deny_chaos",
+    "Text": "Absolutely not me.",
+    "Requires": [],
+    "Tags": {
+     "honesty": 0.5,
+     "cunning": 1
+    },
+    "StatDeltas": {
+     "Cunning.Deceit": 1,
+     "Sanity.Composure": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "blame_other",
+    "Text": "Blame {gremlin}. Always.",
+    "Requires": [],
+    "Tags": {
+     "betrayal": 1,
+     "humor": 0.5
+    },
+    "StatDeltas": {
+     "Charisma.Wit": 1,
+     "Cunning.Deceit": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "talk_existential_lunch",
+  "Kind": "talk",
+  "Conditions": [],
+  "Priority": 9,
+  "bOnce": false,
+  "Slots": {
+   "npc": "talk_target"
+  },
+  "Location": "",
+  "Lines": [
+   {
+    "Speaker": "@npc",
+    "Text": "If ranking is meaning, what happens when you hit number one and still feel hollow?",
+    "Shot": "close"
+   }
+  ],
+  "PromptSpeaker": "@npc",
+  "Text": "You here for purpose, or for winning?",
+  "Choices": [
+   {
+    "Id": "for_purpose",
+    "Text": "Purpose. Still searching.",
+    "Requires": [],
+    "Tags": {
+     "empathy": 1,
+     "honesty": 0.5
+    },
+    "StatDeltas": {
+     "Sanity.Focus": 1,
+     "Charisma.Presence": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "for_winning",
+    "Text": "Winning. Hollow is fine.",
+    "Requires": [],
+    "Tags": {
+     "ambition": 1,
+     "cruelty": 0.5
+    },
+    "StatDeltas": {
+     "Cunning.Insight": 1,
+     "Reputation.Standing": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "for_neither",
+    "Text": "Neither. Chaos buffet.",
+    "Requires": [],
+    "Tags": {
+     "chaos": 1,
+     "humor": 1
+    },
+    "StatDeltas": {
+     "Luck.Chance": 2
+    },
+    "SetFlags": [],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "talk_ally_favour",
+  "Kind": "talk",
+  "Conditions": [
+   "rel:@npc>20"
+  ],
+  "Priority": 17,
+  "bOnce": false,
+  "Slots": {
+   "npc": "talk_target"
+  },
+  "Location": "",
+  "Lines": [
+   {
+    "Speaker": "@npc",
+    "Text": "Can you cover for me in group work? I'll owe you a cafeteria seat that isn't cursed.",
+    "Shot": "close"
+   }
+  ],
+  "PromptSpeaker": "@npc",
+  "Text": "Small favour. You in?",
+  "Choices": [
+   {
+    "Id": "cover_yes",
+    "Text": "I got you.",
+    "Requires": [],
+    "Tags": {
+     "loyalty": 1,
+     "empathy": 0.5
+    },
+    "StatDeltas": {
+     "Charisma.Charm": 1,
+     "Reputation.Standing": 1
+    },
+    "SetFlags": [
+     "flag_owed_favour"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "cover_no",
+    "Text": "Can't risk my score.",
+    "Requires": [],
+    "Tags": {
+     "ambition": 1,
+     "withdrawal": 0.5
+    },
+    "StatDeltas": {
+     "Intellect.Logic": 1,
+     "Sanity.Composure": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "talk_hostile_glare",
+  "Kind": "talk",
+  "Conditions": [
+   "rel:@npc<-20"
+  ],
+  "Priority": 19,
+  "bOnce": false,
+  "Slots": {
+   "npc": "talk_target"
+  },
+  "Location": "",
+  "Lines": [
+   {
+    "Speaker": "@npc",
+    "Text": "Oh. You. The hallway suddenly smells like bad decisions.",
+    "Shot": "low"
+   }
+  ],
+  "PromptSpeaker": "@npc",
+  "Text": "Got something to say, or just lingering?",
+  "Choices": [
+   {
+    "Id": "apologize",
+    "Text": "Truce. For now.",
+    "Requires": [],
+    "Tags": {
+     "empathy": 1,
+     "honesty": 0.5
+    },
+    "StatDeltas": {
+     "Charisma.Charm": 1,
+     "Sanity.Composure": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "double_down",
+    "Text": "Lingering. Intentionally.",
+    "Requires": [],
+    "Tags": {
+     "cruelty": 1,
+     "ambition": 0.5
+    },
+    "StatDeltas": {
+     "Reputation.Notoriety": 2
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "walk_away",
+    "Text": "Never mind. Bye.",
+    "Requires": [],
+    "Tags": {
+     "withdrawal": 1
+    },
+    "StatDeltas": {
+     "Sanity.Focus": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "talk_cafeteria_stock",
+  "Kind": "talk",
+  "Conditions": [],
+  "Priority": 7,
+  "bOnce": false,
+  "Slots": {
+   "npc": "talk_target"
+  },
+  "Location": "",
+  "Lines": [
+   {
+    "Speaker": "@npc",
+    "Text": "Someone's hoarding curry tickets. The cafeteria is a black market with worse seasoning.",
+    "Shot": "wide"
+   }
+  ],
+  "PromptSpeaker": "@npc",
+  "Text": "Invest in noodles or in information?",
+  "Choices": [
+   {
+    "Id": "invest_noodles",
+    "Text": "Noodles. Always.",
+    "Requires": [],
+    "Tags": {
+     "humor": 1,
+     "honesty": 0.5
+    },
+    "StatDeltas": {
+     "Funds.Budget": 1,
+     "Physique.Stamina": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "invest_info",
+    "Text": "Information. Spicy.",
+    "Requires": [],
+    "Tags": {
+     "cunning": 1,
+     "ambition": 0.5
+    },
+    "StatDeltas": {
+     "Cunning.Insight": 2
+    },
+    "SetFlags": [],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "talk_ex1_fall",
+  "Kind": "talk",
+  "Conditions": [
+   "flag:system_awake",
+   "uniq>0.4"
+  ],
+  "Priority": 16,
+  "bOnce": false,
+  "Slots": {
+   "npc": "talk_target"
+  },
+  "Location": "",
+  "Lines": [
+   {
+    "Speaker": "@npc",
+    "Text": "{ex1} used to own the top slot. Now they sit in the back like a ghost with better grades than us.",
+    "Shot": "pan"
+   },
+   {
+    "Speaker": "@npc",
+    "Text": "Falling from number one looks contagious. People keep distance.",
+    "Shot": "close"
+   }
+  ],
+  "PromptSpeaker": "@npc",
+  "Text": "Pity {ex1}, or study their mistakes?",
+  "Choices": [
+   {
+    "Id": "pity_ex1",
+    "Text": "Pity. Softly.",
+    "Requires": [],
+    "Tags": {
+     "empathy": 1,
+     "loyalty": 0.5
+    },
+    "StatDeltas": {
+     "Charisma.Charm": 1,
+     "Sanity.Composure": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "study_ex1",
+    "Text": "Study every crack.",
+    "Requires": [],
+    "Tags": {
+     "cunning": 1,
+     "ambition": 1
+    },
+    "StatDeltas": {
+     "Intellect.Analysis": 2
+    },
+    "SetFlags": [
+     "flag_studied_ex1"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "mock_ex1",
+    "Text": "Mock. Quietly cruel.",
+    "Requires": [],
+    "Tags": {
+     "cruelty": 1,
+     "humor": 0.5
+    },
+    "StatDeltas": {
+     "Reputation.Notoriety": 1,
+     "Charisma.Wit": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "talk_gremlin_dare",
+  "Kind": "talk",
+  "Conditions": [
+   "tag:chaos>=2"
+  ],
+  "Priority": 14,
+  "bOnce": false,
+  "Slots": {
+   "npc": "talk_target"
+  },
+  "Location": "",
+  "Lines": [
+   {
+    "Speaker": "@npc",
+    "Text": "{gremlin} dared someone to swap nameplates on the staff lounge door. Chaos achieved. Detention pending.",
+    "Shot": "close"
+   }
+  ],
+  "PromptSpeaker": "@npc",
+  "Text": "You joining the next dare, or snitching?",
+  "Choices": [
+   {
+    "Id": "join_dare",
+    "Text": "Joining. Obviously.",
+    "Requires": [],
+    "Tags": {
+     "chaos": 1,
+     "loyalty": 0.5
+    },
+    "StatDeltas": {
+     "Luck.Chance": 1,
+     "Physique.Stamina": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "snitch_dare",
+    "Text": "Snitching. Softly.",
+    "Requires": [],
+    "Tags": {
+     "obedience": 1,
+     "betrayal": 0.5
+    },
+    "StatDeltas": {
+     "Reputation.Standing": 1,
+     "Cunning.Deceit": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "watch_dare",
+    "Text": "Watching. Popcorn mode.",
+    "Requires": [],
+    "Tags": {
+     "withdrawal": 1,
+     "humor": 0.5
+    },
+    "StatDeltas": {
+     "Sanity.Focus": 1,
+     "Charisma.Wit": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "talk_stat_flex",
+  "Kind": "talk",
+  "Conditions": [
+   "stat:Intellect>=30"
+  ],
+  "Priority": 12,
+  "bOnce": false,
+  "Slots": {
+   "npc": "talk_target"
+  },
+  "Location": "",
+  "Lines": [
+   {
+    "Speaker": "@npc",
+    "Text": "Your intellect score leaked in a group chat. Half the class wants tutoring. Half wants you gone.",
+    "Shot": "over_shoulder"
+   }
+  ],
+  "PromptSpeaker": "@npc",
+  "Text": "Tutor them, or weaponize the gap?",
+  "Choices": [
+   {
+    "Id": "tutor_class",
+    "Text": "Tutor. Build debt.",
+    "Requires": [],
+    "Tags": {
+     "empathy": 0.5,
+     "ambition": 1
+    },
+    "StatDeltas": {
+     "Charisma.Presence": 1,
+     "Intellect.Logic": 1
+    },
+    "SetFlags": [
+     "flag_tutoring"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "weaponize_gap",
+    "Text": "Weaponize. Quietly.",
+    "Requires": [],
+    "Tags": {
+     "cunning": 1,
+     "cruelty": 0.5
+    },
+    "StatDeltas": {
+     "Cunning.Insight": 2
+    },
+    "SetFlags": [],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "talk_physique_challenge",
+  "Kind": "talk",
+  "Conditions": [
+   "stat:Physique>=25"
+  ],
+  "Priority": 10,
+  "bOnce": false,
+  "Slots": {
+   "npc": "talk_target"
+  },
+  "Location": "",
+  "Lines": [
+   {
+    "Speaker": "@npc",
+    "Text": "Coach keeps eyeing you like you're a free sports festival battery.",
+    "Shot": "wide"
+   }
+  ],
+  "PromptSpeaker": "@npc",
+  "Text": "Volunteer for drills, or fake a limp?",
+  "Choices": [
+   {
+    "Id": "volunteer_drills",
+    "Text": "Volunteer. Sweat equity.",
+    "Requires": [],
+    "Tags": {
+     "ambition": 1,
+     "obedience": 0.5
+    },
+    "StatDeltas": {
+     "Physique.Strength": 2,
+     "Sanity.Focus": -1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "fake_limp",
+    "Text": "Limp. Oscar-worthy.",
+    "Requires": [],
+    "Tags": {
+     "cunning": 1,
+     "humor": 0.5
+    },
+    "StatDeltas": {
+     "Cunning.Deceit": 2
+    },
+    "SetFlags": [],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "talk_sanity_spiral",
+  "Kind": "talk",
+  "Conditions": [
+   "stat:Sanity<=40"
+  ],
+  "Priority": 15,
+  "bOnce": false,
+  "Slots": {
+   "npc": "talk_target"
+  },
+  "Location": "",
+  "Lines": [
+   {
+    "Speaker": "@npc",
+    "Text": "You look like the ranking board lives behind your eyelids. Blink twice if you need air.",
+    "Shot": "close"
+   }
+  ],
+  "PromptSpeaker": "@npc",
+  "Text": "Want a quiet walk, or darker jokes?",
+  "Choices": [
+   {
+    "Id": "quiet_walk",
+    "Text": "Walk. Please.",
+    "Requires": [],
+    "Tags": {
+     "empathy": 1,
+     "withdrawal": 0.5
+    },
+    "StatDeltas": {
+     "Sanity.Composure": 2
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "darker_jokes",
+    "Text": "Darker jokes. Now.",
+    "Requires": [],
+    "Tags": {
+     "humor": 1,
+     "chaos": 0.5
+    },
+    "StatDeltas": {
+     "Charisma.Wit": 1,
+     "Sanity.Focus": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "deny_spiral",
+    "Text": "I'm fine. Completely.",
+    "Requires": [],
+    "Tags": {
+     "honesty": 0.5,
+     "cunning": 1
+    },
+    "StatDeltas": {
+     "Cunning.Deceit": 1,
+     "Sanity.Composure": -1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "talk_funds_flex",
+  "Kind": "talk",
+  "Conditions": [
+   "stat:Funds>=20"
+  ],
+  "Priority": 11,
+  "bOnce": false,
+  "Slots": {
+   "npc": "talk_target"
+  },
+  "Location": "",
+  "Lines": [
+   {
+    "Speaker": "@npc",
+    "Text": "Rumour says points can become real money if you know which office to smile at.",
+    "Shot": "over_shoulder"
+   }
+  ],
+  "PromptSpeaker": "@npc",
+  "Text": "You buying influence, or saving for escape?",
+  "Choices": [
+   {
+    "Id": "buy_influence",
+    "Text": "Influence. Expensive.",
+    "Requires": [],
+    "Tags": {
+     "ambition": 1,
+     "cunning": 0.5
+    },
+    "StatDeltas": {
+     "Funds.Budget": -1,
+     "Reputation.Standing": 2
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "save_escape",
+    "Text": "Escape fund. Quiet.",
+    "Requires": [],
+    "Tags": {
+     "withdrawal": 1,
+     "cunning": 0.5
+    },
+    "StatDeltas": {
+     "Funds.Budget": 1,
+     "Luck.Chance": 1
+    },
+    "SetFlags": [
+     "flag_escape_fund"
+    ],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "talk_counsellor_hint",
+  "Kind": "talk",
+  "Conditions": [
+   "flag:system_awake"
+  ],
+  "Priority": 8,
+  "bOnce": false,
+  "Slots": {
+   "npc": "talk_target"
+  },
+  "Location": "",
+  "Lines": [
+   {
+    "Speaker": "@npc",
+    "Text": "Counsellor posters say 'talk about pressure'. The fine print says your chat may inform evaluations.",
+    "Shot": "close"
+   }
+  ],
+  "PromptSpeaker": "@npc",
+  "Text": "Would you ever book that office?",
+  "Choices": [
+   {
+    "Id": "book_office",
+    "Text": "Maybe. Carefully.",
+    "Requires": [],
+    "Tags": {
+     "honesty": 0.5,
+     "empathy": 1
+    },
+    "StatDeltas": {
+     "Sanity.Composure": 1,
+     "Charisma.Charm": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "never_book",
+    "Text": "Never. Trap door.",
+    "Requires": [],
+    "Tags": {
+     "cunning": 1,
+     "withdrawal": 0.5
+    },
+    "StatDeltas": {
+     "Cunning.Insight": 1,
+     "Sanity.Focus": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "talk_head_speech",
+  "Kind": "talk",
+  "Conditions": [],
+  "Priority": 6,
+  "bOnce": false,
+  "Slots": {
+   "npc": "talk_target"
+  },
+  "Location": "",
+  "Lines": [
+   {
+    "Speaker": "@npc",
+    "Text": "Ninety-nine percent placement rate. The missing one percent is a ghost story they tell in orientation.",
+    "Shot": "wide"
+   }
+  ],
+  "PromptSpeaker": "@npc",
+  "Text": "Believe the head, or fear the one percent?",
+  "Choices": [
+   {
+    "Id": "believe_head",
+    "Text": "Believe. Motivational.",
+    "Requires": [],
+    "Tags": {
+     "obedience": 1,
+     "ambition": 0.5
+    },
+    "StatDeltas": {
+     "Reputation.Standing": 1,
+     "Sanity.Focus": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "fear_one",
+    "Text": "Fear. Stay sharp.",
+    "Requires": [],
+    "Tags": {
+     "cunning": 1,
+     "withdrawal": 0.5
+    },
+    "StatDeltas": {
+     "Cunning.Insight": 1,
+     "Sanity.Composure": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "be_the_one",
+    "Text": "Be the one percent.",
+    "Requires": [],
+    "Tags": {
+     "chaos": 1,
+     "ambition": 1
+    },
+    "StatDeltas": {
+     "Luck.Chance": 1,
+     "Reputation.Notoriety": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "talk_proctor_myth",
+  "Kind": "talk",
+  "Conditions": [],
+  "Priority": 5,
+  "bOnce": false,
+  "Slots": {
+   "npc": "talk_target"
+  },
+  "Location": "",
+  "Lines": [
+   {
+    "Speaker": "@npc",
+    "Text": "Proctors don't blink during exams. Scientific fact. Or sleep deprivation. Same vibe.",
+    "Shot": "close"
+   }
+  ],
+  "PromptSpeaker": "@npc",
+  "Text": "Cheat-proof, or blink-proof?",
+  "Choices": [
+   {
+    "Id": "cheat_proof",
+    "Text": "Cheat-proof. Sadly.",
+    "Requires": [],
+    "Tags": {
+     "honesty": 1,
+     "obedience": 0.5
+    },
+    "StatDeltas": {
+     "Intellect.Logic": 1,
+     "Sanity.Focus": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "blink_proof",
+    "Text": "Blink-proof. Creepy.",
+    "Requires": [],
+    "Tags": {
+     "humor": 1,
+     "chaos": 0.5
+    },
+    "StatDeltas": {
+     "Charisma.Wit": 2
+    },
+    "SetFlags": [],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "talk_class_loyalty",
+  "Kind": "talk",
+  "Conditions": [
+   "rel:@npc>20"
+  ],
+  "Priority": 13,
+  "bOnce": false,
+  "Slots": {
+   "npc": "talk_target"
+  },
+  "Location": "",
+  "Lines": [
+   {
+    "Speaker": "@npc",
+    "Text": "Our class average dipped. Someone suggested throwing a weak link under the bus. Eyes wandered.",
+    "Shot": "over_shoulder"
+   }
+  ],
+  "PromptSpeaker": "@npc",
+  "Text": "Protect the weak link, or cut them?",
+  "Choices": [
+   {
+    "Id": "protect_link",
+    "Text": "Protect. We're a unit.",
+    "Requires": [],
+    "Tags": {
+     "loyalty": 1,
+     "empathy": 1
+    },
+    "StatDeltas": {
+     "Charisma.Presence": 1,
+     "Reputation.Standing": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "cut_link",
+    "Text": "Cut. Survival math.",
+    "Requires": [],
+    "Tags": {
+     "betrayal": 1,
+     "ambition": 0.5
+    },
+    "StatDeltas": {
+     "Cunning.Insight": 1,
+     "Reputation.Notoriety": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "talk_absurdist_roof",
+  "Kind": "talk",
+  "Conditions": [
+   "uniq>0.4"
+  ],
+  "Priority": 20,
+  "bOnce": false,
+  "Slots": {
+   "npc": "talk_target"
+  },
+  "Location": "",
+  "Lines": [
+   {
+    "Speaker": "@npc",
+    "Text": "What if the ranking is a fever dream and the real exam is who laughs first?",
+    "Shot": "low"
+   },
+   {
+    "Speaker": "@npc",
+    "Text": "I tried laughing at the board. It didn't update. Rude.",
+    "Shot": "close"
+   }
+  ],
+  "PromptSpeaker": "@npc",
+  "Text": "Join my nonsense cult, or report me?",
+  "Choices": [
+   {
+    "Id": "join_cult",
+    "Text": "Cult. Matching hats.",
+    "Requires": [],
+    "Tags": {
+     "chaos": 1,
+     "loyalty": 0.5,
+     "humor": 1
+    },
+    "StatDeltas": {
+     "Luck.Chance": 2,
+     "Charisma.Wit": 1
+    },
+    "SetFlags": [
+     "flag_nonsense_cult"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "report_cult",
+    "Text": "Reporting. Softly.",
+    "Requires": [],
+    "Tags": {
+     "obedience": 1,
+     "betrayal": 0.5
+    },
+    "StatDeltas": {
+     "Reputation.Standing": 1,
+     "Cunning.Deceit": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "stare_blank",
+    "Text": "...",
+    "Requires": [],
+    "Tags": {
+     "withdrawal": 1
+    },
+    "StatDeltas": {
+     "Sanity.Composure": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "talk_met_ally_check",
+  "Kind": "talk",
+  "Conditions": [
+   "flag:met_ally"
+  ],
+  "Priority": 9,
+  "bOnce": false,
+  "Slots": {
+   "npc": "talk_target"
+  },
+  "Location": "",
+  "Lines": [
+   {
+    "Speaker": "@npc",
+    "Text": "You're tight with {ally}, right? People notice who you sit with. The board notices too, somehow.",
+    "Shot": "close"
+   }
+  ],
+  "PromptSpeaker": "@npc",
+  "Text": "Is {ally} a friend, or a strategy?",
+  "Choices": [
+   {
+    "Id": "ally_friend",
+    "Text": "Friend. Full stop.",
+    "Requires": [],
+    "Tags": {
+     "loyalty": 1,
+     "honesty": 1
+    },
+    "StatDeltas": {
+     "Charisma.Charm": 1,
+     "Sanity.Focus": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "ally_strategy",
+    "Text": "Strategy. Don't tell.",
+    "Requires": [],
+    "Tags": {
+     "cunning": 1,
+     "betrayal": 0.5
+    },
+    "StatDeltas": {
+     "Cunning.Deceit": 2
+    },
+    "SetFlags": [],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "talk_rumour_chain",
+  "Kind": "talk",
+  "Conditions": [],
+  "Priority": 4,
+  "bOnce": false,
+  "Slots": {
+   "npc": "talk_target"
+  },
+  "Location": "",
+  "Lines": [
+   {
+    "Speaker": "@npc",
+    "Text": "I heard {broker} heard {president} heard {rival} failed a practice quiz. Source: vibes.",
+    "Shot": "pan"
+   }
+  ],
+  "PromptSpeaker": "@npc",
+  "Text": "Pass it on, or kill the chain?",
+  "Choices": [
+   {
+    "Id": "pass_rumour",
+    "Text": "Pass it. With flair.",
+    "Requires": [],
+    "Tags": {
+     "chaos": 1,
+     "cunning": 0.5
+    },
+    "StatDeltas": {
+     "Charisma.Wit": 1,
+     "Reputation.Notoriety": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "kill_rumour",
+    "Text": "Kill it. Dead end.",
+    "Requires": [],
+    "Tags": {
+     "honesty": 1,
+     "loyalty": 0.5
+    },
+    "StatDeltas": {
+     "Reputation.Standing": 1,
+     "Sanity.Composure": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "upgrade_rumour",
+    "Text": "Upgrade it. Wilder.",
+    "Requires": [],
+    "Tags": {
+     "chaos": 1,
+     "humor": 1,
+     "betrayal": 0.5
+    },
+    "StatDeltas": {
+     "Cunning.Deceit": 1,
+     "Luck.Chance": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "talk_small_errand",
+  "Kind": "talk",
+  "Conditions": [],
+  "Priority": 3,
+  "bOnce": false,
+  "Slots": {
+   "npc": "talk_target"
+  },
+  "Location": "",
+  "Lines": [
+   {
+    "Speaker": "@npc",
+    "Text": "If you're headed past the gate, grab me a spare stylus. Mine died mid-note. Tragic.",
+    "Shot": "close"
+   }
+  ],
+  "PromptSpeaker": "@npc",
+  "Text": "Fetch a stylus for me?",
+  "Choices": [
+   {
+    "Id": "fetch_yes",
+    "Text": "Sure. Easy favour.",
+    "Requires": [],
+    "Tags": {
+     "empathy": 1,
+     "loyalty": 0.5
+    },
+    "StatDeltas": {
+     "Charisma.Charm": 1,
+     "Physique.Stamina": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "fetch_no",
+    "Text": "Busy. Buy your own.",
+    "Requires": [],
+    "Tags": {
+     "withdrawal": 1,
+     "honesty": 0.5
+    },
+    "StatDeltas": {
+     "Sanity.Focus": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "fetch_trade",
+    "Text": "Stylus for a secret.",
+    "Requires": [],
+    "Tags": {
+     "cunning": 1,
+     "ambition": 0.5
+    },
+    "StatDeltas": {
+     "Cunning.Insight": 1,
+     "Funds.Budget": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "talk_night_study",
+  "Kind": "talk",
+  "Conditions": [
+   "flag:system_awake"
+  ],
+  "Priority": 7,
+  "bOnce": false,
+  "Slots": {
+   "npc": "talk_target"
+  },
+  "Location": "",
+  "Lines": [
+   {
+    "Speaker": "@npc",
+    "Text": "Library lights stay on until the app pings 'rest recommended'. Then it judges your dark circles.",
+    "Shot": "wide"
+   }
+  ],
+  "PromptSpeaker": "@npc",
+  "Text": "All-nighter tonight, or sleep like a coward?",
+  "Choices": [
+   {
+    "Id": "all_nighter",
+    "Text": "All-nighter. Glory.",
+    "Requires": [],
+    "Tags": {
+     "ambition": 1,
+     "obedience": 0.5
+    },
+    "StatDeltas": {
+     "Intellect.Memory": 2,
+     "Sanity.Composure": -1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "sleep_coward",
+    "Text": "Sleep. Proud coward.",
+    "Requires": [],
+    "Tags": {
+     "honesty": 1,
+     "humor": 0.5
+    },
+    "StatDeltas": {
+     "Sanity.Focus": 2,
+     "Physique.Stamina": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "talk_villain_vote",
+  "Kind": "talk",
+  "Conditions": [
+   "rel:@npc<-20"
+  ],
+  "Priority": 18,
+  "bOnce": false,
+  "Slots": {
+   "npc": "talk_target"
+  },
+  "Location": "",
+  "Lines": [
+   {
+    "Speaker": "@npc",
+    "Text": "Group chat named you as this week's unofficial villain. Congrats. Cake was not provided.",
+    "Shot": "close"
+   }
+  ],
+  "PromptSpeaker": "@npc",
+  "Text": "Own the title, or sue for defamation?",
+  "Choices": [
+   {
+    "Id": "own_villain",
+    "Text": "Own it. Capes later.",
+    "Requires": [],
+    "Tags": {
+     "cruelty": 1,
+     "ambition": 0.5,
+     "chaos": 0.5
+    },
+    "StatDeltas": {
+     "Reputation.Notoriety": 2
+    },
+    "SetFlags": [
+     "flag_week_villain"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "deny_villain",
+    "Text": "Defamation. Softly.",
+    "Requires": [],
+    "Tags": {
+     "honesty": 1,
+     "empathy": 0.5
+    },
+    "StatDeltas": {
+     "Charisma.Presence": 1,
+     "Reputation.Standing": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "talk_luck_coin",
+  "Kind": "talk",
+  "Conditions": [
+   "stat:Luck>=15"
+  ],
+  "Priority": 6,
+  "bOnce": false,
+  "Slots": {
+   "npc": "talk_target"
+  },
+  "Location": "",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "They flip a scratched coin that somehow always lands the way they want.",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@npc",
+    "Text": "Your luck score is weird. Do you bribe probability, or does it crush on you?",
+    "Shot": "over_shoulder"
+   }
+  ],
+  "PromptSpeaker": "@npc",
+  "Text": "Skill, luck, or staged miracles?",
+  "Choices": [
+   {
+    "Id": "claim_skill",
+    "Text": "Skill. Pure grind.",
+    "Requires": [],
+    "Tags": {
+     "ambition": 1,
+     "honesty": 0.5
+    },
+    "StatDeltas": {
+     "Intellect.Logic": 1,
+     "Reputation.Standing": 1
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "claim_luck",
+    "Text": "Luck. Don't ask.",
+    "Requires": [],
+    "Tags": {
+     "humor": 1,
+     "chaos": 0.5
+    },
+    "StatDeltas": {
+     "Luck.Chance": 2
+    },
+    "SetFlags": [],
+    "Next": "None"
+   },
+   {
+    "Id": "claim_staged",
+    "Text": "Staged. Obviously.",
+    "Requires": [],
+    "Tags": {
+     "cunning": 1,
+     "betrayal": 0.5
+    },
+    "StatDeltas": {
+     "Cunning.Deceit": 2
+    },
+    "SetFlags": [],
+    "Next": "None"
+   }
+  ]
+ }
+]

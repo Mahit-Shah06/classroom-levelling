@@ -3,6 +3,7 @@
 #include "VoiceSubsystem.h"
 #include "UI/GamePrefs.h"
 #include "World/HubWorld.h"
+#include "GameAudio.h"
 #include "Engine/GameInstance.h"
 #include "Engine/GameViewportClient.h"
 #include "Engine/Engine.h"
@@ -98,7 +99,7 @@ public:
 	{
 		Name->SetText(FText::FromString(Style == EStyle::System ? TEXT("EVAL // Notification") : Speaker));
 		Name->SetVisibility(Speaker.IsEmpty() && Style != EStyle::System ? EVisibility::Collapsed : EVisibility::Visible);
-		Body->SetFont(Font(Style == EStyle::Narrator ? "Italic" : "Regular", 20));
+		Body->SetFont(Font(Style == EStyle::Narrator ? "Italic" : "Regular", 16 + 4 * FMath::Clamp((int32)FGamePrefs::Get().TextSize, 0, 2)));
 		Body->SetColorAndOpacity(Style == EStyle::Narrator ? FLinearColor(0.72f, 0.72f, 0.72f) : FLinearColor(0.93f, 0.93f, 0.93f));
 		FullText = Text; Shown = 0; TypeAcc = 0.f;
 		Body->SetText(FText::GetEmpty());
@@ -261,6 +262,20 @@ void UStoryPlayerComponent::StartNext(FName Kind)
 	if (UNarrativeSubsystem* N = Narrative()) if (N->PickStorylet(Kind, NAME_None, S)) Begin(S);
 }
 
+void UStoryPlayerComponent::StartTalk(FName NPC)
+{
+	UNarrativeSubsystem* N = Narrative();
+	if (!N || NPC.IsNone()) return;
+	N->TalkTarget = NPC;
+	FStorylet S;
+	if (N->PickStorylet(TEXT("talk"), NAME_None, S))
+	{
+		// Talk happens where you stand: no relocation, just face each other.
+		S.Location = NAME_None;
+		Begin(S);
+	}
+}
+
 void UStoryPlayerComponent::StartAt(FName Location)
 {
 	FStorylet S;
@@ -308,6 +323,7 @@ bool UStoryPlayerComponent::Begin(const FStorylet& S)
 		Hub->Stage(Current.Location, Cast_, PC ? PC->GetPawn() : nullptr);
 	}
 	Window->SetLetterbox(true);
+	if (UGameAudio* Au = UGameAudio::Get(this)) Au->PlayMusic(this, Current.Kind == TEXT("exam") ? FName("music_tension") : FName("music_hub"));
 	Step = 0;
 	bResolved = false;
 	ShowStep();
@@ -392,6 +408,7 @@ void UStoryPlayerComponent::Choose(int32 Index)
 		Worst = FMath::Min(Worst, R.Delta);
 	}
 	Window->ShowToast(Out);
+	if (UGameAudio* Au = UGameAudio::Get(this)) { Au->PlaySfx(this, "choice_confirm"); Au->PlaySfx(this, "notify", 0.7f); }
 	Window->SetHesitation(0.f, false, false);
 	Window->SetContinue(TEXT("Continue"));
 	if (Worst <= -5.f) Shake(FMath::Clamp(-Worst / 15.f, 0.3f, 1.f));
@@ -406,8 +423,8 @@ void UStoryPlayerComponent::Continue()
 	if (!PendingNext.IsNone())
 	{
 		const FName Id = PendingNext; PendingNext = NAME_None;
-		if (const UNarrativeSubsystem* N = Narrative())
-			for (const FStorylet& S : N->Storylets) if (S.Id == Id) { const FStorylet Copy = S; StopVoice(); Begin(Copy); return; }
+		if (UNarrativeSubsystem* N = Narrative())
+			for (const FStorylet& S : N->Storylets) if (S.Id == Id) { const FStorylet Copy = S; N->MarkPlayed(Id); StopVoice(); Begin(Copy); return; }
 	}
 	Close();
 	// Mandatory follow-ups (e.g. homeroom right after the ceremony) play immediately.
@@ -423,6 +440,7 @@ void UStoryPlayerComponent::StopVoice()
 
 void UStoryPlayerComponent::Close()
 {
+	const bool bWasOpen = Window.IsValid();
 	if (Window.IsValid()) UE_LOG(LogStory, Log, TEXT("Close %s at step %d"), *Current.Id.ToString(), Step);
 	StopVoice();
 	if (Window.IsValid() && GEngine && GEngine->GameViewport) GEngine->GameViewport->RemoveViewportWidgetContent(Window.ToSharedRef());
@@ -433,13 +451,18 @@ void UStoryPlayerComponent::Close()
 	{
 		if (AHubWorld* Hub = AHubWorld::Get(this)) Hub->EndCutscene(Cast<APlayerController>(GetOwner()));
 		SetUIMode(false);
+		if (bWasOpen)
+		{
+			if (UGameAudio* Au = UGameAudio::Get(this)) Au->PlayMusic(this, "music_hub");
+			if (OnSceneEnded) OnSceneEnded();
+		}
 	}
 }
 
 void UStoryPlayerComponent::Shake(float Strength)
 {
 	ShakeT = 0.35f; ShakeAmp = 14.f * Strength;
-	if (APlayerController* PC = Cast<APlayerController>(GetOwner()))
+	if (APlayerController* PC = Cast<APlayerController>(GetOwner()); PC && FGamePrefs::Get().bVibration)
 	{
 		FLatentActionInfo Info;
 		PC->PlayDynamicForceFeedback(Strength, 0.3f, true, true, true, true, EDynamicForceFeedbackAction::Start, Info);
@@ -460,12 +483,20 @@ void UStoryPlayerComponent::TickComponent(float Dt, ELevelTick TickType, FActorC
 		{
 			bVoicePending = false;
 			V->bEnabled = FGamePrefs::Get().bVoice;
+			V->Volume = FGamePrefs::Get().Vol(FGamePrefs::Get().VoiceVol);
 			Voice = V->Play(this, VoicePaths[Step]);
 			if (Voice && StepSpeakers.IsValidIndex(Step))
 				if (AHubWorld* Hub = AHubWorld::Get(this)) Hub->SetTalking(StepSpeakers[Step], true);
 		}
 		else if (VoiceWait > 2.f) bVoicePending = false;
 	}
+	// Auto-advance narration lines once typed and voiced (+1.5 s), if enabled.
+	if (FGamePrefs::Get().bAutoAdvance && !bAwaitingChoice && Step < Current.Lines.Num() && !Window->IsTyping() && !bVoicePending && !Voice)
+	{
+		AutoT += Dt;
+		if (AutoT > 1.5f) { AutoT = 0.f; Continue(); return; }
+	}
+	else AutoT = 0.f;
 	if (Voice && !Voice->IsPlaying())
 	{
 		Voice = nullptr;
@@ -481,7 +512,7 @@ void UStoryPlayerComponent::TickComponent(float Dt, ELevelTick TickType, FActorC
 		const float Patience = FMath::Max(CachedPatience, 3.f);
 		const bool bLate = ChoiceTime > Patience;
 		Window->SetHesitation(FMath::Clamp(ChoiceTime / Patience, 0.f, 1.f), true, bLate);
-		if (bLate && !bWarnedHesitation) { bWarnedHesitation = true; Shake(0.25f); }
+		if (bLate && !bWarnedHesitation) { bWarnedHesitation = true; Shake(0.25f); if (UGameAudio* Au = UGameAudio::Get(this)) Au->PlaySfx(this, "hesitation"); }
 	}
 	if (ShakeT > 0.f)
 	{

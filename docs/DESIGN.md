@@ -123,3 +123,9 @@
 - Wanted: main menu, settings, cutscenes, a 3D school hub environment. Assets are generated in parallel (Tripo/Rodin) with a procedural blockout.
 - Content format: storylets have Location, Lines (cutscene dialogue: Speaker, Text, Shot) and PromptSpeaker + Text (the final prompt).
   Speakers: @rival/@ally/@gremlin/@president/@ex1/@broker, staff @head/@homeroom/@proctor/@nurse/@coach/@counsellor, "narrator" or "system" (app notification).
+
+## Round 2 requests (user, 2026-11-13)
+- Proper character models for students/teachers/player; huge free-roam campus; full menu with save/load and complete audio/graphics/controller settings; do work in parallel.
+- Player body: random each run (user unsure about tying it to stats). Default = 50/50 coin flip, seeded and saved. Easy to tie to stats later if wanted.
+- Campus areas: station (bus stop/road outside), gate, courtyard, main building (corridor, hall, classroom, office), cafeteria, rooftop, store, library, gym, sports field, dorm, garden.
+- Talk to any named NPC (E / X): "talk" storylets bound to that NPC (slot talk_target).

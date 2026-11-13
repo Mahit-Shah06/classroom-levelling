@@ -55,13 +55,32 @@ protected:
 	/** Returns true if the player should use UMG touch controls */
 	bool ShouldUseTouchControls() const;
 
-	// Title / pause menus
+	// Title / pause menus, saves, HUD, sprint, talk
+public:
 	void ShowMenu(bool bPause);
 	void HideMenu();
 	void NewGame();
 	void TogglePause();
+	void LoadGame(const FString& Slot);
+	void SaveGame(const FString& Slot);
+	void Autosave();
+	void ApplyPrefs();
+protected:
+	void EnterPlay();
+	void SprintDown(); void SprintUp();
+	void Interact();
+	void ApplyPlayerBody();
+	virtual void PlayerTick(float DeltaTime) override;
 	TSharedPtr<class SMainMenu> Menu;
-	bool bInGame = false;
+	TSharedPtr<class SGameHud> Hud;
+	bool bInGame = false, bSprinting = false;
+	float StepDist = 0.f, AreaT = 0.f, FpsAcc = 0.f; int32 FpsFrames = 0;
+	FName LastArea;
+	bool bAutoTune = false; float TuneT = 0.f; int32 TuneFrames = 0;
+public:
+	void AutoTuneTick();
+protected:
+	FVector PendingLoc; FRotator PendingRot; bool bPendingPlace = false;
 	virtual void EndPlay(const EEndPlayReason::Type Reason) override;
 
 };

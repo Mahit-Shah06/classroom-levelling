@@ -51,6 +51,16 @@ public:
 	// Distance of player behaviour from the built-in average profile (0 = typical).
 	UFUNCTION(BlueprintCallable) float Uniqueness() const;
 
+	// --- Run / save ---
+	UPROPERTY(BlueprintReadOnly) FName PlayerGender = "m";
+	UPROPERTY(BlueprintReadOnly) int32 RunSeed = 0;
+	float PlayTime = 0.f;
+	FName TalkTarget;
+	void MarkPlayed(FName Id) { Played.Add(Id); } // NPC the player walked up to (fills "talk_target" slots)
+	bool SaveSlot(const FString& Slot, const FVector& Loc, const FRotator& Rot, FName Area);
+	class UCLSaveGame* LoadSlot(const FString& Slot); // restores narrative state; caller places the player
+	static class UCLSaveGame* PeekSlot(const FString& Slot);
+
 private:
 	FName SelectNPC(FName Selector);
 	void RollRoles(TArray<FName>& Pool, const FName* Roles, int32 Count);

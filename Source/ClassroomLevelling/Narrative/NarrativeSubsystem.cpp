@@ -3,6 +3,8 @@
 #include "Misc/FileHelper.h"
 #include "Misc/Paths.h"
 #include "HAL/FileManager.h"
+#include "CLSaveGame.h"
+#include "Kismet/GameplayStatics.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogNarrative, Log, All);
 
@@ -91,6 +93,8 @@ void UNarrativeSubsystem::LoadContent()
 void UNarrativeSubsystem::NewRun(int32 Seed)
 {
 	Rng.Initialize(Seed);
+	RunSeed = Seed; PlayTime = 0.f;
+	PlayerGender = Rng.FRand() < 0.5f ? FName("f") : FName("m"); // random body each run
 	Player = FStatBlock(); Relationship.Reset(); Flags.Reset(); TagHistory.Reset(); Played.Reset(); SlotBindings.Reset();
 	RoleBindings.Reset();
 	for (auto& KV : NPCs) { Relationship.Add(KV.Key, 0.f); KV.Value.Role = TEXT("bg"); }
@@ -195,6 +199,7 @@ FName UNarrativeSubsystem::SelectNPC(FName Selector)
 		float BestV = -MAX_flt;
 		for (const auto& KV : Relationship) if (KV.Value * Sign > BestV) { BestV = KV.Value * Sign; Best = KV.Key; }
 	}
+	else if (S == TEXT("talk_target")) Best = TalkTarget;
 	else if (S.StartsWith(TEXT("role:")))
 	{
 		Best = RoleBindings.FindRef(FName(S.Mid(5)));
@@ -215,9 +220,11 @@ const FStorylet* UNarrativeSubsystem::FindStorylet(FName Kind, FName Location) c
 	{
 		if (!Kind.IsNone() && S.Kind != Kind) continue;
 		if (!Location.IsNone() && S.Location != Location) continue;
+		if (Kind.IsNone() && S.Kind == TEXT("talk")) continue; // talk only on demand
 		if (S.bOnce && Played.Contains(S.Id)) continue;
 		if (!CheckAll(S.Conditions)) continue;
-		const float Score = S.Priority + S.Conditions.Num() * 0.5f; // specific > generic
+		float Score = S.Priority + S.Conditions.Num() * 0.5f; // specific > generic
+		if (S.Kind == TEXT("talk")) Score += Rng.FRand() * 15.f; // variety in small talk
 		if (Score > BestScore) { BestScore = Score; Best = &S; }
 	}
 	return Best;
@@ -327,4 +334,33 @@ float UNarrativeSubsystem::Uniqueness() const
 		D2 += FMath::Square(P - A);
 	}
 	return FMath::Sqrt(D2); // 0..~1.4
+}
+
+bool UNarrativeSubsystem::SaveSlot(const FString& Slot, const FVector& Loc, const FRotator& Rot, FName Area)
+{
+	UCLSaveGame* G = Cast<UCLSaveGame>(UGameplayStatics::CreateSaveGameObject(UCLSaveGame::StaticClass()));
+	G->Saved = FDateTime::Now(); G->PlayTime = PlayTime; G->Area = Area;
+	G->PlayerLocation = Loc; G->PlayerRotation = Rot; G->PlayerGender = PlayerGender; G->Seed = RunSeed;
+	G->Player = Player; G->Relationship = Relationship; G->Flags = Flags; G->TagHistory = TagHistory;
+	G->RoleBindings = RoleBindings; G->Played = Played;
+	return UGameplayStatics::SaveGameToSlot(G, Slot, 0);
+}
+
+UCLSaveGame* UNarrativeSubsystem::PeekSlot(const FString& Slot)
+{
+	return UGameplayStatics::DoesSaveGameExist(Slot, 0) ? Cast<UCLSaveGame>(UGameplayStatics::LoadGameFromSlot(Slot, 0)) : nullptr;
+}
+
+UCLSaveGame* UNarrativeSubsystem::LoadSlot(const FString& Slot)
+{
+	UCLSaveGame* G = PeekSlot(Slot);
+	if (!G) return nullptr;
+	NewRun(G->Seed);
+	PlayTime = G->PlayTime; PlayerGender = G->PlayerGender;
+	Player = G->Player; Flags = G->Flags; TagHistory = G->TagHistory; Played = G->Played;
+	for (const auto& KV : G->Relationship) Relationship.Add(KV.Key, KV.Value);
+	RoleBindings.Reset();
+	for (auto& KV : NPCs) KV.Value.Role = TEXT("bg");
+	for (const auto& KV : G->RoleBindings) if (FNPCProfile* P = NPCs.Find(KV.Value)) { RoleBindings.Add(KV.Key, KV.Value); P->Role = KV.Key; }
+	return G;
 }

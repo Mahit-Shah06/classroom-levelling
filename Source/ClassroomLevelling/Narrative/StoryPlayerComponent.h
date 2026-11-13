@@ -21,6 +21,7 @@ public:
 
 	UFUNCTION(BlueprintCallable) void StartNext(FName Kind = NAME_None);
 	UFUNCTION(BlueprintCallable) void StartAt(FName Location);
+	UFUNCTION(BlueprintCallable) void StartTalk(FName NPC); // small talk with whoever you walked up to
 	UFUNCTION(BlueprintCallable) void Choose(int32 Index);
 	UFUNCTION(BlueprintCallable) void Continue();
 	UFUNCTION(BlueprintCallable) void Close();
@@ -29,6 +30,7 @@ public:
 	bool IsBusy() const { return Window.IsValid() || bBlocked; }
 	bool bBlocked = false;              // set while menus are open
 	TFunction<void()> OnPauseRequested; // Esc / Start inside a scene
+	TFunction<void()> OnSceneEnded;     // autosave hook
 	void SetHidden(bool bHide);
 
 protected:
@@ -55,6 +57,6 @@ private:
 	TArray<FName> CachedWitnesses;
 	UPROPERTY() TObjectPtr<UAudioComponent> Voice;
 	float CachedPatience = 10.f, ChoiceTime = 0.f, Grace = 0.f, VoiceWait = 0.f;
-	float ShakeT = 0.f, ShakeAmp = 0.f;
+	float ShakeT = 0.f, ShakeAmp = 0.f, AutoT = 0.f;
 	bool bAwaitingChoice = false, bWarnedHesitation = false, bResolved = false, bVoicePending = false;
 };

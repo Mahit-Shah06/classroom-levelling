@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ClassroomLevellingCharacter.h"
+#include "UI/GamePrefs.h"
 #include "Engine/LocalPlayer.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -61,7 +62,7 @@ void AClassroomLevellingCharacter::SetupPlayerInputComponent(UInputComponent* Pl
 
 		// Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AClassroomLevellingCharacter::Move);
-		EnhancedInputComponent->BindAction(MouseLookAction, ETriggerEvent::Triggered, this, &AClassroomLevellingCharacter::Look);
+		EnhancedInputComponent->BindAction(MouseLookAction, ETriggerEvent::Triggered, this, &AClassroomLevellingCharacter::LookMouse);
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AClassroomLevellingCharacter::Look);
@@ -81,8 +82,19 @@ void AClassroomLevellingCharacter::Move(const FInputActionValue& Value)
 	DoMove(MovementVector.X, MovementVector.Y);
 }
 
+void AClassroomLevellingCharacter::LookMouse(const FInputActionValue& Value)
+{
+	const FVector2D V = Value.Get<FVector2D>();
+	const FGamePrefs& P = FGamePrefs::Get();
+	DoLook(V.X * P.LookSens, V.Y * P.LookSens * (P.bInvertY ? -1.f : 1.f));
+}
+
 void AClassroomLevellingCharacter::Look(const FInputActionValue& Value)
 {
+	const FGamePrefs& P = FGamePrefs::Get();
+	const FVector2D V = Value.Get<FVector2D>();
+	DoLook(V.X * P.PadSens, V.Y * P.PadSens * (P.bInvertY ? -1.f : 1.f));
+	return;
 	// input is a Vector2D
 	FVector2D LookAxisVector = Value.Get<FVector2D>();
 

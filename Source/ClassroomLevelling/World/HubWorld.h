@@ -32,6 +32,8 @@ public:
 	static AHubWorld* Get(const UObject* WorldContext);
 
 	const FHubArea* Area(FName Name) const;
+	FName AreaAt(const FVector& P) const;
+	ANPCStandIn* NearestNamed(const FVector& P, float MaxDist) const;
 	FVector PlayerSpawn() const;
 
 	// Cutscenes: put speakers in an arc in front of the player at an area, then frame shots.
@@ -66,5 +68,6 @@ private:
 
 	float MarkerT = 0.f, OrbitT = 0.f, PanT = 0.f;
 	bool bOrbit = false, bPan = false;
+	FName Rearm;
 	FVector PanFrom, PanTo, PanLook;
 };
