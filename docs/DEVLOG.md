@@ -57,3 +57,5 @@ Newest last. Every session: append what was decided/done/blocked.
 - 2026-11-13: The user redeemed all three perks: Tripo, Rodin and Cursor. The $50 credit is Cursor/xAI Grok (not Groq), and the dashboard says it "applies to Cursor usage".
 - Keys go in .env (gitignored). Template in .env.example. The user writes the keys themselves, so they never go through chat.
 - Crash safety (16 threads, 30 GB RAM, 8 GB swap, systemd-oomd active): shader compiling now leaves 4 threads free (6 while in-game), and UBT runs at most 10 parallel compiles (~/.config/Unreal Engine/UnrealBuildTool/BuildConfiguration.xml). Temps are fine (GPU 54C, CPU 60C).
+- The $50 is Cursor-only credit, with no separate xAI API balance. There's no OpenAI key with credits either, so OpenAI-in-dev is dropped unless one turns up.
+- Plan: install the Cursor CLI (`agent -p`, headless) and offload bulk content writing to it (NPCs, storylines, exam text) so the Cursor credit gets used instead of the Claude credit. Tripo and Rodin APIs: script batch 3D asset generation. Rodin use also counts toward the $10k pool.
