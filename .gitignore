@@ -1,0 +1,34 @@
+# Unreal Engine
+Binaries/
+Build/
+DerivedDataCache/
+Intermediate/
+Saved/
+.vs/
+.idea/
+*.sln
+*.suo
+*.xcworkspace
+*.xcodeproj
+*.VC.db
+*.VC.opendb
+*.sdf
+*.opensdf
+*.user
+# Plugins' build output
+Plugins/*/Binaries/
+Plugins/*/Intermediate/
+# Generated for clangd/vim (regenerate locally)
+compile_commands.json
+.cache/
+.vscode/
+# Misc
+*.swp
+*~
+.DS_Store
+# Engine (never commit; install it outside the repo)
+UnrealEngine/
+
+# Secrets
+.env
+*.key
