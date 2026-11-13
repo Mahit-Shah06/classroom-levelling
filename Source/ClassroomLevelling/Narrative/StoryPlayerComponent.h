@@ -23,6 +23,7 @@ public:
 	UFUNCTION(BlueprintCallable) void Close();
 
 	UPROPERTY(EditAnywhere) bool bAutoStart = true;
+	bool IsAwaitingChoice() const { return bAwaitingChoice; }
 
 protected:
 	virtual void BeginPlay() override;

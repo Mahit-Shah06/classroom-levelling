@@ -61,6 +61,7 @@ public:
 		];
 	}
 
+	static const TCHAR* PadLabel(int32 i) { static const TCHAR* L[] = { TEXT("A"), TEXT("B"), TEXT("X"), TEXT("Y"), TEXT("-") }; return L[FMath::Clamp(i, 0, 4)]; }
 	static FSlateFontInfo Font(const char* Style, int32 Size) { return FCoreStyle::GetDefaultFontStyle(Style, Size); }
 
 	void Show(const FString& InHeader, const FString& InBody, const TArray<FString>& InChoices)
@@ -78,7 +79,7 @@ public:
 				SNew(SButton).ButtonColorAndOpacity(FLinearColor(0.08f, 0.08f, 0.08f, 1.f))
 				.OnClicked_Lambda([this, i]() { if (Owner.IsValid()) Owner->Choose(i); return FReply::Handled(); })
 				[ SNew(STextBlock).Font(Font("Regular", 16)).ColorAndOpacity(FLinearColor(0.92f, 0.92f, 0.92f))
-					.Text(FText::FromString(FString::Printf(TEXT("[%d]  %s"), i + 1, *InChoices[i]))) ]
+					.Text(FText::FromString(FString::Printf(TEXT("[%d / %s]  %s"), i + 1, PadLabel(i), *InChoices[i]))) ]
 			];
 		}
 	}
@@ -105,6 +106,10 @@ public:
 		const FKey K = E.GetKey();
 		static const FKey Nums[] = { EKeys::One, EKeys::Two, EKeys::Three, EKeys::Four, EKeys::Five };
 		for (int32 i = 0; i < 5; ++i) if (K == Nums[i]) { Owner->Choose(i); return FReply::Handled(); }
+		// Gamepad: A/B/X/Y = choices 1-4 (A also continues), Start = close.
+		static const FKey Pad[] = { EKeys::Gamepad_FaceButton_Bottom, EKeys::Gamepad_FaceButton_Right, EKeys::Gamepad_FaceButton_Left, EKeys::Gamepad_FaceButton_Top };
+		for (int32 i = 0; i < 4; ++i) if (K == Pad[i] && Shown >= FullText.Len() && Owner->IsAwaitingChoice()) { Owner->Choose(i); return FReply::Handled(); }
+		if (K == EKeys::Gamepad_Special_Right) { Owner->Close(); return FReply::Handled(); }
 		if (K == EKeys::SpaceBar || K == EKeys::Enter || K == EKeys::Gamepad_FaceButton_Bottom)
 		{
 			if (Shown < FullText.Len()) SkipTyping(); else Owner->Continue();

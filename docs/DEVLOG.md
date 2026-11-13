@@ -71,3 +71,4 @@ Newest last. Every session: append what was decided/done/blocked.
 - Implemented the random cast roll (NewRun), @role/@slot refs (Resolve), and Kind/Voice/RoleFit fields. Grok generated 24 students (2 files) plus 8 role-based Y1 storylets. Fixed duplicate ids and renamed Okabe (Steins;Gate) to avoid IP.
 - UStoryPlayerComponent (on the PlayerController): Slate System window with typewriter text, choices, hesitation bar, interpretation readout, UI shake and gamepad rumble. Pure C++, no binary UI assets.
 - Headless test (`UnrealEditor <uproject> -game -nullrhi`): "Loaded 24 NPCs, 8 storylets", map loads, no errors.
+- Gamepad: A/B/X/Y pick choices 1-4 (A also continues), Start closes. Added play.sh (standalone windowed launch).
