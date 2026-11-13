@@ -82,3 +82,21 @@
 - Timeline: 3 school years to graduation (scope for the jam build TBD).
 - Scope (user): all 3 years compressed. Each year = 2-3 exam chapters, with time-skips + stat buffs between. Build as much as possible.
 - Gameplay (user): hybrid. Third-person walkable campus hub with visible NPCs to approach and talk to (feel reference: Pokemon S/V school/overworld, NOT its content). Exams + story = cinematic 3D scenes with choice menus + System UI windows.
+
+## Exams + depth (user, 2026-11-13)
+- Draft exam list (9, 3 per year): Hot Seat, Group Project From Hell, Cafeteria Stock Market | Mock Trial, Chained Sports Festival, Council Election | Rumour Exam, Debt Exam, The Final Cut. Approved as a base.
+- Exams must be LONG. Off-script stunts (e.g. Kingmaker) need prerequisites: stat levels, decisions earlier in the chapter, allies in other classes, things acquired earlier. Going against the System needs something set up from the beginning.
+- Year 1 = existential arc: new students questioning life/purpose. Ignore it and bond with friends, build your own purpose, go nihilist, go absurdist, etc. This sets the trajectory: shadow, dropout (system too hard), too smart for the system, average rat-racer, or the best = System's puppet.
+- Hidden behaviour tracking: sympathy/empathy, how they react to each situation, how long they think. If they take too long, the System/NPCs get bored, smack them, or wonder what's up.
+- NPCs interpret the player through their own communication style -> misunderstandings.
+- Villainization: track who the player turns into the villain (the System, specific students, a whole class, their own class, teachers). Anything can happen.
+
+## Exams + depth (user, 2026-11-13)
+- Draft exam list (9, 3 per year): Hot Seat, Group Project From Hell, Cafeteria Stock Market | Mock Trial, Chained Sports Festival, Council Election | Rumour Exam, Debt Exam, The Final Cut. Approved as a base.
+- Exams must be LONG. Off-script stunts (e.g. Kingmaker) need prerequisites: stat levels, decisions earlier in the chapter, allies in other classes, things acquired earlier. Going against the System needs something set up from the beginning.
+- Exams adapt per player: eligibility can differ; the exam can change entirely because of past decisions; or the same exam is populated by past choices (e.g. Mock Trial accused = your best friend, your rival, or a random NPC who later proves useless, a plot-twist saviour, or the biggest enemy even after you saved them).
+- Outcomes depend on how each NPC INTERPRETS the player's decision: player personality + NPC personality + luck.
+- Year 1 = existential arc: new students questioning life/purpose. Ignore it and bond with friends, build your own purpose, go nihilist, go absurdist, etc. This sets the trajectory: shadow, dropout (system too hard), too smart for the system, average rat-racer, or the best = System's puppet.
+- Hidden behaviour tracking: sympathy/empathy, how they react, how long they think. If they take too long, the System/NPCs get bored, smack them, or wonder what's up.
+- NPCs interpret the player through their own communication style -> misunderstandings.
+- Villainization: track who the player turns into the villain (the System, specific students, a whole class, their own class, teachers).

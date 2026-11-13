@@ -49,3 +49,6 @@ Newest last. Every session: append what was decided/done/blocked.
 - Round 2 answers logged.
 - User approved: offline AI-authored content + local director; real-player comparison server last (free tier) if time; core loop first, then chapters.
 - UE 5.7.4 zip downloaded. Deps were already installed. Extracting to /media/.../UE/5.7.4 (background); zip auto-deleted from ~/Downloads on success.
+- Exam/depth design logged (adaptive exams, NPC interpretation, philosophy arc, hesitation tracking, villain target).
+- UE 5.7.4 extracted to /media/.../UE/5.7.4 (zip deleted). Created C++ project ClassroomLevelling from the TP_ThirdPerson template (renamed module + class redirects). The template files were read-only -> chmod u+w.
+- Build: `Engine/Build/BatchFiles/Linux/Build.sh ClassroomLevellingEditor Linux Development -Project=$PWD/ClassroomLevelling.uproject` -> Succeeded (2 min).
