@@ -1,0 +1,785 @@
+[
+ {
+  "Id": "y1_arrival_system_awaken",
+  "Kind": "system",
+  "Conditions": [
+   "!flag:system_awake"
+  ],
+  "Priority": 100.0,
+  "bOnce": true,
+  "Slots": {},
+  "Text": "Orientation ends. Your phone buzzes with no sender. A window blooms midair: SYSTEM ONLINE. Rank: unranked. Purpose: survive. Classmates freeze, then laugh—until the window reads their names too. A soft voice: Welcome. I will make you interesting. Choose how you greet the leash.",
+  "Choices": [
+   {
+    "Id": "arrival_obey",
+    "Text": "Tap ACCEPT before anyone else.",
+    "Requires": [],
+    "Tags": {
+     "obedience": 1.0,
+     "ambition": 0.4
+    },
+    "StatDeltas": {
+     "Intellect.Logic": 2.0,
+     "Sanity.Composure": -1.0,
+     "Reputation.Prestige": 1.0
+    },
+    "SetFlags": [
+     "system_awake",
+     "accepted_system",
+     "path_puppet_seed"
+    ],
+    "Next": "y1_meet_rival_kurose"
+   },
+   {
+    "Id": "arrival_probe",
+    "Text": "Ask who wrote the rules. Silence. Poke the UI seams.",
+    "Requires": [],
+    "Tags": {
+     "cunning": 1.0,
+     "honesty": 0.3
+    },
+    "StatDeltas": {
+     "Cunning.Observation": 3.0,
+     "Intellect.Analysis": 2.0,
+     "Luck.Timing": 1.0
+    },
+    "SetFlags": [
+     "system_awake",
+     "probed_system",
+     "path_director_seed"
+    ],
+    "Next": "y1_meet_rival_kurose"
+   },
+   {
+    "Id": "arrival_chaos",
+    "Text": "Screenshot it, flip the phone, yell FAKE NEWS.",
+    "Requires": [],
+    "Tags": {
+     "chaos": 1.0,
+     "humor": 0.8
+    },
+    "StatDeltas": {
+     "Charisma.Presence": 2.0,
+     "Sanity.Clarity": -2.0,
+     "Reputation.Fear": 1.0
+    },
+    "SetFlags": [
+     "system_awake",
+     "mocked_system",
+     "path_clown_seed"
+    ],
+    "Next": "y1_meet_rival_kurose"
+   },
+   {
+    "Id": "arrival_withdraw",
+    "Text": "Pocket the phone. Walk out mid-speech.",
+    "Requires": [],
+    "Tags": {
+     "withdrawal": 1.0,
+     "empathy": -0.2
+    },
+    "StatDeltas": {
+     "Sanity.Resilience": 2.0,
+     "Charisma.Charm": -2.0,
+     "Physique.Endurance": 1.0
+    },
+    "SetFlags": [
+     "system_awake",
+     "ignored_system",
+     "path_dropout_seed"
+    ],
+    "Next": "y1_meet_rival_kurose"
+   }
+  ]
+ },
+ {
+  "Id": "y1_meet_rival_kurose",
+  "Kind": "scene",
+  "Conditions": [
+   "flag:system_awake",
+   "!flag:met_rival_kurose"
+  ],
+  "Priority": 90.0,
+  "bOnce": true,
+  "Slots": {},
+  "Text": "Rooftop. Kurose leans on the fence like the city is already ranked. I saw your ACCEPT latency, he says—or your silence. Either way, you're a data point. He offers a handshake that feels like a wager. Wind steals words. He waits for a move, not a speech.",
+  "Choices": [
+   {
+    "Id": "rival_match",
+    "Text": "Match his grip. Hold eye contact too long.",
+    "Requires": [],
+    "Tags": {
+     "ambition": 1.0,
+     "loyalty": -0.2
+    },
+    "StatDeltas": {
+     "Charisma.Presence": 2.0,
+     "Physique.Strength": 1.0,
+     "Cunning.Tactics": 1.0
+    },
+    "SetFlags": [
+     "met_rival_kurose",
+     "rival_contested"
+    ],
+    "Next": "y1_meet_ally_hanazawa"
+   },
+   {
+    "Id": "rival_flatter",
+    "Text": "Bow slightly. Call him inevitable.",
+    "Requires": [
+     "!flag:mocked_system"
+    ],
+    "Tags": {
+     "obedience": 0.7,
+     "cunning": 0.5
+    },
+    "StatDeltas": {
+     "Charisma.Speech": 2.0,
+     "Reputation.Trust": -1.0,
+     "Cunning.Deceit": 2.0
+    },
+    "SetFlags": [
+     "met_rival_kurose",
+     "rival_underestimated"
+    ],
+    "Next": "y1_meet_ally_hanazawa"
+   },
+   {
+    "Id": "rival_betray_seed",
+    "Text": "Smile, then photograph his schedule board.",
+    "Requires": [
+     "stat:Cunning.Observation>=1"
+    ],
+    "Tags": {
+     "betrayal": 1.0,
+     "cunning": 0.8
+    },
+    "StatDeltas": {
+     "Cunning.Observation": 3.0,
+     "Reputation.Fear": 2.0,
+     "Sanity.Composure": -1.0
+    },
+    "SetFlags": [
+     "met_rival_kurose",
+     "rival_marked",
+     "stole_kurose_schedule"
+    ],
+    "Next": "y1_meet_ally_hanazawa"
+   },
+   {
+    "Id": "rival_absurd",
+    "Text": "Offer him a juice box labeled STRATEGY.",
+    "Requires": [],
+    "Tags": {
+     "chaos": 0.9,
+     "humor": 1.0
+    },
+    "StatDeltas": {
+     "Charisma.Charm": 3.0,
+     "Luck.Fortune": 2.0,
+     "Intellect.Logic": -1.0
+    },
+    "SetFlags": [
+     "met_rival_kurose",
+     "rival_confused"
+    ],
+    "Next": "y1_meet_ally_hanazawa"
+   }
+  ]
+ },
+ {
+  "Id": "y1_meet_ally_hanazawa",
+  "Kind": "scene",
+  "Conditions": [
+   "flag:met_rival_kurose",
+   "!flag:met_ally_hanazawa"
+  ],
+  "Priority": 85.0,
+  "bOnce": true,
+  "Slots": {},
+  "Text": "Library stairwell. Hanazawa blocks a collapsing stack of ethics textbooks with one arm and a joke about free will. You look lost in a useful way, they say. Need a map, or a co-conspirator who still believes in people? Their smile is soft. Dangerous soft.",
+  "Choices": [
+   {
+    "Id": "ally_accept",
+    "Text": "Take the map. Nod once. Stay close.",
+    "Requires": [],
+    "Tags": {
+     "loyalty": 1.0,
+     "empathy": 0.8
+    },
+    "StatDeltas": {
+     "Charisma.Charm": 2.0,
+     "Reputation.Trust": 3.0,
+     "Sanity.Clarity": 1.0
+    },
+    "SetFlags": [
+     "met_ally_hanazawa",
+     "ally_bonded",
+     "best_friend_hanazawa"
+    ],
+    "Next": "y1_meet_gremlin_shibata"
+   },
+   {
+    "Id": "ally_use",
+    "Text": "Ask who hates them. File names silently.",
+    "Requires": [],
+    "Tags": {
+     "cunning": 0.9,
+     "betrayal": 0.4,
+     "empathy": -0.3
+    },
+    "StatDeltas": {
+     "Cunning.Observation": 3.0,
+     "Reputation.Trust": -2.0,
+     "Intellect.Memory": 2.0
+    },
+    "SetFlags": [
+     "met_ally_hanazawa",
+     "ally_instrument"
+    ],
+    "Next": "y1_meet_gremlin_shibata"
+   },
+   {
+    "Id": "ally_honest",
+    "Text": "Show the System window. Wait for their face to change.",
+    "Requires": [
+     "flag:system_awake"
+    ],
+    "Tags": {
+     "honesty": 1.0,
+     "empathy": 0.5
+    },
+    "StatDeltas": {
+     "Sanity.Composure": -1.0,
+     "Reputation.Trust": 2.0,
+     "Charisma.Speech": 1.0
+    },
+    "SetFlags": [
+     "met_ally_hanazawa",
+     "ally_knows_system"
+    ],
+    "Next": "y1_meet_gremlin_shibata"
+   },
+   {
+    "Id": "ally_withdraw",
+    "Text": "Step past. Leave the books falling.",
+    "Requires": [],
+    "Tags": {
+     "withdrawal": 1.0,
+     "cruelty": 0.3
+    },
+    "StatDeltas": {
+     "Sanity.Resilience": 2.0,
+     "Charisma.Charm": -3.0,
+     "Physique.Agility": 1.0
+    },
+    "SetFlags": [
+     "met_ally_hanazawa",
+     "ally_spurned"
+    ],
+    "Next": "y1_meet_gremlin_shibata"
+   }
+  ]
+ },
+ {
+  "Id": "y1_meet_gremlin_shibata",
+  "Kind": "scene",
+  "Conditions": [
+   "flag:met_ally_hanazawa",
+   "!flag:met_gremlin_shibata"
+  ],
+  "Priority": 80.0,
+  "bOnce": true,
+  "Slots": {},
+  "Text": "Cafeteria. Shibata has duct-taped a ranking chart to a tray and is auctioning seats with rubber chickens. BET ON MADNESS, they shout. A teacher pretends not to see. Shibata points at you: Fresh meat. Pick a crime that looks like comedy.",
+  "Choices": [
+   {
+    "Id": "gremlin_join",
+    "Text": "Buy a chicken. Bid on the worst seat.",
+    "Requires": [],
+    "Tags": {
+     "chaos": 1.0,
+     "humor": 0.9
+    },
+    "StatDeltas": {
+     "Luck.Fortune": 3.0,
+     "Charisma.Presence": 2.0,
+     "Funds.Cash": -2.0
+    },
+    "SetFlags": [
+     "met_gremlin_shibata",
+     "gremlin_crew",
+     "path_clown_seed"
+    ],
+    "Next": "y1_meet_president_aizawa"
+   },
+   {
+    "Id": "gremlin_expose",
+    "Text": "Unplug the speaker. Point at the rulebook.",
+    "Requires": [
+     "flag:accepted_system"
+    ],
+    "Tags": {
+     "obedience": 0.8,
+     "honesty": 0.6
+    },
+    "StatDeltas": {
+     "Reputation.Prestige": 2.0,
+     "Charisma.Charm": -2.0,
+     "Intellect.Logic": 1.0
+    },
+    "SetFlags": [
+     "met_gremlin_shibata",
+     "gremlin_snitched"
+    ],
+    "Next": "y1_meet_president_aizawa"
+   },
+   {
+    "Id": "gremlin_steal_bit",
+    "Text": "Steal the auction gavel. Sell silence instead.",
+    "Requires": [
+     "stat:Cunning.Tactics>=1"
+    ],
+    "Tags": {
+     "cunning": 1.0,
+     "ambition": 0.5,
+     "chaos": 0.4
+    },
+    "StatDeltas": {
+     "Cunning.Tactics": 3.0,
+     "Funds.Cash": 2.0,
+     "Reputation.Fear": 1.0
+    },
+    "SetFlags": [
+     "met_gremlin_shibata",
+     "gremlin_outplayed"
+    ],
+    "Next": "y1_meet_president_aizawa"
+   },
+   {
+    "Id": "gremlin_cruel",
+    "Text": "Knock the tray. Watch chickens fly into soup.",
+    "Requires": [],
+    "Tags": {
+     "cruelty": 1.0,
+     "chaos": 0.6
+    },
+    "StatDeltas": {
+     "Physique.Strength": 2.0,
+     "Reputation.Fear": 3.0,
+     "Sanity.Clarity": -2.0
+    },
+    "SetFlags": [
+     "met_gremlin_shibata",
+     "gremlin_enemy"
+    ],
+    "Next": "y1_meet_president_aizawa"
+   }
+  ]
+ },
+ {
+  "Id": "y1_meet_president_aizawa",
+  "Kind": "scene",
+  "Conditions": [
+   "flag:met_gremlin_shibata",
+   "!flag:met_president_aizawa"
+  ],
+  "Priority": 75.0,
+  "bOnce": true,
+  "Slots": {},
+  "Text": "Student council antechamber. Aizawa's desk is a chessboard of stamped forms. Efficiency is kindness here, they say. Sign for your provisional rank, or explain why chaos deserves a chair. A camera blinks. The System hums approval for paperwork.",
+  "Choices": [
+   {
+    "Id": "pres_sign",
+    "Text": "Sign without reading. Perfect posture.",
+    "Requires": [],
+    "Tags": {
+     "obedience": 1.0,
+     "ambition": 0.3
+    },
+    "StatDeltas": {
+     "Reputation.Prestige": 3.0,
+     "Sanity.Composure": 1.0,
+     "Cunning.Deceit": -1.0
+    },
+    "SetFlags": [
+     "met_president_aizawa",
+     "council_compliant"
+    ],
+    "Next": "y1_meet_ex1_tsukishiro"
+   },
+   {
+    "Id": "pres_negotiate",
+    "Text": "Trade a favor for delayed ranking.",
+    "Requires": [
+     "rel:ally_hanazawa>0"
+    ],
+    "Tags": {
+     "cunning": 0.8,
+     "ambition": 0.7
+    },
+    "StatDeltas": {
+     "Cunning.Tactics": 3.0,
+     "Charisma.Speech": 2.0,
+     "Funds.Credit": -1.0
+    },
+    "SetFlags": [
+     "met_president_aizawa",
+     "council_debt_owed"
+    ],
+    "Next": "y1_meet_ex1_tsukishiro"
+   },
+   {
+    "Id": "pres_challenge",
+    "Text": "Ask who the camera serves. Hold the stare.",
+    "Requires": [
+     "flag:probed_system"
+    ],
+    "Tags": {
+     "honesty": 0.7,
+     "ambition": 0.6,
+     "betrayal": 0.2
+    },
+    "StatDeltas": {
+     "Intellect.Analysis": 3.0,
+     "Reputation.Fear": 1.0,
+     "Sanity.Resilience": -1.0
+    },
+    "SetFlags": [
+     "met_president_aizawa",
+     "council_suspicious",
+     "path_director_seed"
+    ],
+    "Next": "y1_meet_ex1_tsukishiro"
+   },
+   {
+    "Id": "pres_chaos_form",
+    "Text": "Stamp EVERY page with a rubber duck.",
+    "Requires": [
+     "flag:gremlin_crew"
+    ],
+    "Tags": {
+     "chaos": 1.0,
+     "humor": 0.8
+    },
+    "StatDeltas": {
+     "Luck.Timing": 2.0,
+     "Reputation.Prestige": -3.0,
+     "Charisma.Presence": 2.0
+    },
+    "SetFlags": [
+     "met_president_aizawa",
+     "council_infuriated"
+    ],
+    "Next": "y1_meet_ex1_tsukishiro"
+   }
+  ]
+ },
+ {
+  "Id": "y1_meet_ex1_tsukishiro",
+  "Kind": "scene",
+  "Conditions": [
+   "flag:met_president_aizawa",
+   "!flag:met_ex1_tsukishiro"
+  ],
+  "Priority": 70.0,
+  "bOnce": true,
+  "Slots": {},
+  "Text": "Empty clubroom. Dust, trophies, a crown of paperclips. Tsukishiro was #1 last year; now they water a dead plant. Being peak feels like a cage with applause, they murmur. Want the key, the warning, or the plant's tragic lore?",
+  "Choices": [
+   {
+    "Id": "ex1_warning",
+    "Text": "Sit. Listen. Memorize the cracks in the crown.",
+    "Requires": [],
+    "Tags": {
+     "empathy": 0.9,
+     "withdrawal": 0.3
+    },
+    "StatDeltas": {
+     "Sanity.Clarity": 3.0,
+     "Intellect.Memory": 2.0,
+     "Ambition": 0.0
+    },
+    "SetFlags": [
+     "met_ex1_tsukishiro",
+     "ex1_warned",
+     "knows_peak_cost"
+    ],
+    "Next": "y1_meet_broker_tanabe"
+   },
+   {
+    "Id": "ex1_ambition",
+    "Text": "Ask how to take the throne cleaner than they did.",
+    "Requires": [],
+    "Tags": {
+     "ambition": 1.0,
+     "cruelty": 0.2
+    },
+    "StatDeltas": {
+     "Cunning.Tactics": 2.0,
+     "Reputation.Prestige": 1.0,
+     "Sanity.Composure": -2.0
+    },
+    "SetFlags": [
+     "met_ex1_tsukishiro",
+     "ex1_mentor_dark",
+     "path_puppet_seed"
+    ],
+    "Next": "y1_meet_broker_tanabe"
+   },
+   {
+    "Id": "ex1_ghost",
+    "Text": "Offer to erase their name from gossip boards.",
+    "Requires": [
+     "tag:empathy>=1"
+    ],
+    "Tags": {
+     "empathy": 0.7,
+     "loyalty": 0.5,
+     "withdrawal": 0.4
+    },
+    "StatDeltas": {
+     "Charisma.Charm": 2.0,
+     "Cunning.Observation": 2.0,
+     "Reputation.Trust": 2.0
+    },
+    "SetFlags": [
+     "met_ex1_tsukishiro",
+     "ex1_ally_shadow",
+     "path_ghost_seed"
+    ],
+    "Next": "y1_meet_broker_tanabe"
+   },
+   {
+    "Id": "ex1_plant",
+    "Text": "Rename the plant King. Hold a funeral.",
+    "Requires": [],
+    "Tags": {
+     "chaos": 0.8,
+     "humor": 1.0,
+     "empathy": 0.4
+    },
+    "StatDeltas": {
+     "Sanity.Clarity": -1.0,
+     "Charisma.Presence": 3.0,
+     "Luck.Fortune": 2.0
+    },
+    "SetFlags": [
+     "met_ex1_tsukishiro",
+     "ex1_amused",
+     "path_clown_seed"
+    ],
+    "Next": "y1_meet_broker_tanabe"
+   }
+  ]
+ },
+ {
+  "Id": "y1_meet_broker_tanabe",
+  "Kind": "scene",
+  "Conditions": [
+   "flag:met_ex1_tsukishiro",
+   "!flag:met_broker_tanabe"
+  ],
+  "Priority": 65.0,
+  "bOnce": true,
+  "Slots": {},
+  "Text": "Campus kiosk. Tanabe sells melon bread and secrets with the same shrug. Receipts talk louder than rankings, they say. Slide a coin, a favor, or a ridiculous rumor—I'll price it. The register beeps like a confession booth.",
+  "Choices": [
+   {
+    "Id": "broker_buy",
+    "Text": "Buy bread. Buy one name that matters tomorrow.",
+    "Requires": [
+     "stat:Funds.Cash>=1"
+    ],
+    "Tags": {
+     "cunning": 0.7,
+     "ambition": 0.4
+    },
+    "StatDeltas": {
+     "Funds.Cash": -3.0,
+     "Cunning.Observation": 3.0,
+     "Intellect.Memory": 1.0
+    },
+    "SetFlags": [
+     "met_broker_tanabe",
+     "broker_client",
+     "hot_seat_tip"
+    ],
+    "Next": "exam_hot_seat"
+   },
+   {
+    "Id": "broker_trade_rumor",
+    "Text": "Trade a rumor about Kurose's juice box.",
+    "Requires": [
+     "flag:rival_confused"
+    ],
+    "Tags": {
+     "chaos": 0.6,
+     "humor": 0.5,
+     "betrayal": 0.3
+    },
+    "StatDeltas": {
+     "Reputation.Fear": 1.0,
+     "Luck.Timing": 2.0,
+     "Charisma.Speech": 2.0
+    },
+    "SetFlags": [
+     "met_broker_tanabe",
+     "broker_amused",
+     "hot_seat_tip"
+    ],
+    "Next": "exam_hot_seat"
+   },
+   {
+    "Id": "broker_honest",
+    "Text": "Admit you have nothing. Ask for charity intel.",
+    "Requires": [],
+    "Tags": {
+     "honesty": 1.0,
+     "empathy": 0.3
+    },
+    "StatDeltas": {
+     "Reputation.Trust": 2.0,
+     "Funds.Credit": 1.0,
+     "Cunning.Deceit": -1.0
+    },
+    "SetFlags": [
+     "met_broker_tanabe",
+     "broker_pity"
+    ],
+    "Next": "exam_hot_seat"
+   },
+   {
+    "Id": "broker_threat",
+    "Text": "Lean in: prices drop when cameras glitch.",
+    "Requires": [
+     "flag:probed_system"
+    ],
+    "Tags": {
+     "cruelty": 0.6,
+     "cunning": 0.9,
+     "betrayal": 0.4
+    },
+    "StatDeltas": {
+     "Cunning.Deceit": 3.0,
+     "Reputation.Fear": 2.0,
+     "Sanity.Composure": -2.0
+    },
+    "SetFlags": [
+     "met_broker_tanabe",
+     "broker_leveraged",
+     "hot_seat_tip"
+    ],
+    "Next": "exam_hot_seat"
+   }
+  ]
+ },
+ {
+  "Id": "exam_hot_seat",
+  "Kind": "exam",
+  "Conditions": [
+   "flag:met_broker_tanabe",
+   "flag:system_awake"
+  ],
+  "Priority": 50.0,
+  "bOnce": true,
+  "Slots": {
+   "accused": "best_friend"
+  },
+  "Text": "Special Exam: Hot Seat. A circle of desks. Spotlight on {accused}. The System: Defend, condemn, or derail. Class points bleed with every dull answer. {accused} looks at you like a verdict wearing a face. The chair is warm. Someone already sweated here.",
+  "Choices": [
+   {
+    "Id": "hotseat_defend",
+    "Text": "Stand. Take blame for {accused}'s 'crime'.",
+    "Requires": [
+     "rel:@accused>0"
+    ],
+    "Tags": {
+     "loyalty": 1.0,
+     "empathy": 0.8,
+     "honesty": -0.2
+    },
+    "StatDeltas": {
+     "Reputation.Trust": 3.0,
+     "Charisma.Speech": 2.0,
+     "Sanity.Resilience": -2.0
+    },
+    "SetFlags": [
+     "hot_seat_done",
+     "defended_accused",
+     "villain_self"
+    ],
+    "Next": ""
+   },
+   {
+    "Id": "hotseat_condemn",
+    "Text": "Recite their flaws like a shopping list.",
+    "Requires": [],
+    "Tags": {
+     "betrayal": 1.0,
+     "cruelty": 0.7,
+     "ambition": 0.5
+    },
+    "StatDeltas": {
+     "Cunning.Deceit": 2.0,
+     "Reputation.Fear": 3.0,
+     "Reputation.Trust": -4.0
+    },
+    "SetFlags": [
+     "hot_seat_done",
+     "condemned_accused",
+     "villain_accused"
+    ],
+    "Next": ""
+   },
+   {
+    "Id": "hotseat_system",
+    "Text": "Ask the System who wrote the accusation.",
+    "Requires": [
+     "flag:probed_system"
+    ],
+    "Tags": {
+     "honesty": 0.6,
+     "cunning": 0.8,
+     "obedience": -0.5
+    },
+    "StatDeltas": {
+     "Intellect.Analysis": 4.0,
+     "Sanity.Clarity": -1.0,
+     "Cunning.Observation": 2.0
+    },
+    "SetFlags": [
+     "hot_seat_done",
+     "questioned_exam",
+     "villain_system",
+     "path_director_seed"
+    ],
+    "Next": ""
+   },
+   {
+    "Id": "hotseat_circus",
+    "Text": "Drag a rubber chicken into evidence. Call it testimony.",
+    "Requires": [
+     "flag:gremlin_crew"
+    ],
+    "Tags": {
+     "chaos": 1.0,
+     "humor": 1.0,
+     "withdrawal": -0.2
+    },
+    "StatDeltas": {
+     "Luck.Fortune": 3.0,
+     "Charisma.Presence": 3.0,
+     "Intellect.Logic": -2.0,
+     "Reputation.Prestige": -2.0
+    },
+    "SetFlags": [
+     "hot_seat_done",
+     "hot_seat_circus",
+     "path_clown_seed"
+    ],
+    "Next": ""
+   }
+  ]
+ }
+]

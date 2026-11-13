@@ -61,3 +61,9 @@ Newest last. Every session: append what was decided/done/blocked.
 - Plan: install the Cursor CLI (`agent -p`, headless) and offload bulk content writing to it (NPCs, storylines, exam text) so the Cursor credit gets used instead of the Claude credit. Tripo and Rodin APIs: script batch 3D asset generation. Rodin use also counts toward the $10k pool.
 - Cursor CLI installed (~/.local/bin/agent) and the user logged in. Headless test: `agent -p --trust --model auto "..."` returns output. On the Free plan, GPT models fail with "Model unavailable on Free"; only Grok 4.7, Grok 4.6 and Auto are included. It's still unclear whether the $50 credit unlocks GPT models.
 - The editor closed with a clean exit (CloseEditor), not a crash.
+- Core narrative system built (C++, compiles):
+  - Source/ClassroomLevelling/Narrative/ holds NarrativeTypes (stats/sub-stats, secret class, tagged choices, NPC profiles, storylets with slots) and UNarrativeSubsystem, the local director.
+  - The director loads Content/Data/*.json, parses condition strings, picks storylets, fills slots (best_friend/worst_enemy/role:x/random), interprets choices per NPC (perception + luck misreads, relationship bias, hesitation penalty) and computes uniqueness against the average profile.
+  - Added the Json and JsonUtilities modules.
+- tools/gen.sh: Cursor CLI (Grok/auto) writes JSON content from the C++ schema plus DESIGN.md, which saves Claude credits. Generated npcs_core.json (6 core NPCs) and storylets_y1_intro.json (8 storylets, including exam_hot_seat with an {accused}=best_friend slot). Schema check passes.
+- Renamed one generated NPC (Morishita -> Tsukishiro) to avoid a COTE character name. Rule going forward: no names copied from COTE or other existing IP.

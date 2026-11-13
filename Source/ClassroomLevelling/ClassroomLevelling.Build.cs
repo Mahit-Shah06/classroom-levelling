@@ -15,6 +15,8 @@ public class ClassroomLevelling : ModuleRules
 			"InputCore",
 			"EnhancedInput",
 			"AIModule",
+			"Json",
+			"JsonUtilities",
 			"StateTreeModule",
 			"GameplayStateTreeModule",
 			"UMG",
@@ -25,6 +27,7 @@ public class ClassroomLevelling : ModuleRules
 
 		PublicIncludePaths.AddRange(new string[] {
 			"ClassroomLevelling",
+			"ClassroomLevelling/Narrative",
 			"ClassroomLevelling/Variant_Platforming",
 			"ClassroomLevelling/Variant_Platforming/Animation",
 			"ClassroomLevelling/Variant_Combat",

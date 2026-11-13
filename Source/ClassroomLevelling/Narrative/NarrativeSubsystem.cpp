@@ -1,0 +1,269 @@
+#include "NarrativeSubsystem.h"
+#include "JsonObjectConverter.h"
+#include "Misc/FileHelper.h"
+#include "Misc/Paths.h"
+#include "HAL/FileManager.h"
+
+DEFINE_LOG_CATEGORY_STATIC(LogNarrative, Log, All);
+
+// ---------- FStatBlock ----------
+static const TCHAR* GStatNames[] = { TEXT("Intellect"), TEXT("Charisma"), TEXT("Physique"), TEXT("Sanity"),
+	TEXT("Cunning"), TEXT("Reputation"), TEXT("Funds"), TEXT("Luck") };
+
+float FStatBlock::General(EGeneralStat S) const
+{
+	const FString Prefix = FString(GStatNames[(int32)S]) + TEXT(".");
+	float Sum = 0.f; int32 N = 0;
+	for (const auto& KV : Sub)
+	{
+		if (KV.Key.ToString().StartsWith(Prefix)) { Sum += KV.Value; ++N; }
+	}
+	return N ? Sum / N : 0.f;
+}
+
+float FStatBlock::Get(FName Key) const
+{
+	if (const float* V = Sub.Find(Key)) return *V;
+	for (int32 i = 0; i < (int32)EGeneralStat::Count; ++i)
+	{
+		if (Key == GStatNames[i]) return General((EGeneralStat)i);
+	}
+	return 0.f;
+}
+
+void FStatBlock::Add(FName SubKey, float Delta)
+{
+	float& V = Sub.FindOrAdd(SubKey);
+	V = FMath::Clamp(V + Delta, 0.f, 100.f);
+}
+
+ESecretClass FStatBlock::SecretClass() const
+{
+	// Pair sums: Onyx=Int+Cun, Slate=Phy+San, Ash=Cha+Rep, Ivory=Fun+Luck
+	const float S[4] = {
+		General(EGeneralStat::Intellect) + General(EGeneralStat::Cunning),
+		General(EGeneralStat::Physique) + General(EGeneralStat::Sanity),
+		General(EGeneralStat::Charisma) + General(EGeneralStat::Reputation),
+		General(EGeneralStat::Funds) + General(EGeneralStat::Luck) };
+	int32 Best = 0;
+	for (int32 i = 1; i < 4; ++i) if (S[i] > S[Best]) Best = i;
+	return (ESecretClass)Best;
+}
+
+// ---------- Subsystem ----------
+void UNarrativeSubsystem::Initialize(FSubsystemCollectionBase& Collection)
+{
+	Super::Initialize(Collection);
+	// Built-in "average player" tag profile (normalized weights). Tuned later with real data.
+	AverageProfile = { {"obedience", 0.30f}, {"empathy", 0.25f}, {"ambition", 0.20f}, {"cunning", 0.10f},
+		{"betrayal", 0.05f}, {"chaos", 0.05f}, {"withdrawal", 0.05f} };
+	LoadContent();
+	NewRun(FMath::Rand());
+}
+
+void UNarrativeSubsystem::LoadContent()
+{
+	NPCs.Reset(); Storylets.Reset();
+	const FString Dir = FPaths::ProjectContentDir() / TEXT("Data");
+	TArray<FString> Files;
+	IFileManager::Get().FindFilesRecursive(Files, *Dir, TEXT("*.json"), true, false);
+	for (const FString& F : Files)
+	{
+		FString Json;
+		if (!FFileHelper::LoadFileToString(Json, *F)) continue;
+		if (FPaths::GetCleanFilename(F).StartsWith(TEXT("npc")))
+		{
+			TArray<FNPCProfile> Arr;
+			if (FJsonObjectConverter::JsonArrayStringToUStruct(Json, &Arr))
+				for (FNPCProfile& N : Arr) NPCs.Add(N.Id, N);
+			else UE_LOG(LogNarrative, Warning, TEXT("Bad NPC json: %s"), *F);
+		}
+		else
+		{
+			TArray<FStorylet> Arr;
+			if (FJsonObjectConverter::JsonArrayStringToUStruct(Json, &Arr)) Storylets.Append(Arr);
+			else UE_LOG(LogNarrative, Warning, TEXT("Bad storylet json: %s"), *F);
+		}
+	}
+	UE_LOG(LogNarrative, Log, TEXT("Loaded %d NPCs, %d storylets"), NPCs.Num(), Storylets.Num());
+}
+
+void UNarrativeSubsystem::NewRun(int32 Seed)
+{
+	Rng.Initialize(Seed);
+	Player = FStatBlock(); Relationship.Reset(); Flags.Reset(); TagHistory.Reset(); Played.Reset(); SlotBindings.Reset();
+	for (const auto& KV : NPCs) Relationship.Add(KV.Key, 0.f);
+}
+
+// Grammar: [!]flag:name | stat:Key OP N | rel:npc OP N | tag:name OP N | uniq OP N   (OP: >= <= > < ==)
+bool UNarrativeSubsystem::CheckCondition(const FString& InCond) const
+{
+	FString Cond = InCond.TrimStartAndEnd();
+	const bool bNot = Cond.RemoveFromStart(TEXT("!"));
+	bool Result = false;
+
+	if (Cond.StartsWith(TEXT("flag:")))
+	{
+		Result = Flags.Contains(FName(Cond.Mid(5)));
+	}
+	else
+	{
+		static const TCHAR* Ops[] = { TEXT(">="), TEXT("<="), TEXT("=="), TEXT(">"), TEXT("<") };
+		int32 OpIdx = -1, Pos = INDEX_NONE;
+		for (int32 i = 0; i < 5 && Pos == INDEX_NONE; ++i) { Pos = Cond.Find(Ops[i]); if (Pos != INDEX_NONE) OpIdx = i; }
+		if (Pos == INDEX_NONE) { UE_LOG(LogNarrative, Warning, TEXT("Bad condition: %s"), *InCond); return false; }
+
+		const FString Lhs = Cond.Left(Pos).TrimEnd();
+		const float Rhs = FCString::Atof(*Cond.Mid(Pos + FCString::Strlen(Ops[OpIdx])));
+		FString Kind, Key;
+		if (!Lhs.Split(TEXT(":"), &Kind, &Key)) Kind = Lhs;
+
+		float L = 0.f;
+		if (Kind == TEXT("stat")) L = Player.Get(FName(Key));
+		else if (Kind == TEXT("rel"))
+		{
+			FName Npc(Key);
+			if (Key.StartsWith(TEXT("@"))) { const FName* B = SlotBindings.Find(FName(Key.Mid(1))); Npc = B ? *B : NAME_None; }
+			const float* R = Relationship.Find(Npc); L = R ? *R : 0.f;
+		}
+		else if (Kind == TEXT("tag")) { const float* T = TagHistory.Find(FName(Key)); L = T ? *T : 0.f; }
+		else if (Kind == TEXT("uniq")) L = Uniqueness();
+
+		switch (OpIdx)
+		{
+		case 0: Result = L >= Rhs; break;
+		case 1: Result = L <= Rhs; break;
+		case 2: Result = FMath::IsNearlyEqual(L, Rhs); break;
+		case 3: Result = L > Rhs; break;
+		default: Result = L < Rhs; break;
+		}
+	}
+	return bNot ? !Result : Result;
+}
+
+bool UNarrativeSubsystem::CheckAll(const TArray<FString>& Conds) const
+{
+	for (const FString& C : Conds) if (!CheckCondition(C)) return false;
+	return true;
+}
+
+FName UNarrativeSubsystem::SelectNPC(FName Selector)
+{
+	const FString S = Selector.ToString();
+	FName Best = NAME_None;
+	if (S == TEXT("best_friend") || S == TEXT("worst_enemy"))
+	{
+		const float Sign = S == TEXT("best_friend") ? 1.f : -1.f;
+		float BestV = -MAX_flt;
+		for (const auto& KV : Relationship) if (KV.Value * Sign > BestV) { BestV = KV.Value * Sign; Best = KV.Key; }
+	}
+	else if (S.StartsWith(TEXT("role:")))
+	{
+		const FName Role(S.Mid(5));
+		for (const auto& KV : NPCs) if (KV.Value.Role == Role) { Best = KV.Key; break; }
+	}
+	if (Best.IsNone() && NPCs.Num()) // random_npc or fallback
+	{
+		TArray<FName> Keys; NPCs.GetKeys(Keys);
+		Best = Keys[Rng.RandRange(0, Keys.Num() - 1)];
+	}
+	return Best;
+}
+
+bool UNarrativeSubsystem::PickStorylet(FName Kind, FStorylet& Out)
+{
+	const FStorylet* Best = nullptr;
+	float BestScore = -MAX_flt;
+	for (const FStorylet& S : Storylets)
+	{
+		if (!Kind.IsNone() && S.Kind != Kind) continue;
+		if (S.bOnce && Played.Contains(S.Id)) continue;
+		if (!CheckAll(S.Conditions)) continue;
+		const float Score = S.Priority + S.Conditions.Num() * 0.5f + Rng.FRand() * 0.1f; // specific > generic
+		if (Score > BestScore) { BestScore = Score; Best = &S; }
+	}
+	if (!Best) return false;
+	SlotBindings.Reset();
+	for (const auto& KV : Best->Slots) SlotBindings.Add(KV.Key, SelectNPC(KV.Value));
+	Played.Add(Best->Id);
+	Out = *Best;
+	return true;
+}
+
+FText UNarrativeSubsystem::ResolveText(const FText& In) const
+{
+	FString S = In.ToString();
+	for (const auto& KV : SlotBindings)
+	{
+		const FNPCProfile* N = NPCs.Find(KV.Value);
+		S.ReplaceInline(*FString::Printf(TEXT("{%s}"), *KV.Key.ToString()), N ? *N->Name.ToString() : TEXT("someone"));
+	}
+	return FText::FromString(S);
+}
+
+FNPCReaction UNarrativeSubsystem::Interpret(FName NPC, const TMap<FName, float>& Tags, float Hesitation)
+{
+	FNPCReaction R; R.NPC = NPC;
+	const FNPCProfile* P = NPCs.Find(NPC);
+	if (!P) return R;
+
+	TArray<FName> Known; P->Values.GetKeys(Known);
+	const float Rel = Relationship.FindRef(NPC);
+	// Misread chance: low perception -> more; player luck reduces it.
+	const float MisreadP = FMath::Clamp((1.f - P->Perception) * 0.5f - Player.General(EGeneralStat::Luck) * 0.002f, 0.f, 0.6f);
+
+	float Strongest = 0.f;
+	for (const auto& T : Tags)
+	{
+		FName Tag = T.Key;
+		if (Known.Num() > 1 && Rng.FRand() < MisreadP)
+		{
+			Tag = Known[Rng.RandRange(0, Known.Num() - 1)];
+			R.bMisread |= Tag != T.Key;
+		}
+		const float D = P->Values.FindRef(Tag) * T.Value * 10.f;
+		R.Delta += D;
+		if (FMath::Abs(D) > Strongest) { Strongest = FMath::Abs(D); R.PerceivedTag = Tag; }
+	}
+	// Existing feelings colour the reading: friends forgive, enemies hold grudges.
+	R.Delta *= (R.Delta >= 0.f) ? (1.f + Rel * 0.005f) : (1.f - Rel * 0.005f);
+	if (Hesitation > P->Patience) R.Delta -= (Hesitation - P->Patience) * 0.5f;
+	return R;
+}
+
+TArray<FNPCReaction> UNarrativeSubsystem::ApplyChoice(const FNarrativeChoice& Choice, const TArray<FName>& Witnesses, float Hesitation)
+{
+	for (const auto& KV : Choice.StatDeltas) Player.Add(KV.Key, KV.Value);
+	for (const auto& KV : Choice.Tags) TagHistory.FindOrAdd(KV.Key) += KV.Value;
+	TagHistory.FindOrAdd(TEXT("hesitation")) += Hesitation;
+	for (const FName& F : Choice.SetFlags) Flags.Add(F);
+
+	TArray<FNPCReaction> Out;
+	for (FName W : Witnesses)
+	{
+		if (W.ToString().StartsWith(TEXT("@"))) W = SlotBindings.FindRef(FName(W.ToString().Mid(1)));
+		FNPCReaction R = Interpret(W, Choice.Tags, Hesitation);
+		float& Rel = Relationship.FindOrAdd(W);
+		Rel = FMath::Clamp(Rel + R.Delta, -100.f, 100.f);
+		Out.Add(R);
+	}
+	return Out;
+}
+
+float UNarrativeSubsystem::Uniqueness() const
+{
+	float Total = 0.f;
+	for (const auto& KV : TagHistory) if (KV.Key != TEXT("hesitation")) Total += FMath::Max(0.f, KV.Value);
+	if (Total <= 0.f) return 0.f;
+	float D2 = 0.f;
+	TSet<FName> Keys;
+	for (const auto& KV : AverageProfile) Keys.Add(KV.Key);
+	for (const auto& KV : TagHistory) if (KV.Key != TEXT("hesitation")) Keys.Add(KV.Key);
+	for (const FName& K : Keys)
+	{
+		const float P = FMath::Max(0.f, TagHistory.FindRef(K)) / Total;
+		const float A = AverageProfile.FindRef(K);
+		D2 += FMath::Square(P - A);
+	}
+	return FMath::Sqrt(D2); // 0..~1.4
+}
