@@ -72,6 +72,17 @@ struct FNPCReaction
 	UPROPERTY(BlueprintReadOnly) FName PerceivedTag;
 };
 
+// One line of a cutscene/dialogue. Speaker: @role, @slot, staff role (@head, @homeroom), "narrator" or "system".
+USTRUCT(BlueprintType)
+struct FDialogueLine
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) FName Speaker;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) FText Text;  // may contain {slot} tokens
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) FName Shot;  // wide | close | over_shoulder | pan | low (camera framing)
+};
+
 // Storylet: fires when its conditions hold. Exams are storylets with Slots filled from the save.
 USTRUCT(BlueprintType)
 struct FStorylet
@@ -84,6 +95,9 @@ struct FStorylet
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) float Priority = 0.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) bool bOnce = true;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TMap<FName, FName> Slots; // slot -> selector (best_friend, rival, random_npc...)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) FText Text;              // may contain {slot} tokens
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) FName Location;          // hub area: gate, hall, classroom, corridor, courtyard, cafeteria, rooftop, office
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) TArray<FDialogueLine> Lines; // cutscene played before the prompt
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) FName PromptSpeaker;      // who asks the final Text (default narrator)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) FText Text;              // final prompt shown with choices; may contain {slot} tokens
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TArray<FNarrativeChoice> Choices;
 };

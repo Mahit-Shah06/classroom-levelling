@@ -100,8 +100,21 @@ void UNarrativeSubsystem::NewRun(int32 Seed)
 	for (const auto& KV : NPCs) if (KV.Value.Kind == TEXT("student")) Pool.Add(KV.Key);
 	for (int32 i = Pool.Num() - 1; i > 0; --i) Pool.Swap(i, Rng.RandRange(0, i));
 	static const FName Roles[] = { "rival", "ally", "gremlin", "president", "ex1", "broker" };
-	for (const FName& Role : Roles)
+	RollRoles(Pool, Roles, UE_ARRAY_COUNT(Roles));
+
+	// Staff roles come from teachers/staff (fixed set, assignment shuffled per run).
+	Pool.Reset();
+	for (const auto& KV : NPCs) if (KV.Value.Kind != TEXT("student")) Pool.Add(KV.Key);
+	for (int32 i = Pool.Num() - 1; i > 0; --i) Pool.Swap(i, Rng.RandRange(0, i));
+	static const FName Staff[] = { "head", "homeroom", "proctor", "nurse", "coach", "counsellor" };
+	RollRoles(Pool, Staff, UE_ARRAY_COUNT(Staff));
+}
+
+void UNarrativeSubsystem::RollRoles(TArray<FName>& Pool, const FName* Roles, int32 Count)
+{
+	for (int32 r = 0; r < Count; ++r)
 	{
+		const FName Role = Roles[r];
 		int32 Pick = Pool.IndexOfByPredicate([&](FName Id) { const auto& F = NPCs[Id].RoleFit; return F.Num() == 0 || F.Contains(Role); });
 		if (Pick == INDEX_NONE) Pick = Pool.Num() ? 0 : INDEX_NONE;
 		if (Pick == INDEX_NONE) break;
@@ -194,24 +207,45 @@ FName UNarrativeSubsystem::SelectNPC(FName Selector)
 	return Best;
 }
 
-bool UNarrativeSubsystem::PickStorylet(FName Kind, FStorylet& Out)
+const FStorylet* UNarrativeSubsystem::FindStorylet(FName Kind, FName Location) const
 {
 	const FStorylet* Best = nullptr;
 	float BestScore = -MAX_flt;
 	for (const FStorylet& S : Storylets)
 	{
 		if (!Kind.IsNone() && S.Kind != Kind) continue;
+		if (!Location.IsNone() && S.Location != Location) continue;
 		if (S.bOnce && Played.Contains(S.Id)) continue;
 		if (!CheckAll(S.Conditions)) continue;
-		const float Score = S.Priority + S.Conditions.Num() * 0.5f + Rng.FRand() * 0.1f; // specific > generic
+		const float Score = S.Priority + S.Conditions.Num() * 0.5f; // specific > generic
 		if (Score > BestScore) { BestScore = Score; Best = &S; }
 	}
+	return Best;
+}
+
+bool UNarrativeSubsystem::PickStorylet(FName Kind, FName Location, FStorylet& Out)
+{
+	const FStorylet* Best = FindStorylet(Kind, Location);
 	if (!Best) return false;
 	SlotBindings.Reset();
 	for (const auto& KV : Best->Slots) SlotBindings.Add(KV.Key, SelectNPC(KV.Value));
 	Played.Add(Best->Id);
 	Out = *Best;
 	return true;
+}
+
+FName UNarrativeSubsystem::SpeakerNPC(FName Speaker) const
+{
+	const FName Id = Resolve(Speaker);
+	return NPCs.Contains(Id) ? Id : NAME_None;
+}
+
+FString UNarrativeSubsystem::SpeakerName(FName Speaker) const
+{
+	if (Speaker.IsNone() || Speaker == TEXT("narrator")) return FString();
+	if (Speaker == TEXT("system")) return TEXT("EVAL // Notification");
+	const FNPCProfile* P = NPCs.Find(SpeakerNPC(Speaker));
+	return P ? P->Name.ToString() : TEXT("???");
 }
 
 FText UNarrativeSubsystem::ResolveText(const FText& In) const

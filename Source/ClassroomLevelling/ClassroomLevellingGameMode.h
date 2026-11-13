@@ -18,6 +18,7 @@ public:
 	
 	/** Constructor */
 	AClassroomLevellingGameMode();
+	virtual void StartPlay() override; // spawns the procedural school hub
 };
 
 

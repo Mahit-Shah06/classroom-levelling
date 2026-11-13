@@ -1,0 +1,1379 @@
+[
+ {
+  "Id": "y1_day_purpose_board",
+  "Kind": "scene",
+  "Conditions": [
+   "flag:system_awake",
+   "!flag:path_nihilist"
+  ],
+  "Priority": 45,
+  "bOnce": true,
+  "Slots": {},
+  "Location": "corridor",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "A ranking board flickers. Your name sits nowhere near the top. The corridor empties except for footsteps that refuse to match yours.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "system",
+    "Text": "Notification: Purpose Survey open. Complete within 48 hours for evaluation credit.",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@ally",
+    "Text": "{ally} taps the glass. \"They ask why you're here like it's homework.\"",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "@ally",
+    "Text": "\"I put 'to not be average.' Felt honest. You?\"",
+    "Shot": "close"
+   }
+  ],
+  "PromptSpeaker": "@ally",
+  "Text": "{ally} waits. The survey cursor blinks. What do you write?",
+  "Choices": [
+   {
+    "Id": "purpose_friends",
+    "Text": "Write: find people who matter.",
+    "Requires": [],
+    "Tags": {
+     "empathy": 1,
+     "loyalty": 0.5
+    },
+    "StatDeltas": {
+     "Sanity.Composure": 1,
+     "Charisma.Charm": 1
+    },
+    "SetFlags": [
+     "path_friendship",
+     "met_purpose_survey"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "purpose_climb",
+    "Text": "Write: reach #1. Nothing else.",
+    "Requires": [],
+    "Tags": {
+     "ambition": 1,
+     "obedience": 0.5
+    },
+    "StatDeltas": {
+     "Cunning.Tactics": 1,
+     "Reputation.Standing": 1
+    },
+    "SetFlags": [
+     "path_ratrace",
+     "met_purpose_survey"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "purpose_blank",
+    "Text": "Leave it blank on purpose.",
+    "Requires": [],
+    "Tags": {
+     "withdrawal": 1,
+     "chaos": 0.3
+    },
+    "StatDeltas": {
+     "Sanity.Focus": -1,
+     "Luck.Timing": 1
+    },
+    "SetFlags": [
+     "path_blank",
+     "met_purpose_survey",
+     "uniq_blank_purpose"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "purpose_joke",
+    "Text": "Write a joke answer.",
+    "Requires": [
+     "stat:Charisma>=3"
+    ],
+    "Tags": {
+     "humor": 1,
+     "chaos": 0.5
+    },
+    "StatDeltas": {
+     "Charisma.Presence": 2,
+     "Sanity.Resilience": 1
+    },
+    "SetFlags": [
+     "path_absurdist",
+     "met_purpose_survey"
+    ],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "y1_day_nihilist_bench",
+  "Kind": "scene",
+  "Conditions": [
+   "flag:system_awake",
+   "flag:met_purpose_survey"
+  ],
+  "Priority": 40,
+  "bOnce": true,
+  "Slots": {},
+  "Location": "courtyard",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "The courtyard fountain spits grey water. Someone carved NOTHING MATTERS into a bench, then added a smiley face.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@ex1",
+    "Text": "{ex1} sits on the carving. \"Cute. I used to believe in ladders. Then I fell off one.\"",
+    "Shot": "low"
+   },
+   {
+    "Speaker": "@ex1",
+    "Text": "\"Ranks, points, purpose surveys—toys for people who need a script.\"",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@ex1",
+    "Text": "\"You still chasing meaning, or did the board already hollow you out?\"",
+    "Shot": "over_shoulder"
+   }
+  ],
+  "PromptSpeaker": "@ex1",
+  "Text": "{ex1} studies your face like a failed exam paper. How do you answer?",
+  "Choices": [
+   {
+    "Id": "nihil_agree",
+    "Text": "Agree: none of it matters.",
+    "Requires": [],
+    "Tags": {
+     "withdrawal": 1,
+     "honesty": 0.5
+    },
+    "StatDeltas": {
+     "Sanity.Composure": -1,
+     "Cunning.Observation": 1
+    },
+    "SetFlags": [
+     "path_nihilist",
+     "met_ex1_bench"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "nihil_reject",
+    "Text": "Reject: I will invent meaning.",
+    "Requires": [],
+    "Tags": {
+     "ambition": 0.8,
+     "loyalty": 0.4
+    },
+    "StatDeltas": {
+     "Sanity.Resilience": 2,
+     "Charisma.Presence": 1
+    },
+    "SetFlags": [
+     "path_selfmade",
+     "met_ex1_bench"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "nihil_probe",
+    "Text": "Ask why they fell.",
+    "Requires": [
+     "rel:@ex1>0"
+    ],
+    "Tags": {
+     "empathy": 1,
+     "cunning": 0.3
+    },
+    "StatDeltas": {
+     "Intellect.Analysis": 1,
+     "Sanity.Focus": 1
+    },
+    "SetFlags": [
+     "met_ex1_story",
+     "met_ex1_bench"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "nihil_mock",
+    "Text": "Call them dramatic.",
+    "Requires": [],
+    "Tags": {
+     "cruelty": 0.7,
+     "humor": 0.4
+    },
+    "StatDeltas": {
+     "Charisma.Presence": 1,
+     "Reputation.Standing": -1
+    },
+    "SetFlags": [
+     "met_ex1_bench",
+     "flag_ex1_cold"
+    ],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "y1_day_absurdist_lunch",
+  "Kind": "scene",
+  "Conditions": [
+   "flag:system_awake",
+   "!flag:path_ratrace"
+  ],
+  "Priority": 35,
+  "bOnce": true,
+  "Slots": {},
+  "Location": "cafeteria",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "The cafeteria menu lists 'Existential Stew' as sold out. Someone taped a banana to the ranking display.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@gremlin",
+    "Text": "{gremlin} bows to the banana. \"Behold: our true class president.\"",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@president",
+    "Text": "{president} pinches the bridge of their nose. \"Remove that. Now.\"",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "@gremlin",
+    "Text": "\"Or we crown it and skip the election. Democracy via potassium.\"",
+    "Shot": "pan"
+   },
+   {
+    "Speaker": "system",
+    "Text": "Alert: Unauthorized symbolism may affect Reputation metrics.",
+    "Shot": "close"
+   }
+  ],
+  "PromptSpeaker": "@gremlin",
+  "Text": "{gremlin} offers you the banana peel like a ballot. What do you do?",
+  "Choices": [
+   {
+    "Id": "abs_join",
+    "Text": "Kneel to the banana.",
+    "Requires": [],
+    "Tags": {
+     "chaos": 1,
+     "humor": 1
+    },
+    "StatDeltas": {
+     "Sanity.Composure": -1,
+     "Luck.Fortune": 2,
+     "Charisma.Charm": 1
+    },
+    "SetFlags": [
+     "path_absurdist",
+     "met_banana_cult"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "abs_side_pres",
+    "Text": "Help {president} remove it.",
+    "Requires": [],
+    "Tags": {
+     "obedience": 1,
+     "loyalty": 0.5
+    },
+    "StatDeltas": {
+     "Reputation.Standing": 2,
+     "Physique.Agility": 1
+    },
+    "SetFlags": [
+     "met_pres_favor",
+     "flag_anti_chaos"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "abs_sell",
+    "Text": "Auction the banana for points.",
+    "Requires": [
+     "stat:Funds>=2"
+    ],
+    "Tags": {
+     "ambition": 0.8,
+     "cunning": 0.7
+    },
+    "StatDeltas": {
+     "Funds.Liquidity": 2,
+     "Cunning.Tactics": 1
+    },
+    "SetFlags": [
+     "met_points_hustle",
+     "path_absurdist"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "abs_ignore",
+    "Text": "Walk away eating stew.",
+    "Requires": [],
+    "Tags": {
+     "withdrawal": 0.8
+    },
+    "StatDeltas": {
+     "Sanity.Focus": 1,
+     "Physique.Endurance": 1
+    },
+    "SetFlags": [
+     "flag_ignored_gremlin"
+    ],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "y1_day_rooftop_bond",
+  "Kind": "quest",
+  "Conditions": [
+   "flag:system_awake",
+   "flag:path_friendship"
+  ],
+  "Priority": 50,
+  "bOnce": true,
+  "Slots": {},
+  "Location": "rooftop",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "Wind scrapes the rooftop fence. Below, class colours blur into one grey herd.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@ally",
+    "Text": "{ally} sits on the ledge, legs swinging. \"If the System wants puppets, we can still be friends off-stage.\"",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@ally",
+    "Text": "\"Or maybe friendship is just another metric. I hate that thought.\"",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "system",
+    "Text": "Side notice: Pair bonding detected. No score assigned… yet.",
+    "Shot": "close"
+   }
+  ],
+  "PromptSpeaker": "@ally",
+  "Text": "{ally} offers a crooked smile. Do you lock this bond in?",
+  "Choices": [
+   {
+    "Id": "bond_promise",
+    "Text": "Promise: we survive together.",
+    "Requires": [],
+    "Tags": {
+     "loyalty": 1,
+     "empathy": 0.8
+    },
+    "StatDeltas": {
+     "Sanity.Resilience": 2,
+     "Charisma.Charm": 1
+    },
+    "SetFlags": [
+     "flag_ally_pact",
+     "met_rooftop_bond"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "bond_hedge",
+    "Text": "Say: until it costs too much.",
+    "Requires": [],
+    "Tags": {
+     "honesty": 0.7,
+     "cunning": 0.5
+    },
+    "StatDeltas": {
+     "Cunning.Observation": 1,
+     "Sanity.Composure": 1
+    },
+    "SetFlags": [
+     "flag_ally_hedge",
+     "met_rooftop_bond"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "bond_use",
+    "Text": "File them as a useful ally.",
+    "Requires": [
+     "stat:Cunning>=4"
+    ],
+    "Tags": {
+     "betrayal": 0.6,
+     "ambition": 0.8
+    },
+    "StatDeltas": {
+     "Cunning.Tactics": 2,
+     "Reputation.Influence": 1
+    },
+    "SetFlags": [
+     "flag_ally_tool",
+     "met_rooftop_bond"
+    ],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "y1_day_homeroom_directive",
+  "Kind": "scene",
+  "Conditions": [
+   "flag:system_awake"
+  ],
+  "Priority": 55,
+  "bOnce": true,
+  "Slots": {},
+  "Location": "classroom",
+  "Lines": [
+   {
+    "Speaker": "@homeroom",
+    "Text": "{homeroom} clears their throat. The app on every desk lights up at once.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@homeroom",
+    "Text": "\"Directive from Evaluation: daily point audits begin. Waste credit, lose privileges.\"",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@rival",
+    "Text": "{rival} mutters, \"They're tightening the leash before the next exam.\"",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "@homeroom",
+    "Text": "\"Questions go through me. The System does not debate students.\"",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "system",
+    "Text": "Quest issued: Maintain a positive point balance for seven days.",
+    "Shot": "pan"
+   }
+  ],
+  "PromptSpeaker": "@homeroom",
+  "Text": "{homeroom} looks at you specifically. How do you respond to the audit?",
+  "Choices": [
+   {
+    "Id": "dir_obey",
+    "Text": "Nod. Promise perfect compliance.",
+    "Requires": [],
+    "Tags": {
+     "obedience": 1
+    },
+    "StatDeltas": {
+     "Reputation.Standing": 2,
+     "Sanity.Focus": 1
+    },
+    "SetFlags": [
+     "flag_audit_obey",
+     "quest_point_balance"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "dir_question",
+    "Text": "Ask who watches the watchers.",
+    "Requires": [
+     "stat:Intellect>=4"
+    ],
+    "Tags": {
+     "cunning": 0.7,
+     "honesty": 0.4
+    },
+    "StatDeltas": {
+     "Intellect.Logic": 2,
+     "Reputation.Standing": -1
+    },
+    "SetFlags": [
+     "flag_questioned_system",
+     "quest_point_balance"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "dir_joke",
+    "Text": "Ask if bananas count as credit.",
+    "Requires": [
+     "flag:met_banana_cult"
+    ],
+    "Tags": {
+     "humor": 1,
+     "chaos": 0.6
+    },
+    "StatDeltas": {
+     "Charisma.Presence": 1,
+     "Luck.Timing": 1
+    },
+    "SetFlags": [
+     "flag_homeroom_annoyed",
+     "quest_point_balance"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "dir_silent",
+    "Text": "Stay silent. Note everything.",
+    "Requires": [],
+    "Tags": {
+     "withdrawal": 0.6,
+     "cunning": 0.5
+    },
+    "StatDeltas": {
+     "Cunning.Observation": 2,
+     "Sanity.Composure": 1
+    },
+    "SetFlags": [
+     "flag_quiet_observer",
+     "quest_point_balance"
+    ],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "y1_day_points_gate",
+  "Kind": "quest",
+  "Conditions": [
+   "flag:system_awake",
+   "flag:quest_point_balance"
+  ],
+  "Priority": 48,
+  "bOnce": true,
+  "Slots": {},
+  "Location": "gate",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "At the school gate, a scanner beeps red for anyone under the new point floor.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@proctor",
+    "Text": "{proctor} holds a tablet. \"Weekend leave is a privilege. Privilege costs points.\"",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@broker",
+    "Text": "{broker} leans on the fence, whispering prices for 'borrowed' credit.",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "@proctor",
+    "Text": "\"I did not hear that. Move along.\"",
+    "Shot": "pan"
+   }
+  ],
+  "PromptSpeaker": "@proctor",
+  "Text": "Your balance sits near the edge. How do you clear the gate?",
+  "Choices": [
+   {
+    "Id": "gate_honest",
+    "Text": "Show your real balance.",
+    "Requires": [
+     "stat:Funds>=3"
+    ],
+    "Tags": {
+     "honesty": 1,
+     "obedience": 0.5
+    },
+    "StatDeltas": {
+     "Reputation.Standing": 1,
+     "Funds.Liquidity": -1
+    },
+    "SetFlags": [
+     "flag_gate_clean",
+     "met_points_gate"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "gate_broker",
+    "Text": "Buy credit from {broker}.",
+    "Requires": [
+     "flag:met_broker"
+    ],
+    "Tags": {
+     "cunning": 0.8,
+     "betrayal": 0.2
+    },
+    "StatDeltas": {
+     "Funds.Liquidity": -2,
+     "Cunning.Deception": 2,
+     "Luck.Fortune": 1
+    },
+    "SetFlags": [
+     "flag_bought_credit",
+     "met_points_gate",
+     "debt_small"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "gate_bluff",
+    "Text": "Bluff that staff already cleared you.",
+    "Requires": [
+     "stat:Charisma>=5"
+    ],
+    "Tags": {
+     "cunning": 1,
+     "ambition": 0.4
+    },
+    "StatDeltas": {
+     "Charisma.Persuasion": 2,
+     "Reputation.Standing": -1
+    },
+    "SetFlags": [
+     "flag_gate_bluff",
+     "met_points_gate"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "gate_stay",
+    "Text": "Skip leave. Grind points instead.",
+    "Requires": [],
+    "Tags": {
+     "obedience": 0.7,
+     "withdrawal": 0.3
+    },
+    "StatDeltas": {
+     "Sanity.Focus": 1,
+     "Intellect.Memory": 1,
+     "Physique.Endurance": 1
+    },
+    "SetFlags": [
+     "flag_skipped_leave",
+     "met_points_gate"
+    ],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "y1_day_rumour_mill",
+  "Kind": "scene",
+  "Conditions": [
+   "flag:system_awake",
+   "uniq>0"
+  ],
+  "Priority": 30,
+  "bOnce": true,
+  "Slots": {},
+  "Location": "corridor",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "Lockers slam like applause. A rumour sprints ahead of you: someone gamed the Purpose Survey.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@president",
+    "Text": "{president} stops you. \"They're saying your answer broke the average-player model.\"",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@rival",
+    "Text": "{rival} laughs too sharp. \"Congrats. Now you're interesting. Interesting gets dissected.\"",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "system",
+    "Text": "Rumour density rising. No official correction issued.",
+    "Shot": "close"
+   }
+  ],
+  "PromptSpeaker": "@president",
+  "Text": "{president} wants a statement. How do you handle the rumour?",
+  "Choices": [
+   {
+    "Id": "rum_deny",
+    "Text": "Deny everything flatly.",
+    "Requires": [],
+    "Tags": {
+     "honesty": 0.3,
+     "withdrawal": 0.6
+    },
+    "StatDeltas": {
+     "Reputation.Standing": 1,
+     "Cunning.Deception": 1
+    },
+    "SetFlags": [
+     "flag_rumour_denied"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "rum_lean",
+    "Text": "Lean into the myth.",
+    "Requires": [],
+    "Tags": {
+     "ambition": 0.8,
+     "chaos": 0.5
+    },
+    "StatDeltas": {
+     "Reputation.Influence": 2,
+     "Charisma.Presence": 1
+    },
+    "SetFlags": [
+     "flag_rumour_owned",
+     "uniq_rumour_lean"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "rum_blame",
+    "Text": "Hint {rival} started it.",
+    "Requires": [],
+    "Tags": {
+     "betrayal": 0.9,
+     "cunning": 0.7
+    },
+    "StatDeltas": {
+     "Cunning.Tactics": 2,
+     "Reputation.Standing": -1
+    },
+    "SetFlags": [
+     "flag_framed_rival",
+     "villain_rival"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "rum_ask_ally",
+    "Text": "Ask {ally} to vouch.",
+    "Requires": [
+     "flag:flag_ally_pact"
+    ],
+    "Tags": {
+     "loyalty": 1,
+     "empathy": 0.5
+    },
+    "StatDeltas": {
+     "Charisma.Charm": 1,
+     "Sanity.Composure": 1
+    },
+    "SetFlags": [
+     "flag_rumour_vouched"
+    ],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "y1_day_broker_whisper",
+  "Kind": "quest",
+  "Conditions": [
+   "flag:system_awake",
+   "!flag:met_broker"
+  ],
+  "Priority": 42,
+  "bOnce": true,
+  "Slots": {},
+  "Location": "cafeteria",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "Behind the drink machines, a student sells bottled water at triple price—and secrets at worse.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@broker",
+    "Text": "{broker} doesn't look up. \"Info has a shelf life. Your curiosity has a price.\"",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@broker",
+    "Text": "\"I know which proctor leaks exam framing. I know who failed last year's audit.\"",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "@broker",
+    "Text": "\"First tip is cheap. Addiction is the real product.\"",
+    "Shot": "close"
+   }
+  ],
+  "PromptSpeaker": "@broker",
+  "Text": "{broker} slides a blank receipt across the tray. Buy in?",
+  "Choices": [
+   {
+    "Id": "brok_buy",
+    "Text": "Pay for the cheap tip.",
+    "Requires": [
+     "stat:Funds>=2"
+    ],
+    "Tags": {
+     "cunning": 0.6,
+     "ambition": 0.4
+    },
+    "StatDeltas": {
+     "Funds.Liquidity": -2,
+     "Intellect.Analysis": 1,
+     "Cunning.Observation": 2
+    },
+    "SetFlags": [
+     "met_broker",
+     "flag_broker_tip1",
+     "info_proctor_leak"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "brok_trade",
+    "Text": "Trade a rumour instead.",
+    "Requires": [
+     "flag:flag_rumour_owned"
+    ],
+    "Tags": {
+     "cunning": 0.8,
+     "betrayal": 0.3
+    },
+    "StatDeltas": {
+     "Cunning.Deception": 1,
+     "Reputation.Influence": 1
+    },
+    "SetFlags": [
+     "met_broker",
+     "flag_broker_tip1",
+     "info_proctor_leak"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "brok_refuse",
+    "Text": "Refuse. Walk off.",
+    "Requires": [],
+    "Tags": {
+     "honesty": 0.5,
+     "withdrawal": 0.4
+    },
+    "StatDeltas": {
+     "Sanity.Composure": 1
+    },
+    "SetFlags": [
+     "met_broker",
+     "flag_broker_refused"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "brok_threat",
+    "Text": "Threaten to report them.",
+    "Requires": [
+     "rel:@president>1"
+    ],
+    "Tags": {
+     "cruelty": 0.6,
+     "obedience": 0.5
+    },
+    "StatDeltas": {
+     "Reputation.Standing": 1,
+     "Charisma.Presence": 1
+    },
+    "SetFlags": [
+     "met_broker",
+     "flag_broker_hostile"
+    ],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "y1_day_gremlin_firedrill",
+  "Kind": "scene",
+  "Conditions": [
+   "flag:system_awake",
+   "!flag:flag_anti_chaos"
+  ],
+  "Priority": 38,
+  "bOnce": true,
+  "Slots": {},
+  "Location": "courtyard",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "Alarms shriek. Students flood the courtyard. There is no smoke—only confetti and a stolen megaphone.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@gremlin",
+    "Text": "{gremlin} crows, \"EVACUATE YOUR BORING PERSONALITIES!\"",
+    "Shot": "low"
+   },
+   {
+    "Speaker": "@coach",
+    "Text": "{coach} arrives mid-sprint. \"This is not a drill you ordered!\"",
+    "Shot": "pan"
+   },
+   {
+    "Speaker": "@nurse",
+    "Text": "{nurse} checks pulses anyway. \"At least nobody's hurt. Yet.\"",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "system",
+    "Text": "Chaos event logged. Witness tagging in progress.",
+    "Shot": "close"
+   }
+  ],
+  "PromptSpeaker": "@coach",
+  "Text": "{coach} points at you in the crowd. \"You—were you part of this?\"",
+  "Choices": [
+   {
+    "Id": "gre_confess",
+    "Text": "Admit you egged {gremlin} on.",
+    "Requires": [
+     "flag:met_banana_cult"
+    ],
+    "Tags": {
+     "chaos": 1,
+     "honesty": 0.7
+    },
+    "StatDeltas": {
+     "Reputation.Standing": -2,
+     "Luck.Fortune": 2,
+     "Physique.Agility": 1
+    },
+    "SetFlags": [
+     "flag_gremlin_accomplice",
+     "met_firedrill"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "gre_cover",
+    "Text": "Cover for {gremlin}.",
+    "Requires": [],
+    "Tags": {
+     "loyalty": 0.8,
+     "cunning": 0.5
+    },
+    "StatDeltas": {
+     "Cunning.Deception": 2,
+     "Charisma.Persuasion": 1
+    },
+    "SetFlags": [
+     "flag_covered_gremlin",
+     "met_firedrill"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "gre_snitch",
+    "Text": "Point straight at {gremlin}.",
+    "Requires": [],
+    "Tags": {
+     "betrayal": 1,
+     "obedience": 0.6
+    },
+    "StatDeltas": {
+     "Reputation.Standing": 2,
+     "Sanity.Composure": -1
+    },
+    "SetFlags": [
+     "flag_snitched_gremlin",
+     "met_firedrill",
+     "villain_gremlin"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "gre_absurb",
+    "Text": "Claim it was performance art.",
+    "Requires": [
+     "flag:path_absurdist"
+    ],
+    "Tags": {
+     "humor": 1,
+     "chaos": 0.8
+    },
+    "StatDeltas": {
+     "Charisma.Presence": 2,
+     "Sanity.Resilience": 1
+    },
+    "SetFlags": [
+     "flag_art_defense",
+     "met_firedrill"
+    ],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "y1_day_stranger_key",
+  "Kind": "quest",
+  "Conditions": [
+   "flag:system_awake",
+   "flag:info_proctor_leak"
+  ],
+  "Priority": 52,
+  "bOnce": true,
+  "Slots": {
+   "stranger": "random_npc"
+  },
+  "Location": "gate",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "Near the side gate, a background student you've never ranked glances twice, then three times.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@stranger",
+    "Text": "{stranger} lowers their voice. \"You're the one buying leak names. Don't trust the first one.\"",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@stranger",
+    "Text": "\"The real leak is a counsellor file, not a proctor. Someone swapped the rumour.\"",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "@stranger",
+    "Text": "\"I shouldn't care. But the System misfiled my secret class. I want that fixed.\"",
+    "Shot": "close"
+   }
+  ],
+  "PromptSpeaker": "@stranger",
+  "Text": "{stranger} waits for a deal. What do you offer?",
+  "Choices": [
+   {
+    "Id": "str_help",
+    "Text": "Promise to help fix their file.",
+    "Requires": [],
+    "Tags": {
+     "empathy": 1,
+     "loyalty": 0.6
+    },
+    "StatDeltas": {
+     "Sanity.Focus": 1,
+     "Reputation.Influence": 1
+    },
+    "SetFlags": [
+     "flag_stranger_ally",
+     "info_counsellor_leak",
+     "met_stranger_key"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "str_pay",
+    "Text": "Pay them to vanish after.",
+    "Requires": [
+     "stat:Funds>=4"
+    ],
+    "Tags": {
+     "cunning": 0.7,
+     "withdrawal": 0.3
+    },
+    "StatDeltas": {
+     "Funds.Liquidity": -3,
+     "Cunning.Observation": 2
+    },
+    "SetFlags": [
+     "info_counsellor_leak",
+     "met_stranger_key",
+     "flag_stranger_paid"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "str_doubt",
+    "Text": "Call it a trap and leave.",
+    "Requires": [],
+    "Tags": {
+     "withdrawal": 0.8,
+     "honesty": 0.2
+    },
+    "StatDeltas": {
+     "Cunning.Observation": 1,
+     "Sanity.Composure": 1
+    },
+    "SetFlags": [
+     "met_stranger_key",
+     "flag_ignored_keyinfo"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "str_exploit",
+    "Text": "Extract more, promise nothing.",
+    "Requires": [
+     "stat:Cunning>=5"
+    ],
+    "Tags": {
+     "betrayal": 0.8,
+     "ambition": 0.7
+    },
+    "StatDeltas": {
+     "Cunning.Tactics": 2,
+     "Intellect.Analysis": 1
+    },
+    "SetFlags": [
+     "info_counsellor_leak",
+     "met_stranger_key",
+     "flag_used_stranger"
+    ],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "y1_day_counsellor_mirror",
+  "Kind": "scene",
+  "Conditions": [
+   "flag:system_awake",
+   "flag:info_counsellor_leak"
+  ],
+  "Priority": 58,
+  "bOnce": true,
+  "Slots": {},
+  "Location": "office",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "The counsellor's office smells like paper and peppermint. A camera diode glows soft red above the desk.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@counsellor",
+    "Text": "{counsellor} smiles carefully. \"We're here to talk about purpose—not leaks.\"",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@counsellor",
+    "Text": "\"Students who chase meaning too hard burn out. Students who refuse it get redirected.\"",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "@counsellor",
+    "Text": "\"Tell me: are you becoming someone, or becoming useful?\"",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "system",
+    "Text": "Session tagged: Existential Compliance Check.",
+    "Shot": "pan"
+   }
+  ],
+  "PromptSpeaker": "@counsellor",
+  "Text": "{counsellor}'s pen hovers. Which truth do you feed the file?",
+  "Choices": [
+   {
+    "Id": "coun_useful",
+    "Text": "Say you want to be useful.",
+    "Requires": [],
+    "Tags": {
+     "obedience": 1,
+     "ambition": 0.5
+    },
+    "StatDeltas": {
+     "Reputation.Standing": 2,
+     "Sanity.Focus": -1
+    },
+    "SetFlags": [
+     "path_puppet_lean",
+     "met_counsellor"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "coun_someone",
+    "Text": "Say you want to be someone.",
+    "Requires": [
+     "flag:path_selfmade"
+    ],
+    "Tags": {
+     "ambition": 1,
+     "honesty": 0.7
+    },
+    "StatDeltas": {
+     "Sanity.Resilience": 2,
+     "Charisma.Presence": 1
+    },
+    "SetFlags": [
+     "path_selfmade",
+     "met_counsellor",
+     "flag_resists_redirect"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "coun_probe",
+    "Text": "Ask about misfiled secret classes.",
+    "Requires": [
+     "flag:flag_stranger_ally"
+    ],
+    "Tags": {
+     "cunning": 0.9,
+     "empathy": 0.4
+    },
+    "StatDeltas": {
+     "Intellect.Logic": 2,
+     "Cunning.Observation": 1
+    },
+    "SetFlags": [
+     "met_counsellor",
+     "flag_pressed_counsellor"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "coun_chaos",
+    "Text": "Say purpose is a prank.",
+    "Requires": [
+     "flag:path_absurdist"
+    ],
+    "Tags": {
+     "chaos": 1,
+     "humor": 0.8
+    },
+    "StatDeltas": {
+     "Luck.Timing": 2,
+     "Sanity.Composure": -1,
+     "Charisma.Charm": 1
+    },
+    "SetFlags": [
+     "met_counsellor",
+     "flag_counsellor_baffled",
+     "uniq_purpose_prank"
+    ],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "y1_day_rival_misread",
+  "Kind": "scene",
+  "Conditions": [
+   "flag:system_awake",
+   "rel:@rival>-2"
+  ],
+  "Priority": 33,
+  "bOnce": true,
+  "Slots": {},
+  "Location": "rooftop",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "Sunset turns the rooftop into a chessboard of shadow and glare. {rival} arrived first.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@rival",
+    "Text": "{rival} doesn't turn. \"You smiled at my failure in class. Or maybe that was pity. I can't tell.\"",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@rival",
+    "Text": "\"That's the problem with this school. Every kindness looks like a knife until proven otherwise.\"",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "@ally",
+    "Text": "From the stairwell, {ally} whispers, \"They misread you. Fix it—or don't.\"",
+    "Shot": "low"
+   }
+  ],
+  "PromptSpeaker": "@rival",
+  "Text": "{rival} finally faces you. How do you answer the misread?",
+  "Choices": [
+   {
+    "Id": "mis_clarify",
+    "Text": "Clarify: it was respect, not pity.",
+    "Requires": [],
+    "Tags": {
+     "honesty": 1,
+     "empathy": 0.6
+    },
+    "StatDeltas": {
+     "Charisma.Persuasion": 1,
+     "Sanity.Composure": 1
+    },
+    "SetFlags": [
+     "flag_rival_cleared",
+     "met_rival_rooftop"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "mis_weapon",
+    "Text": "Let them keep the wrong story.",
+    "Requires": [],
+    "Tags": {
+     "cunning": 1,
+     "betrayal": 0.4
+    },
+    "StatDeltas": {
+     "Cunning.Deception": 2,
+     "Intellect.Analysis": 1
+    },
+    "SetFlags": [
+     "flag_rival_misled",
+     "met_rival_rooftop"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "mis_cruel",
+    "Text": "Confirm it was mockery.",
+    "Requires": [],
+    "Tags": {
+     "cruelty": 1,
+     "ambition": 0.5
+    },
+    "StatDeltas": {
+     "Reputation.Influence": 1,
+     "Charisma.Presence": 1,
+     "Sanity.Resilience": -1
+    },
+    "SetFlags": [
+     "flag_rival_enemy",
+     "met_rival_rooftop",
+     "villain_rival"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "mis_ally",
+    "Text": "Ask {ally} to translate for you.",
+    "Requires": [
+     "rel:@ally>2"
+    ],
+    "Tags": {
+     "loyalty": 0.7,
+     "withdrawal": 0.3
+    },
+    "StatDeltas": {
+     "Charisma.Charm": 1,
+     "Sanity.Focus": 1
+    },
+    "SetFlags": [
+     "flag_ally_mediated",
+     "met_rival_rooftop"
+    ],
+    "Next": "None"
+   }
+  ]
+ }
+]

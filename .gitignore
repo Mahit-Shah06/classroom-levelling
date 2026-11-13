@@ -32,3 +32,4 @@ UnrealEngine/
 # Secrets
 .env
 *.key
+ThirdParty/Piper/

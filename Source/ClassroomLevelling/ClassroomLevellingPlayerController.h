@@ -55,4 +55,13 @@ protected:
 	/** Returns true if the player should use UMG touch controls */
 	bool ShouldUseTouchControls() const;
 
+	// Title / pause menus
+	void ShowMenu(bool bPause);
+	void HideMenu();
+	void NewGame();
+	void TogglePause();
+	TSharedPtr<class SMainMenu> Menu;
+	bool bInGame = false;
+	virtual void EndPlay(const EEndPlayReason::Type Reason) override;
+
 };

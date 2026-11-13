@@ -1,7 +1,7 @@
 [
  {
-  "Id": "stu_kurose",
-  "Name": "Kurose Ren",
+  "Id": "stu_okafor",
+  "Name": "Ngozi Okafor",
   "Kind": "student",
   "Voice": "47",
   "RoleFit": [
@@ -49,8 +49,8 @@
   "Patience": 6.5
  },
  {
-  "Id": "stu_habu",
-  "Name": "Habu Misaki",
+  "Id": "stu_ferreira",
+  "Name": "Lucas Ferreira",
   "Kind": "student",
   "Voice": "112",
   "RoleFit": [
@@ -98,8 +98,8 @@
   "Patience": 12.0
  },
  {
-  "Id": "stu_enomoto",
-  "Name": "Enomoto Kai",
+  "Id": "stu_solberg",
+  "Name": "Astrid Solberg",
   "Kind": "student",
   "Voice": "3",
   "RoleFit": [
@@ -148,8 +148,8 @@
   "Patience": 4.5
  },
  {
-  "Id": "stu_fujimori",
-  "Name": "Fujimori Aoi",
+  "Id": "stu_mehta",
+  "Name": "Rohan Mehta",
   "Kind": "student",
   "Voice": "221",
   "RoleFit": [
@@ -197,8 +197,8 @@
   "Patience": 10.5
  },
  {
-  "Id": "stu_tachibana",
-  "Name": "Tachibana Mei",
+  "Id": "stu_tanabe",
+  "Name": "Yuki Tanabe",
   "Kind": "student",
   "Voice": "89",
   "RoleFit": [
@@ -247,8 +247,8 @@
   "Patience": 8.0
  },
  {
-  "Id": "stu_saikawa",
-  "Name": "Saikawa Kenji",
+  "Id": "stu_alvarez",
+  "Name": "Mateo Alvarez",
   "Kind": "student",
   "Voice": "304",
   "RoleFit": [
@@ -296,8 +296,8 @@
   "Patience": 11.0
  },
  {
-  "Id": "stu_nagase",
-  "Name": "Nagase Yui",
+  "Id": "stu_haddad",
+  "Name": "Leila Haddad",
   "Kind": "student",
   "Voice": "156",
   "RoleFit": [
@@ -345,8 +345,8 @@
   "Patience": 5.0
  },
  {
-  "Id": "stu_okada",
-  "Name": "Okada Shion",
+  "Id": "stu_volkov",
+  "Name": "Dmitri Volkov",
   "Kind": "student",
   "Voice": "401",
   "RoleFit": [
@@ -395,8 +395,8 @@
   "Patience": 7.5
  },
  {
-  "Id": "stu_midorikawa",
-  "Name": "Midorikawa Rina",
+  "Id": "stu_kelly",
+  "Name": "Siobhan Kelly",
   "Kind": "student",
   "Voice": "67",
   "RoleFit": [
@@ -445,8 +445,8 @@
   "Patience": 14.0
  },
  {
-  "Id": "stu_torii",
-  "Name": "Torii Haruto",
+  "Id": "stu_mensah",
+  "Name": "Kwame Mensah",
   "Kind": "student",
   "Voice": "278",
   "RoleFit": [
@@ -495,8 +495,8 @@
   "Patience": 9.0
  },
  {
-  "Id": "stu_igarashi",
-  "Name": "Igarashi Sora",
+  "Id": "stu_rojas",
+  "Name": "Ana Lucia Rojas",
   "Kind": "student",
   "Voice": "190",
   "RoleFit": [
@@ -544,8 +544,8 @@
   "Patience": 13.5
  },
  {
-  "Id": "stu_wakatsuki",
-  "Name": "Wakatsuki Hinata",
+  "Id": "stu_brandt",
+  "Name": "Felix Brandt",
   "Kind": "student",
   "Voice": "333",
   "RoleFit": [

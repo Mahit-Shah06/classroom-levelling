@@ -1,0 +1,311 @@
+[
+ {
+  "Id": "staff_okonkwo",
+  "Name": "Amara Okonkwo",
+  "Kind": "staff",
+  "Voice": "714",
+  "RoleFit": [
+   "head"
+  ],
+  "Stats": {
+   "Sub": {
+    "Intellect.Logic": 88.0,
+    "Intellect.Memory": 82.0,
+    "Charisma.Presence": 92.0,
+    "Charisma.Persuasion": 86.0,
+    "Physique.Strength": 48.0,
+    "Physique.Endurance": 55.0,
+    "Sanity.Composure": 90.0,
+    "Sanity.Resilience": 84.0,
+    "Cunning.Guile": 78.0,
+    "Cunning.Insight": 85.0,
+    "Reputation.Prestige": 95.0,
+    "Reputation.Influence": 93.0,
+    "Funds.Wealth": 88.0,
+    "Funds.Resources": 80.0,
+    "Luck.Fortune": 62.0,
+    "Luck.Timing": 70.0
+   }
+  },
+  "Values": {
+   "obedience": 0.95,
+   "empathy": -0.35,
+   "ambition": 0.9,
+   "cunning": 0.55,
+   "betrayal": -0.2,
+   "chaos": -0.85,
+   "withdrawal": -0.5,
+   "loyalty": 0.7,
+   "honesty": 0.15,
+   "cruelty": 0.25,
+   "humor": -0.4
+  },
+  "Perception": 0.9,
+  "Patience": 5.5
+ },
+ {
+  "Id": "staff_haugen",
+  "Name": "Ingrid Haugen",
+  "Kind": "teacher",
+  "Voice": "203",
+  "RoleFit": [
+   "homeroom"
+  ],
+  "Stats": {
+   "Sub": {
+    "Intellect.Logic": 76.0,
+    "Intellect.Memory": 80.0,
+    "Charisma.Presence": 72.0,
+    "Charisma.Persuasion": 78.0,
+    "Physique.Strength": 42.0,
+    "Physique.Endurance": 58.0,
+    "Sanity.Composure": 74.0,
+    "Sanity.Resilience": 70.0,
+    "Cunning.Guile": 45.0,
+    "Cunning.Insight": 68.0,
+    "Reputation.Prestige": 65.0,
+    "Reputation.Influence": 60.0,
+    "Funds.Wealth": 52.0,
+    "Funds.Resources": 55.0,
+    "Luck.Fortune": 58.0,
+    "Luck.Timing": 54.0
+   }
+  },
+  "Values": {
+   "obedience": 0.55,
+   "empathy": 0.8,
+   "ambition": 0.35,
+   "cunning": -0.15,
+   "betrayal": -0.7,
+   "chaos": -0.45,
+   "withdrawal": -0.2,
+   "loyalty": 0.75,
+   "honesty": 0.85,
+   "cruelty": -0.8,
+   "humor": 0.4
+  },
+  "Perception": 0.7,
+  "Patience": 10.0
+ },
+ {
+  "Id": "staff_venkatesh",
+  "Name": "Priya Venkatesh",
+  "Kind": "teacher",
+  "Voice": "481",
+  "RoleFit": [
+   "proctor"
+  ],
+  "Stats": {
+   "Sub": {
+    "Intellect.Logic": 90.0,
+    "Intellect.Memory": 86.0,
+    "Charisma.Presence": 58.0,
+    "Charisma.Persuasion": 52.0,
+    "Physique.Strength": 50.0,
+    "Physique.Endurance": 62.0,
+    "Sanity.Composure": 88.0,
+    "Sanity.Resilience": 82.0,
+    "Cunning.Guile": 70.0,
+    "Cunning.Insight": 84.0,
+    "Reputation.Prestige": 72.0,
+    "Reputation.Influence": 68.0,
+    "Funds.Wealth": 60.0,
+    "Funds.Resources": 58.0,
+    "Luck.Fortune": 45.0,
+    "Luck.Timing": 66.0
+   }
+  },
+  "Values": {
+   "obedience": 0.85,
+   "empathy": 0.1,
+   "ambition": 0.4,
+   "cunning": 0.3,
+   "betrayal": -0.9,
+   "chaos": -0.95,
+   "withdrawal": 0.2,
+   "loyalty": 0.5,
+   "honesty": 0.95,
+   "cruelty": -0.3,
+   "humor": -0.55
+  },
+  "Perception": 0.95,
+  "Patience": 4.0
+ },
+ {
+  "Id": "staff_delgado",
+  "Name": "Carmen Delgado",
+  "Kind": "staff",
+  "Voice": "112",
+  "RoleFit": [
+   "nurse"
+  ],
+  "Stats": {
+   "Sub": {
+    "Intellect.Logic": 70.0,
+    "Intellect.Memory": 74.0,
+    "Charisma.Presence": 68.0,
+    "Charisma.Persuasion": 72.0,
+    "Physique.Strength": 55.0,
+    "Physique.Endurance": 72.0,
+    "Sanity.Composure": 80.0,
+    "Sanity.Resilience": 86.0,
+    "Cunning.Guile": 40.0,
+    "Cunning.Insight": 62.0,
+    "Reputation.Prestige": 58.0,
+    "Reputation.Influence": 55.0,
+    "Funds.Wealth": 48.0,
+    "Funds.Resources": 62.0,
+    "Luck.Fortune": 64.0,
+    "Luck.Timing": 60.0
+   }
+  },
+  "Values": {
+   "obedience": 0.3,
+   "empathy": 0.95,
+   "ambition": 0.1,
+   "cunning": -0.4,
+   "betrayal": -0.85,
+   "chaos": -0.3,
+   "withdrawal": 0.15,
+   "loyalty": 0.7,
+   "honesty": 0.8,
+   "cruelty": -0.95,
+   "humor": 0.55
+  },
+  "Perception": 0.75,
+  "Patience": 12.0
+ },
+ {
+  "Id": "staff_raukawa",
+  "Name": "Tane Raukawa",
+  "Kind": "staff",
+  "Voice": "629",
+  "RoleFit": [
+   "coach"
+  ],
+  "Stats": {
+   "Sub": {
+    "Intellect.Logic": 52.0,
+    "Intellect.Memory": 48.0,
+    "Charisma.Presence": 82.0,
+    "Charisma.Persuasion": 70.0,
+    "Physique.Strength": 92.0,
+    "Physique.Endurance": 94.0,
+    "Sanity.Composure": 68.0,
+    "Sanity.Resilience": 78.0,
+    "Cunning.Guile": 35.0,
+    "Cunning.Insight": 50.0,
+    "Reputation.Prestige": 70.0,
+    "Reputation.Influence": 66.0,
+    "Funds.Wealth": 45.0,
+    "Funds.Resources": 50.0,
+    "Luck.Fortune": 72.0,
+    "Luck.Timing": 68.0
+   }
+  },
+  "Values": {
+   "obedience": 0.45,
+   "empathy": 0.5,
+   "ambition": 0.75,
+   "cunning": -0.25,
+   "betrayal": -0.6,
+   "chaos": 0.35,
+   "withdrawal": -0.7,
+   "loyalty": 0.85,
+   "honesty": 0.65,
+   "cruelty": -0.4,
+   "humor": 0.7
+  },
+  "Perception": 0.55,
+  "Patience": 7.0
+ },
+ {
+  "Id": "staff_rashid",
+  "Name": "Layla Al-Rashid",
+  "Kind": "staff",
+  "Voice": "337",
+  "RoleFit": [
+   "counsellor"
+  ],
+  "Stats": {
+   "Sub": {
+    "Intellect.Logic": 78.0,
+    "Intellect.Memory": 76.0,
+    "Charisma.Presence": 74.0,
+    "Charisma.Persuasion": 88.0,
+    "Physique.Strength": 40.0,
+    "Physique.Endurance": 52.0,
+    "Sanity.Composure": 92.0,
+    "Sanity.Resilience": 88.0,
+    "Cunning.Guile": 58.0,
+    "Cunning.Insight": 90.0,
+    "Reputation.Prestige": 62.0,
+    "Reputation.Influence": 70.0,
+    "Funds.Wealth": 56.0,
+    "Funds.Resources": 54.0,
+    "Luck.Fortune": 60.0,
+    "Luck.Timing": 58.0
+   }
+  },
+  "Values": {
+   "obedience": 0.2,
+   "empathy": 0.9,
+   "ambition": 0.25,
+   "cunning": 0.15,
+   "betrayal": -0.75,
+   "chaos": -0.2,
+   "withdrawal": 0.4,
+   "loyalty": 0.6,
+   "honesty": 0.7,
+   "cruelty": -0.9,
+   "humor": 0.35
+  },
+  "Perception": 0.88,
+  "Patience": 14.0
+ },
+ {
+  "Id": "staff_seo",
+  "Name": "Yuna Seo",
+  "Kind": "teacher",
+  "Voice": "55",
+  "RoleFit": [
+   "homeroom",
+   "proctor"
+  ],
+  "Stats": {
+   "Sub": {
+    "Intellect.Logic": 84.0,
+    "Intellect.Memory": 80.0,
+    "Charisma.Presence": 66.0,
+    "Charisma.Persuasion": 64.0,
+    "Physique.Strength": 46.0,
+    "Physique.Endurance": 60.0,
+    "Sanity.Composure": 76.0,
+    "Sanity.Resilience": 72.0,
+    "Cunning.Guile": 62.0,
+    "Cunning.Insight": 74.0,
+    "Reputation.Prestige": 68.0,
+    "Reputation.Influence": 64.0,
+    "Funds.Wealth": 58.0,
+    "Funds.Resources": 56.0,
+    "Luck.Fortune": 50.0,
+    "Luck.Timing": 62.0
+   }
+  },
+  "Values": {
+   "obedience": 0.7,
+   "empathy": 0.45,
+   "ambition": 0.55,
+   "cunning": 0.4,
+   "betrayal": -0.65,
+   "chaos": -0.7,
+   "withdrawal": -0.1,
+   "loyalty": 0.55,
+   "honesty": 0.75,
+   "cruelty": -0.5,
+   "humor": 0.2
+  },
+  "Perception": 0.8,
+  "Patience": 6.5
+ }
+]

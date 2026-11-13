@@ -1,7 +1,7 @@
 [
  {
-  "Id": "stu_arai",
-  "Name": "Arai Shion",
+  "Id": "stu_raman",
+  "Name": "Ananya Raman",
   "Kind": "student",
   "Voice": "512",
   "RoleFit": [
@@ -42,8 +42,8 @@
   "Patience": 6.5
  },
  {
-  "Id": "stu_fujimori_n",
-  "Name": "Fujimori Nao",
+  "Id": "stu_alamin",
+  "Name": "Tariq Al-Amin",
   "Kind": "student",
   "Voice": "634",
   "RoleFit": [
@@ -83,8 +83,8 @@
   "Patience": 11.0
  },
  {
-  "Id": "stu_kuroishi",
-  "Name": "Kuroishi Haru",
+  "Id": "stu_zhou",
+  "Name": "Mei-Lin Zhou",
   "Kind": "student",
   "Voice": "701",
   "RoleFit": [
@@ -125,8 +125,8 @@
   "Patience": 14.0
  },
  {
-  "Id": "stu_natsume",
-  "Name": "Natsume Riku",
+  "Id": "stu_grant",
+  "Name": "Oliver Grant",
   "Kind": "student",
   "Voice": "458",
   "RoleFit": [
@@ -167,8 +167,8 @@
   "Patience": 4.5
  },
  {
-  "Id": "stu_sawaguchi",
-  "Name": "Sawaguchi Yui",
+  "Id": "stu_bello",
+  "Name": "Zainab Bello",
   "Kind": "student",
   "Voice": "823",
   "RoleFit": [
@@ -209,8 +209,8 @@
   "Patience": 9.0
  },
  {
-  "Id": "stu_murase",
-  "Name": "Murase Toru",
+  "Id": "stu_lund",
+  "Name": "Henrik Lund",
   "Kind": "student",
   "Voice": "567",
   "RoleFit": [
@@ -250,8 +250,8 @@
   "Patience": 12.5
  },
  {
-  "Id": "stu_hidaka",
-  "Name": "Hidaka Mei",
+  "Id": "stu_dubois",
+  "Name": "Camille Dubois",
   "Kind": "student",
   "Voice": "889",
   "RoleFit": [
@@ -292,8 +292,8 @@
   "Patience": 10.0
  },
  {
-  "Id": "stu_enomoto_j",
-  "Name": "Enomoto Jun",
+  "Id": "stu_park",
+  "Name": "Jae-won Park",
   "Kind": "student",
   "Voice": "476",
   "RoleFit": [
@@ -334,8 +334,8 @@
   "Patience": 7.5
  },
  {
-  "Id": "stu_shirane",
-  "Name": "Shirane Kazu",
+  "Id": "stu_petrova",
+  "Name": "Nadia Petrova",
   "Kind": "student",
   "Voice": "745",
   "RoleFit": [
@@ -377,8 +377,8 @@
   "Patience": 13.0
  },
  {
-  "Id": "stu_tsujimoto",
-  "Name": "Tsujimoto Aya",
+  "Id": "stu_brooks",
+  "Name": "Elijah Brooks",
   "Kind": "student",
   "Voice": "591",
   "RoleFit": [
@@ -420,8 +420,8 @@
   "Patience": 5.0
  },
  {
-  "Id": "stu_manabe",
-  "Name": "Manabe Osamu",
+  "Id": "stu_siddiqui",
+  "Name": "Farah Siddiqui",
   "Kind": "student",
   "Voice": "903",
   "RoleFit": [
@@ -462,8 +462,8 @@
   "Patience": 4.0
  },
  {
-  "Id": "stu_wakita",
-  "Name": "Wakita Sora",
+  "Id": "stu_novak",
+  "Name": "Tomas Novak",
   "Kind": "student",
   "Voice": "668",
   "RoleFit": [

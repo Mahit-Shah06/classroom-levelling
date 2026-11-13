@@ -36,8 +36,11 @@ public:
 	UFUNCTION(BlueprintCallable) bool CheckCondition(const FString& Cond) const;
 	UFUNCTION(BlueprintCallable) bool CheckAll(const TArray<FString>& Conds) const;
 
-	// Best eligible storylet of a kind (None = any). Binds its slots.
-	UFUNCTION(BlueprintCallable) bool PickStorylet(FName Kind, FStorylet& Out);
+	// Best eligible storylet of a kind/location (None = any). Pick binds its slots and marks it played.
+	const FStorylet* FindStorylet(FName Kind, FName Location = NAME_None) const;
+	UFUNCTION(BlueprintCallable) bool PickStorylet(FName Kind, FName Location, FStorylet& Out);
+	FName SpeakerNPC(FName Speaker) const;   // "@rival" -> npc id (None for narrator/system)
+	FString SpeakerName(FName Speaker) const; // display name ("" = narrator)
 	UFUNCTION(BlueprintCallable) FText ResolveText(const FText& In) const;
 
 	// Apply a choice; Witnesses interpret it. Hesitation = seconds the player took.
@@ -50,6 +53,7 @@ public:
 
 private:
 	FName SelectNPC(FName Selector);
+	void RollRoles(TArray<FName>& Pool, const FName* Roles, int32 Count);
 	FRandomStream Rng;
 	TSet<FName> Played;
 	TMap<FName, float> AverageProfile;

@@ -107,3 +107,19 @@
 - Teachers: a fixed set assigned to classes by skill match. Involvement scales with player actions: minimal by default, deeper storylets once the player engages them or goes down the teacher route.
 - Voices: Piper TTS, pre-generated offline, with a distinct voice per NPC (libritts_r speaker ids) and accents where available. Mouth flaps follow audio amplitude. Screen shake and controller rumble on strong reactions.
 - UI (v1): a monochrome "System window". Text types out, there's a hesitation bar, and the System narrates how each witness read your choice, including misreads. Keys: 1-5 to choose, Space to continue or skip typing, Esc to close.
+
+## Story frame + playtest round 1 (user, 2026-11-13)
+- The System is NOT a sci-fi/Matrix entity. It is the school's real evaluation system, built and monitored by the school heads,
+  who boast about a 99% placement/graduation rate. It observes students, assigns stats and ranks, and relays its directives
+  through the PROFESSORS (teachers announce exams and read out evaluations). Students see their stats on a school app.
+- Its purpose: make students compete. The survivors become its puppets; #1 is the most perfect puppet.
+- Player stance is emergent, not chosen up front: with the System (model student / puppet), the System's pet, a doomed loud rebellion,
+  or the cold manipulator who never bends and quietly turns the System to their own ends. Hard-working idealists are what the System loves to play with.
+- Opening: no floating "welcome" window. The game starts with a cutscene (entrance ceremony: the head's speech about the 99% rate),
+  then homeroom, where a teacher explains the evaluation app and your first stats. The System only "speaks" through staff and app notifications.
+- Names: hugely diverse, international (it is the most elite school in the world). Fictional city; no country specified.
+- UI: dialogue box (speaker name + lines) with the choices on its right side; prompts show 1/2/3 on keyboard or A/B/X/Y once a gamepad is used.
+  Hesitation just says "Hesitation detected". The hesitation timer only starts after the text has finished and the player has had time to read it.
+- Wanted: main menu, settings, cutscenes, a 3D school hub environment. Assets are generated in parallel (Tripo/Rodin) with a procedural blockout.
+- Content format: storylets have Location, Lines (cutscene dialogue: Speaker, Text, Shot) and PromptSpeaker + Text (the final prompt).
+  Speakers: @rival/@ally/@gremlin/@president/@ex1/@broker, staff @head/@homeroom/@proctor/@nurse/@coach/@counsellor, "narrator" or "system" (app notification).
