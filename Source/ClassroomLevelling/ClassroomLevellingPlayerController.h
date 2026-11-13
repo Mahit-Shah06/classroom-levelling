@@ -80,6 +80,7 @@ protected:
 	bool bInGame = false, bSprinting = false;
 	float StepDist = 0.f, AreaT = 0.f, FpsAcc = 0.f; int32 FpsFrames = 0;
 	FName LastArea;
+	int32 LastRank = 0;
 	bool bAutoTune = false; float TuneT = 0.f; int32 TuneFrames = 0;
 public:
 	void AutoTuneTick();

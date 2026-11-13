@@ -1201,8 +1201,7 @@
     },
     "StatDeltas": {
      "Reputation.Fear": 1,
-     "Cunning.Investigation": 1,
-     "rel_placeholder": 0
+     "Cunning.Investigation": 1
     },
     "SetFlags": [
      "market_done",

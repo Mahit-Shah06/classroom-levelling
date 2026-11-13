@@ -219,6 +219,29 @@ private:
 	bool bPad = false, bContinue = false;
 };
 
+// Lines are often written as narration around speech ({rival} taps the desk. "Pick."): return only what is said aloud.
+// Empty = nothing quoted.
+static FString SpokenPart(const FString& In)
+{
+	FString Out; bool bOpen = false; TCHAR Opener = 0;
+	for (int32 i = 0; i < In.Len(); ++i)
+	{
+		const TCHAR C = In[i];
+		const bool bDouble = C == TEXT('"') || C == 0x201C || C == 0x201D;
+		const bool bSingle = C == TEXT('\'') || C == 0x2018 || C == 0x2019;
+		if (!bOpen)
+		{
+			// A single quote only opens speech at a word start (otherwise it is an apostrophe).
+			if (bDouble || (bSingle && (i == 0 || FChar::IsWhitespace(In[i - 1])) && i + 1 < In.Len() && !FChar::IsWhitespace(In[i + 1]))) { bOpen = true; Opener = bDouble ? TEXT('"') : TEXT('\''); }
+			continue;
+		}
+		const bool bEndsWord = i + 1 >= In.Len() || FChar::IsWhitespace(In[i + 1]) || FChar::IsPunct(In[i + 1]);
+		if ((Opener == TEXT('"') && bDouble) || (Opener == TEXT('\'') && bSingle && bEndsWord)) { bOpen = false; Out += TEXT(" "); continue; }
+		Out.AppendChar(C);
+	}
+	return Out.TrimStartAndEnd();
+}
+
 // ---------------------------------------------------------------------------
 UStoryPlayerComponent::UStoryPlayerComponent()
 {
@@ -268,6 +291,7 @@ void UStoryPlayerComponent::StartTalk(FName NPC)
 	UNarrativeSubsystem* N = Narrative();
 	if (!N || NPC.IsNone()) return;
 	N->TalkTarget = NPC;
+	N->SlotBindings.Add(TEXT("npc"), NPC); // talk conditions (rel:@npc>20) are about whoever you walked up to
 	FStorylet S;
 	if (N->PickStorylet(TEXT("talk"), NAME_None, S))
 	{
@@ -313,7 +337,11 @@ bool UStoryPlayerComponent::Begin(const FStorylet& S)
 		StepSpeakers.Add(Npc);
 		if (!Npc.IsNone()) Cast_.AddUnique(Npc);
 		const bool bVoiced = V && Speaker != TEXT("system");
-		VoicePaths.Add(bVoiced ? V->Request(N->ResolveText(Text).ToString(), VoiceId(Npc)) : FString());
+		// A character voices only their quoted speech; a line that is pure stage direction goes to the narrator.
+		const FString Full = N->ResolveText(Text).ToString();
+		const FString Said = Npc.IsNone() ? FString() : SpokenPart(Full);
+		const bool bDirection = !Npc.IsNone() && Said.IsEmpty() && Text.ToString().Contains(TEXT("{"));
+		VoicePaths.Add(bVoiced ? V->Request(Said.IsEmpty() ? Full : Said, VoiceId(bDirection ? FName() : Npc)) : FString());
 	};
 	for (const FDialogueLine& L : Current.Lines) AddStep(L.Speaker, L.Text);
 	AddStep(Current.PromptSpeaker, Current.Text);
@@ -459,6 +487,7 @@ void UStoryPlayerComponent::Close()
 {
 	const bool bWasOpen = Window.IsValid();
 	if (Window.IsValid()) UE_LOG(LogStory, Log, TEXT("Close %s at step %d"), *Current.Id.ToString(), Step);
+	if (bWasOpen) LastKind = Current.Kind;
 	StopVoice();
 	if (Window.IsValid() && GEngine && GEngine->GameViewport) GEngine->GameViewport->RemoveViewportWidgetContent(Window.ToSharedRef());
 	Window.Reset();

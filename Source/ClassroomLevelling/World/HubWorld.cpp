@@ -22,7 +22,7 @@
 // Real colours (menus show them); gameplay desaturates to the B/W look via post-process. Ordered light -> dark
 // so the grayscale reading matches the original tone design.
 static const float Tones[] = { 0.92f, 0.55f, 0.22f, 0.05f };
-static const FLinearColor CubePal[] = { FLinearColor(0.93f, 0.86f, 0.72f), FLinearColor(0.32f, 0.55f, 0.30f), FLinearColor(0.62f, 0.24f, 0.16f), FLinearColor(0.06f, 0.08f, 0.16f) }; // cream, grass, brick, navy
+static const FLinearColor CubePal[] = { FLinearColor(0.60f, 0.54f, 0.44f), FLinearColor(0.32f, 0.55f, 0.30f), FLinearColor(0.62f, 0.24f, 0.16f), FLinearColor(0.06f, 0.08f, 0.16f) }; // cream, grass, brick, navy
 static const FLinearColor CylPal[] = { FLinearColor(0.95f, 0.93f, 0.88f), FLinearColor(0.35f, 0.62f, 0.85f), FLinearColor(0.70f, 0.30f, 0.20f), FLinearColor(0.20f, 0.12f, 0.06f) };  // white, sky, clay, bark
 static const FLinearColor SphPal[] = { FLinearColor(0.20f, 0.52f, 0.22f), FLinearColor(0.85f, 0.75f, 0.30f), FLinearColor(0.55f, 0.20f, 0.35f), FLinearColor(0.05f, 0.05f, 0.05f) }; // leaves, gold, plum
 
@@ -34,12 +34,15 @@ AHubWorld::AHubWorld()
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> CubM(TEXT("/Engine/BasicShapes/Cube.Cube"));
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> CylM(TEXT("/Engine/BasicShapes/Cylinder.Cylinder"));
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> SphM(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
+	// The engine cube defaults to the prototype grid material; use the plain tintable one on everything.
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> Plain(TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
 	auto Make = [&](TArray<TObjectPtr<UInstancedStaticMeshComponent>>& Arr, UStaticMesh* M, const TCHAR* Base)
 	{
 		for (int32 t = 0; t < UE_ARRAY_COUNT(Tones); ++t)
 		{
 			UInstancedStaticMeshComponent* C = CreateDefaultSubobject<UInstancedStaticMeshComponent>(*FString::Printf(TEXT("%s%d"), Base, t));
 			C->SetStaticMesh(M);
+			if (Plain.Succeeded()) C->SetMaterial(0, Plain.Object);
 			C->SetupAttachment(RootComponent);
 			C->SetMobility(EComponentMobility::Static);
 			Arr.Add(C);
@@ -88,7 +91,12 @@ void AHubWorld::BeginPlay()
 		S.bOverride_ColorContrast = true; S.ColorContrast = FVector4(1, 1, 1, 1);
 		S.bOverride_VignetteIntensity = true; S.VignetteIntensity = 0.3f;
 		S.bOverride_MotionBlurAmount = true; S.MotionBlurAmount = 0.f; // cleaner cuts + cheaper
-		S.bOverride_AutoExposureBias = true; S.AutoExposureBias = 1.0f;
+		S.bOverride_AutoExposureBias = true; S.AutoExposureBias = 0.3f;
+		// Print-like finish: grain, soft bloom and a slight toe so the B/W reads as film stock, not a grey filter.
+		S.bOverride_FilmGrainIntensity = true; S.FilmGrainIntensity = 0.f;
+		S.bOverride_BloomIntensity = true; S.BloomIntensity = 0.45f;
+		S.bOverride_FilmToe = true; S.FilmToe = 0.62f;
+		S.bOverride_FilmSlope = true; S.FilmSlope = 0.92f;
 	}
 	Cam = GetWorld()->SpawnActor<ACameraActor>(SP);
 	if (Cam) { Cam->GetCameraComponent()->SetFieldOfView(55.f); Cam->GetCameraComponent()->bConstrainAspectRatio = false; }
@@ -402,6 +410,7 @@ void AHubWorld::Tick(float Dt)
 		S.ColorSaturation = FVector4(1, 1, 1, 1) * (1.f - G) + FVector4(0, 0, 0, 1) * G; S.ColorSaturation.W = 1.f;
 		const float C = FMath::Lerp(1.f, 1.15f, G); S.ColorContrast = FVector4(C, C, C, 1);
 		S.VignetteIntensity = FMath::Lerp(0.3f, 0.55f, G);
+		S.FilmGrainIntensity = 0.35f * G;
 	}
 	if (bOrbit && Cam)
 	{

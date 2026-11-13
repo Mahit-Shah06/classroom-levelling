@@ -54,6 +54,12 @@ public:
 			]
 			+ SOverlay::Slot().HAlign(HAlign_Right).VAlign(VAlign_Top).Padding(24, 16)
 			[ SAssignNew(Fps, STextBlock).Font(F("Mono", 12)).ColorAndOpacity(FLinearColor(0.8f, 0.8f, 0.8f)) ]
+			+ SOverlay::Slot().HAlign(HAlign_Center).VAlign(VAlign_Top).Padding(0, 110, 0, 0)
+			[
+				SNew(SVerticalBox)
+				+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Center)[ SAssignNew(Notice, STextBlock).Font(F("Bold", 26)).ColorAndOpacity(FLinearColor(1.f, 0.72f, 0.18f)).ShadowOffset(FVector2D(2, 2)) ]
+				+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Center)[ SAssignNew(NoticeSub, STextBlock).Font(F("Regular", 16)).ColorAndOpacity(FLinearColor::White).ShadowOffset(FVector2D(1, 1)) ]
+			]
 			+ SOverlay::Slot().HAlign(HAlign_Left).VAlign(VAlign_Bottom).Padding(48, 0, 0, 40)
 			[
 				SNew(SVerticalBox)
@@ -70,15 +76,19 @@ public:
 	void ShowArea(const FString& Title, const FString& Subtitle) { Area->SetText(FText::FromString(Title.ToUpper())); Sub->SetText(FText::FromString(Subtitle)); AreaT = 4.f; }
 	void SetPrompt(const FString& S) { PromptBox->SetVisibility(S.IsEmpty() ? EVisibility::Collapsed : EVisibility::HitTestInvisible); Prompt->SetText(FText::FromString(S)); }
 	void SetFps(const FString& S) { Fps->SetText(FText::FromString(S)); }
+	void ShowNotice(const FString& Title, const FString& Line) { Notice->SetText(FText::FromString(Title)); NoticeSub->SetText(FText::FromString(Line)); NoticeT = 5.f; }
 	void SetStatus(const FString& G, const FString& S) { Goal->SetText(FText::FromString(G)); Status->SetText(FText::FromString(S)); }
 	virtual void Tick(const FGeometry& G, const double T, const float Dt) override
 	{
 		AreaT = FMath::Max(AreaT - Dt, 0.f);
 		const float A = FMath::Clamp(AreaT, 0.f, 1.f);
 		Area->SetRenderOpacity(A); Sub->SetRenderOpacity(A);
+		NoticeT = FMath::Max(NoticeT - Dt, 0.f);
+		Notice->SetRenderOpacity(FMath::Clamp(NoticeT, 0.f, 1.f)); NoticeSub->SetRenderOpacity(FMath::Clamp(NoticeT, 0.f, 1.f));
 	}
 private:
-	TSharedPtr<STextBlock> Area, Sub, Prompt, Fps, Goal, Status;
+	TSharedPtr<STextBlock> Area, Sub, Prompt, Fps, Goal, Status, Notice, NoticeSub;
+	float NoticeT = 0.f;
 	TSharedPtr<SBorder> PromptBox;
 	float AreaT = 0.f;
 };
@@ -122,7 +132,14 @@ void AClassroomLevellingPlayerController::BeginPlay()
 		{
 			Autosave();
 			const UNarrativeSubsystem* N = GetGameInstance()->GetSubsystem<UNarrativeSubsystem>();
-			if (N && !N->EndingReached().IsNone()) ShowEnding();
+			if (N && !N->EndingReached().IsNone()) { ShowEnding(); return; }
+			// Tell the player what the scene did to their standing.
+			const int32 R = N ? N->Rank() : 0;
+			const bool bExam = Story->LastKind == TEXT("exam");
+			if (N && Hud.IsValid() && LastRank > 0 && (bExam || R != LastRank))
+				Hud->ShowNotice(bExam ? TEXT("EXAM STAGE COMPLETE") : R < LastRank ? TEXT("RANK UP") : TEXT("RANK DOWN"),
+					R == LastRank ? FString::Printf(TEXT("Rank holds at %d of %d"), R, N->CohortSize()) : FString::Printf(TEXT("Rank %d  >  %d of %d"), LastRank, R, N->CohortSize()));
+			LastRank = R;
 		};
 		ApplyPrefs();
 		ShowMenu(false);
@@ -278,6 +295,7 @@ void AClassroomLevellingPlayerController::EnterPlay()
 	ResetIgnoreInputFlags(); // counters: fully unlock
 	SetInputMode(FInputModeGameOnly());
 	LastArea = NAME_None;
+	if (const UNarrativeSubsystem* N = GetGameInstance()->GetSubsystem<UNarrativeSubsystem>()) LastRank = N->Rank();
 }
 
 void AClassroomLevellingPlayerController::NewGame()
@@ -408,7 +426,7 @@ void AClassroomLevellingPlayerController::PlayerTick(float Dt)
 	if (FpsAcc >= 0.5f && Hud.IsValid()) { if (Prefs.bShowFps) Hud->SetFps(FString::Printf(TEXT("%d FPS"), FMath::RoundToInt(FpsFrames / FpsAcc))); FpsAcc = 0.f; FpsFrames = 0; }
 
 	ACharacter* C = Cast<ACharacter>(GetPawn());
-	if (!C || Story->IsBusy()) { if (Hud.IsValid()) Hud->SetPrompt(FString()); return; }
+	if (!C || Story->IsBusy()) { if (Hud.IsValid()) { Hud->SetPrompt(FString()); Hud->SetStatus(FString(), FString()); } return; }
 
 	// Footsteps by distance travelled on the ground.
 	if (C->GetCharacterMovement()->IsMovingOnGround())
@@ -438,7 +456,17 @@ void AClassroomLevellingPlayerController::PlayerTick(float Dt)
 		// Objective = where the best eligible scene is waiting.
 		FString GoalText;
 		if (const FStorylet* S = N->FindStorylet(NAME_None, NAME_None); S && !S->Location.IsNone())
+		{
 			GoalText = FString::Printf(TEXT("%s  >  %s"), S->Kind == TEXT("exam") ? TEXT("EXAM PENDING") : TEXT("NEXT"), *S->Location.ToString().ToUpper());
+			if (const FHubArea* Target = Hub->Area(S->Location))
+			{
+				// Distance + which way to turn, relative to where the camera looks.
+				const FVector To = Target->Center - C->GetActorLocation();
+				const float Rel = FRotator::NormalizeAxis(To.Rotation().Yaw - GetControlRotation().Yaw);
+				static const TCHAR* Dirs[] = { TEXT("ahead"), TEXT("ahead right"), TEXT("right"), TEXT("behind right"), TEXT("behind"), TEXT("behind left"), TEXT("left"), TEXT("ahead left") };
+				GoalText += FString::Printf(TEXT("   %dm %s"), FMath::RoundToInt(To.Size2D() / 100.f), Dirs[FMath::RoundToInt((Rel + 360.f) / 45.f) % 8]);
+			}
+		}
 		Hud->SetStatus(GoalText, FString::Printf(TEXT("LV %d   RANK %d/%d   [%s] EVAL app"), N->Level, N->Rank(), N->CohortSize(),
 			FSlateApplication::Get().IsGamepadAttached() ? TEXT("Back") : TEXT("Tab")));
 		if (App.IsValid()) App->Refresh(N, FSlateApplication::Get().IsGamepadAttached() ? TEXT("Back") : TEXT("Tab"));

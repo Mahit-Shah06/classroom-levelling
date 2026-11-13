@@ -28,6 +28,7 @@ public:
 
 	bool IsAwaitingChoice() const { return bAwaitingChoice; }
 	bool IsBusy() const { return Window.IsValid() || bBlocked; }
+	FName LastKind;                     // kind of the scene that just closed (for the HUD's exam/rank notice)
 	bool bBlocked = false;              // set while menus are open
 	TFunction<void()> OnPauseRequested; // Esc / Start inside a scene
 	TFunction<void()> OnSceneEnded;     // autosave hook
