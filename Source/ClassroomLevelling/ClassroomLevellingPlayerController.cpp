@@ -2,12 +2,18 @@
 
 
 #include "ClassroomLevellingPlayerController.h"
+#include "StoryPlayerComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Engine/LocalPlayer.h"
 #include "InputMappingContext.h"
 #include "Blueprint/UserWidget.h"
 #include "ClassroomLevelling.h"
 #include "Widgets/Input/SVirtualJoystick.h"
+
+AClassroomLevellingPlayerController::AClassroomLevellingPlayerController()
+{
+	Story = CreateDefaultSubobject<UStoryPlayerComponent>(TEXT("Story"));
+}
 
 void AClassroomLevellingPlayerController::BeginPlay()
 {

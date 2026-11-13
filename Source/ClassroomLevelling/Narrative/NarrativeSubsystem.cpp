@@ -92,7 +92,33 @@ void UNarrativeSubsystem::NewRun(int32 Seed)
 {
 	Rng.Initialize(Seed);
 	Player = FStatBlock(); Relationship.Reset(); Flags.Reset(); TagHistory.Reset(); Played.Reset(); SlotBindings.Reset();
-	for (const auto& KV : NPCs) Relationship.Add(KV.Key, 0.f);
+	RoleBindings.Reset();
+	for (auto& KV : NPCs) { Relationship.Add(KV.Key, 0.f); KV.Value.Role = TEXT("bg"); }
+
+	// Roll the cast: every run, any student can fill any key role (personality fit preferred).
+	TArray<FName> Pool;
+	for (const auto& KV : NPCs) if (KV.Value.Kind == TEXT("student")) Pool.Add(KV.Key);
+	for (int32 i = Pool.Num() - 1; i > 0; --i) Pool.Swap(i, Rng.RandRange(0, i));
+	static const FName Roles[] = { "rival", "ally", "gremlin", "president", "ex1", "broker" };
+	for (const FName& Role : Roles)
+	{
+		int32 Pick = Pool.IndexOfByPredicate([&](FName Id) { const auto& F = NPCs[Id].RoleFit; return F.Num() == 0 || F.Contains(Role); });
+		if (Pick == INDEX_NONE) Pick = Pool.Num() ? 0 : INDEX_NONE;
+		if (Pick == INDEX_NONE) break;
+		RoleBindings.Add(Role, Pool[Pick]);
+		NPCs[Pool[Pick]].Role = Role;
+		Pool.RemoveAt(Pick);
+	}
+}
+
+FName UNarrativeSubsystem::Resolve(FName IdOrRef) const
+{
+	const FString S = IdOrRef.ToString();
+	if (!S.StartsWith(TEXT("@"))) return IdOrRef;
+	const FName Ref(S.Mid(1));
+	if (const FName* B = SlotBindings.Find(Ref)) return *B;
+	if (const FName* R = RoleBindings.Find(Ref)) return *R;
+	return NAME_None;
 }
 
 // Grammar: [!]flag:name | stat:Key OP N | rel:npc OP N | tag:name OP N | uniq OP N   (OP: >= <= > < ==)
@@ -122,8 +148,7 @@ bool UNarrativeSubsystem::CheckCondition(const FString& InCond) const
 		if (Kind == TEXT("stat")) L = Player.Get(FName(Key));
 		else if (Kind == TEXT("rel"))
 		{
-			FName Npc(Key);
-			if (Key.StartsWith(TEXT("@"))) { const FName* B = SlotBindings.Find(FName(Key.Mid(1))); Npc = B ? *B : NAME_None; }
+			const FName Npc = Resolve(FName(Key));
 			const float* R = Relationship.Find(Npc); L = R ? *R : 0.f;
 		}
 		else if (Kind == TEXT("tag")) { const float* T = TagHistory.Find(FName(Key)); L = T ? *T : 0.f; }
@@ -159,8 +184,7 @@ FName UNarrativeSubsystem::SelectNPC(FName Selector)
 	}
 	else if (S.StartsWith(TEXT("role:")))
 	{
-		const FName Role(S.Mid(5));
-		for (const auto& KV : NPCs) if (KV.Value.Role == Role) { Best = KV.Key; break; }
+		Best = RoleBindings.FindRef(FName(S.Mid(5)));
 	}
 	if (Best.IsNone() && NPCs.Num()) // random_npc or fallback
 	{
@@ -193,7 +217,9 @@ bool UNarrativeSubsystem::PickStorylet(FName Kind, FStorylet& Out)
 FText UNarrativeSubsystem::ResolveText(const FText& In) const
 {
 	FString S = In.ToString();
-	for (const auto& KV : SlotBindings)
+	TMap<FName, FName> All = RoleBindings;
+	All.Append(SlotBindings);
+	for (const auto& KV : All)
 	{
 		const FNPCProfile* N = NPCs.Find(KV.Value);
 		S.ReplaceInline(*FString::Printf(TEXT("{%s}"), *KV.Key.ToString()), N ? *N->Name.ToString() : TEXT("someone"));
@@ -241,7 +267,8 @@ TArray<FNPCReaction> UNarrativeSubsystem::ApplyChoice(const FNarrativeChoice& Ch
 	TArray<FNPCReaction> Out;
 	for (FName W : Witnesses)
 	{
-		if (W.ToString().StartsWith(TEXT("@"))) W = SlotBindings.FindRef(FName(W.ToString().Mid(1)));
+		W = Resolve(W);
+		if (W.IsNone()) continue;
 		FNPCReaction R = Interpret(W, Choice.Tags, Hesitation);
 		float& Rel = Relationship.FindOrAdd(W);
 		Rel = FMath::Clamp(Rel + R.Delta, -100.f, 100.f);

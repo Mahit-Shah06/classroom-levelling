@@ -1,0 +1,597 @@
+[
+ {
+  "Id": "stu_kurose",
+  "Name": "Kurose Ren",
+  "Kind": "student",
+  "Voice": "47",
+  "RoleFit": [
+   "rival",
+   "ex1"
+  ],
+  "Stats": {
+   "Sub": {
+    "Intellect.Logic": 88,
+    "Intellect.Memory": 76,
+    "Intellect.Analysis": 91,
+    "Charisma.Presence": 62,
+    "Charisma.Persuasion": 55,
+    "Charisma.Charm": 41,
+    "Physique.Strength": 38,
+    "Physique.Endurance": 44,
+    "Physique.Agility": 50,
+    "Sanity.Focus": 84,
+    "Sanity.Resilience": 71,
+    "Sanity.Clarity": 79,
+    "Cunning.Deception": 72,
+    "Cunning.Scheming": 86,
+    "Cunning.Insight": 80,
+    "Reputation.Prestige": 68,
+    "Reputation.Trust": 35,
+    "Reputation.Influence": 74,
+    "Funds.Liquidity": 52,
+    "Funds.Credit": 48,
+    "Funds.Assets": 40,
+    "Luck.Timing": 45,
+    "Luck.Serendipity": 33,
+    "Luck.Odds": 39
+   }
+  },
+  "Values": {
+   "ambition": 0.9,
+   "cunning": 0.7,
+   "honesty": -0.6,
+   "empathy": -0.4,
+   "obedience": 0.2,
+   "betrayal": 0.5,
+   "loyalty": -0.3
+  },
+  "Perception": 0.86,
+  "Patience": 6.5
+ },
+ {
+  "Id": "stu_habu",
+  "Name": "Habu Misaki",
+  "Kind": "student",
+  "Voice": "112",
+  "RoleFit": [
+   "ally",
+   "president"
+  ],
+  "Stats": {
+   "Sub": {
+    "Intellect.Logic": 64,
+    "Intellect.Memory": 70,
+    "Intellect.Analysis": 58,
+    "Charisma.Presence": 82,
+    "Charisma.Persuasion": 88,
+    "Charisma.Charm": 75,
+    "Physique.Strength": 42,
+    "Physique.Endurance": 55,
+    "Physique.Agility": 48,
+    "Sanity.Focus": 66,
+    "Sanity.Resilience": 78,
+    "Sanity.Clarity": 72,
+    "Cunning.Deception": 28,
+    "Cunning.Scheming": 35,
+    "Cunning.Insight": 60,
+    "Reputation.Prestige": 80,
+    "Reputation.Trust": 90,
+    "Reputation.Influence": 77,
+    "Funds.Liquidity": 45,
+    "Funds.Credit": 50,
+    "Funds.Assets": 38,
+    "Luck.Timing": 55,
+    "Luck.Serendipity": 62,
+    "Luck.Odds": 48
+   }
+  },
+  "Values": {
+   "loyalty": 0.85,
+   "empathy": 0.8,
+   "honesty": 0.7,
+   "ambition": 0.4,
+   "betrayal": -0.9,
+   "chaos": -0.5,
+   "obedience": 0.3
+  },
+  "Perception": 0.72,
+  "Patience": 12.0
+ },
+ {
+  "Id": "stu_enomoto",
+  "Name": "Enomoto Kai",
+  "Kind": "student",
+  "Voice": "3",
+  "RoleFit": [
+   "gremlin",
+   "broker"
+  ],
+  "Stats": {
+   "Sub": {
+    "Intellect.Logic": 55,
+    "Intellect.Memory": 48,
+    "Intellect.Analysis": 61,
+    "Charisma.Presence": 70,
+    "Charisma.Persuasion": 65,
+    "Charisma.Charm": 84,
+    "Physique.Strength": 58,
+    "Physique.Endurance": 62,
+    "Physique.Agility": 79,
+    "Sanity.Focus": 30,
+    "Sanity.Resilience": 85,
+    "Sanity.Clarity": 25,
+    "Cunning.Deception": 74,
+    "Cunning.Scheming": 68,
+    "Cunning.Insight": 71,
+    "Reputation.Prestige": 22,
+    "Reputation.Trust": 40,
+    "Reputation.Influence": 55,
+    "Funds.Liquidity": 60,
+    "Funds.Credit": 35,
+    "Funds.Assets": 28,
+    "Luck.Timing": 88,
+    "Luck.Serendipity": 92,
+    "Luck.Odds": 81
+   }
+  },
+  "Values": {
+   "chaos": 0.95,
+   "humor": 0.9,
+   "obedience": -0.8,
+   "ambition": 0.3,
+   "cruelty": 0.2,
+   "withdrawal": -0.6,
+   "cunning": 0.55,
+   "loyalty": 0.1
+  },
+  "Perception": 0.58,
+  "Patience": 4.5
+ },
+ {
+  "Id": "stu_fujimori",
+  "Name": "Fujimori Aoi",
+  "Kind": "student",
+  "Voice": "221",
+  "RoleFit": [
+   "president",
+   "ally"
+  ],
+  "Stats": {
+   "Sub": {
+    "Intellect.Logic": 72,
+    "Intellect.Memory": 68,
+    "Intellect.Analysis": 75,
+    "Charisma.Presence": 90,
+    "Charisma.Persuasion": 86,
+    "Charisma.Charm": 70,
+    "Physique.Strength": 50,
+    "Physique.Endurance": 64,
+    "Physique.Agility": 52,
+    "Sanity.Focus": 80,
+    "Sanity.Resilience": 74,
+    "Sanity.Clarity": 77,
+    "Cunning.Deception": 45,
+    "Cunning.Scheming": 58,
+    "Cunning.Insight": 69,
+    "Reputation.Prestige": 88,
+    "Reputation.Trust": 82,
+    "Reputation.Influence": 91,
+    "Funds.Liquidity": 70,
+    "Funds.Credit": 72,
+    "Funds.Assets": 65,
+    "Luck.Timing": 50,
+    "Luck.Serendipity": 44,
+    "Luck.Odds": 48
+   }
+  },
+  "Values": {
+   "ambition": 0.75,
+   "obedience": 0.55,
+   "loyalty": 0.5,
+   "honesty": 0.35,
+   "chaos": -0.7,
+   "empathy": 0.4,
+   "cunning": 0.25
+  },
+  "Perception": 0.81,
+  "Patience": 10.5
+ },
+ {
+  "Id": "stu_tachibana",
+  "Name": "Tachibana Mei",
+  "Kind": "student",
+  "Voice": "89",
+  "RoleFit": [
+   "ex1",
+   "rival"
+  ],
+  "Stats": {
+   "Sub": {
+    "Intellect.Logic": 80,
+    "Intellect.Memory": 85,
+    "Intellect.Analysis": 78,
+    "Charisma.Presence": 58,
+    "Charisma.Persuasion": 50,
+    "Charisma.Charm": 45,
+    "Physique.Strength": 35,
+    "Physique.Endurance": 40,
+    "Physique.Agility": 42,
+    "Sanity.Focus": 55,
+    "Sanity.Resilience": 48,
+    "Sanity.Clarity": 62,
+    "Cunning.Deception": 66,
+    "Cunning.Scheming": 70,
+    "Cunning.Insight": 73,
+    "Reputation.Prestige": 40,
+    "Reputation.Trust": 28,
+    "Reputation.Influence": 52,
+    "Funds.Liquidity": 78,
+    "Funds.Credit": 82,
+    "Funds.Assets": 88,
+    "Luck.Timing": 30,
+    "Luck.Serendipity": 25,
+    "Luck.Odds": 35
+   }
+  },
+  "Values": {
+   "ambition": 0.65,
+   "withdrawal": 0.7,
+   "betrayal": 0.4,
+   "empathy": -0.2,
+   "loyalty": -0.5,
+   "honesty": -0.3,
+   "cruelty": 0.15,
+   "obedience": -0.4
+  },
+  "Perception": 0.77,
+  "Patience": 8.0
+ },
+ {
+  "Id": "stu_saikawa",
+  "Name": "Saikawa Kenji",
+  "Kind": "student",
+  "Voice": "304",
+  "RoleFit": [
+   "broker",
+   "ally"
+  ],
+  "Stats": {
+   "Sub": {
+    "Intellect.Logic": 68,
+    "Intellect.Memory": 82,
+    "Intellect.Analysis": 71,
+    "Charisma.Presence": 48,
+    "Charisma.Persuasion": 72,
+    "Charisma.Charm": 55,
+    "Physique.Strength": 45,
+    "Physique.Endurance": 50,
+    "Physique.Agility": 47,
+    "Sanity.Focus": 70,
+    "Sanity.Resilience": 65,
+    "Sanity.Clarity": 68,
+    "Cunning.Deception": 80,
+    "Cunning.Scheming": 77,
+    "Cunning.Insight": 85,
+    "Reputation.Prestige": 35,
+    "Reputation.Trust": 60,
+    "Reputation.Influence": 70,
+    "Funds.Liquidity": 85,
+    "Funds.Credit": 78,
+    "Funds.Assets": 72,
+    "Luck.Timing": 66,
+    "Luck.Serendipity": 58,
+    "Luck.Odds": 70
+   }
+  },
+  "Values": {
+   "cunning": 0.8,
+   "honesty": -0.2,
+   "ambition": 0.55,
+   "loyalty": 0.35,
+   "betrayal": 0.25,
+   "empathy": 0.15,
+   "chaos": -0.1
+  },
+  "Perception": 0.9,
+  "Patience": 11.0
+ },
+ {
+  "Id": "stu_nagase",
+  "Name": "Nagase Yui",
+  "Kind": "student",
+  "Voice": "156",
+  "RoleFit": [
+   "gremlin",
+   "rival"
+  ],
+  "Stats": {
+   "Sub": {
+    "Intellect.Logic": 60,
+    "Intellect.Memory": 55,
+    "Intellect.Analysis": 64,
+    "Charisma.Presence": 75,
+    "Charisma.Persuasion": 60,
+    "Charisma.Charm": 88,
+    "Physique.Strength": 70,
+    "Physique.Endurance": 68,
+    "Physique.Agility": 82,
+    "Sanity.Focus": 40,
+    "Sanity.Resilience": 72,
+    "Sanity.Clarity": 45,
+    "Cunning.Deception": 58,
+    "Cunning.Scheming": 50,
+    "Cunning.Insight": 55,
+    "Reputation.Prestige": 48,
+    "Reputation.Trust": 52,
+    "Reputation.Influence": 60,
+    "Funds.Liquidity": 30,
+    "Funds.Credit": 25,
+    "Funds.Assets": 20,
+    "Luck.Timing": 75,
+    "Luck.Serendipity": 80,
+    "Luck.Odds": 70
+   }
+  },
+  "Values": {
+   "humor": 0.85,
+   "chaos": 0.7,
+   "cruelty": -0.3,
+   "empathy": 0.45,
+   "obedience": -0.55,
+   "ambition": 0.2,
+   "loyalty": 0.3
+  },
+  "Perception": 0.42,
+  "Patience": 5.0
+ },
+ {
+  "Id": "stu_okada",
+  "Name": "Okada Shion",
+  "Kind": "student",
+  "Voice": "401",
+  "RoleFit": [
+   "president",
+   "ex1",
+   "rival"
+  ],
+  "Stats": {
+   "Sub": {
+    "Intellect.Logic": 90,
+    "Intellect.Memory": 84,
+    "Intellect.Analysis": 87,
+    "Charisma.Presence": 78,
+    "Charisma.Persuasion": 80,
+    "Charisma.Charm": 62,
+    "Physique.Strength": 55,
+    "Physique.Endurance": 60,
+    "Physique.Agility": 58,
+    "Sanity.Focus": 88,
+    "Sanity.Resilience": 70,
+    "Sanity.Clarity": 82,
+    "Cunning.Deception": 62,
+    "Cunning.Scheming": 75,
+    "Cunning.Insight": 78,
+    "Reputation.Prestige": 92,
+    "Reputation.Trust": 55,
+    "Reputation.Influence": 88,
+    "Funds.Liquidity": 68,
+    "Funds.Credit": 74,
+    "Funds.Assets": 80,
+    "Luck.Timing": 42,
+    "Luck.Serendipity": 38,
+    "Luck.Odds": 40
+   }
+  },
+  "Values": {
+   "ambition": 0.95,
+   "obedience": 0.6,
+   "cunning": 0.5,
+   "empathy": -0.35,
+   "betrayal": 0.3,
+   "honesty": 0.1,
+   "withdrawal": -0.7
+  },
+  "Perception": 0.88,
+  "Patience": 7.5
+ },
+ {
+  "Id": "stu_midorikawa",
+  "Name": "Midorikawa Rina",
+  "Kind": "student",
+  "Voice": "67",
+  "RoleFit": [
+   "ally",
+   "gremlin"
+  ],
+  "Stats": {
+   "Sub": {
+    "Intellect.Logic": 50,
+    "Intellect.Memory": 58,
+    "Intellect.Analysis": 45,
+    "Charisma.Presence": 68,
+    "Charisma.Persuasion": 70,
+    "Charisma.Charm": 92,
+    "Physique.Strength": 40,
+    "Physique.Endurance": 48,
+    "Physique.Agility": 65,
+    "Sanity.Focus": 52,
+    "Sanity.Resilience": 80,
+    "Sanity.Clarity": 58,
+    "Cunning.Deception": 40,
+    "Cunning.Scheming": 32,
+    "Cunning.Insight": 48,
+    "Reputation.Prestige": 55,
+    "Reputation.Trust": 85,
+    "Reputation.Influence": 62,
+    "Funds.Liquidity": 42,
+    "Funds.Credit": 40,
+    "Funds.Assets": 35,
+    "Luck.Timing": 70,
+    "Luck.Serendipity": 85,
+    "Luck.Odds": 72
+   }
+  },
+  "Values": {
+   "empathy": 0.9,
+   "humor": 0.75,
+   "loyalty": 0.7,
+   "cruelty": -0.85,
+   "chaos": 0.4,
+   "ambition": 0.15,
+   "honesty": 0.6,
+   "withdrawal": -0.4
+  },
+  "Perception": 0.35,
+  "Patience": 14.0
+ },
+ {
+  "Id": "stu_torii",
+  "Name": "Torii Haruto",
+  "Kind": "student",
+  "Voice": "278",
+  "RoleFit": [
+   "broker",
+   "ex1"
+  ],
+  "Stats": {
+   "Sub": {
+    "Intellect.Logic": 74,
+    "Intellect.Memory": 70,
+    "Intellect.Analysis": 80,
+    "Charisma.Presence": 40,
+    "Charisma.Persuasion": 58,
+    "Charisma.Charm": 35,
+    "Physique.Strength": 48,
+    "Physique.Endurance": 52,
+    "Physique.Agility": 45,
+    "Sanity.Focus": 75,
+    "Sanity.Resilience": 60,
+    "Sanity.Clarity": 70,
+    "Cunning.Deception": 88,
+    "Cunning.Scheming": 84,
+    "Cunning.Insight": 90,
+    "Reputation.Prestige": 30,
+    "Reputation.Trust": 45,
+    "Reputation.Influence": 65,
+    "Funds.Liquidity": 90,
+    "Funds.Credit": 86,
+    "Funds.Assets": 75,
+    "Luck.Timing": 60,
+    "Luck.Serendipity": 55,
+    "Luck.Odds": 68
+   }
+  },
+  "Values": {
+   "cunning": 0.9,
+   "withdrawal": 0.55,
+   "honesty": -0.45,
+   "ambition": 0.5,
+   "loyalty": 0.2,
+   "betrayal": 0.35,
+   "obedience": -0.25,
+   "empathy": -0.1
+  },
+  "Perception": 0.94,
+  "Patience": 9.0
+ },
+ {
+  "Id": "stu_igarashi",
+  "Name": "Igarashi Sora",
+  "Kind": "student",
+  "Voice": "190",
+  "RoleFit": [
+   "ally",
+   "president"
+  ],
+  "Stats": {
+   "Sub": {
+    "Intellect.Logic": 58,
+    "Intellect.Memory": 62,
+    "Intellect.Analysis": 55,
+    "Charisma.Presence": 72,
+    "Charisma.Persuasion": 78,
+    "Charisma.Charm": 68,
+    "Physique.Strength": 85,
+    "Physique.Endurance": 88,
+    "Physique.Agility": 80,
+    "Sanity.Focus": 65,
+    "Sanity.Resilience": 90,
+    "Sanity.Clarity": 60,
+    "Cunning.Deception": 25,
+    "Cunning.Scheming": 30,
+    "Cunning.Insight": 42,
+    "Reputation.Prestige": 70,
+    "Reputation.Trust": 88,
+    "Reputation.Influence": 65,
+    "Funds.Liquidity": 35,
+    "Funds.Credit": 38,
+    "Funds.Assets": 30,
+    "Luck.Timing": 48,
+    "Luck.Serendipity": 52,
+    "Luck.Odds": 45
+   }
+  },
+  "Values": {
+   "loyalty": 0.9,
+   "honesty": 0.8,
+   "empathy": 0.65,
+   "ambition": 0.35,
+   "betrayal": -0.95,
+   "cruelty": -0.7,
+   "obedience": 0.45
+  },
+  "Perception": 0.5,
+  "Patience": 13.5
+ },
+ {
+  "Id": "stu_wakatsuki",
+  "Name": "Wakatsuki Hinata",
+  "Kind": "student",
+  "Voice": "333",
+  "RoleFit": [
+   "gremlin",
+   "broker",
+   "president"
+  ],
+  "Stats": {
+   "Sub": {
+    "Intellect.Logic": 66,
+    "Intellect.Memory": 60,
+    "Intellect.Analysis": 72,
+    "Charisma.Presence": 85,
+    "Charisma.Persuasion": 82,
+    "Charisma.Charm": 78,
+    "Physique.Strength": 52,
+    "Physique.Endurance": 55,
+    "Physique.Agility": 60,
+    "Sanity.Focus": 48,
+    "Sanity.Resilience": 68,
+    "Sanity.Clarity": 50,
+    "Cunning.Deception": 70,
+    "Cunning.Scheming": 72,
+    "Cunning.Insight": 65,
+    "Reputation.Prestige": 75,
+    "Reputation.Trust": 42,
+    "Reputation.Influence": 80,
+    "Funds.Liquidity": 72,
+    "Funds.Credit": 68,
+    "Funds.Assets": 70,
+    "Luck.Timing": 78,
+    "Luck.Serendipity": 74,
+    "Luck.Odds": 80
+   }
+  },
+  "Values": {
+   "ambition": 0.7,
+   "chaos": 0.6,
+   "humor": 0.5,
+   "cunning": 0.65,
+   "obedience": -0.35,
+   "empathy": 0.05,
+   "betrayal": 0.45,
+   "loyalty": -0.15
+  },
+  "Perception": 0.68,
+  "Patience": 6.0
+ }
+]

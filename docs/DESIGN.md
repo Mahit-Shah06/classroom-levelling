@@ -100,3 +100,10 @@
 - Hidden behaviour tracking: sympathy/empathy, how they react, how long they think. If they take too long, the System/NPCs get bored, smack them, or wonder what's up.
 - NPCs interpret the player through their own communication style -> misunderstandings.
 - Villainization: track who the player turns into the villain (the System, specific students, a whole class, their own class, teachers).
+
+## Corrections (2026-11-13)
+- THEME: "Director's Cut" in this jam means the developer directing AI agents: the features a dev always wanted to build but had to cut, now built in 4 days with agents. It is NOT a film director's cut. The UI does not need to be film-themed.
+- Random cast: every run rolls the rival/ally/gremlin/president/ex-#1/broker from a pool of generated students (RoleFit preferred), and everyone else is background. Storylets refer to @role or {role}, never fixed NPCs.
+- Teachers: a fixed set assigned to classes by skill match. Involvement scales with player actions: minimal by default, deeper storylets once the player engages them or goes down the teacher route.
+- Voices: Piper TTS, pre-generated offline, with a distinct voice per NPC (libritts_r speaker ids) and accents where available. Mouth flaps follow audio amplitude. Screen shake and controller rumble on strong reactions.
+- UI (v1): a monochrome "System window". Text types out, there's a hesitation bar, and the System narrates how each witness read your choice, including misreads. Keys: 1-5 to choose, Space to continue or skip typing, Esc to close.

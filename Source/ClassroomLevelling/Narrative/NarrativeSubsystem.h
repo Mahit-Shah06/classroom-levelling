@@ -21,6 +21,10 @@ public:
 	UPROPERTY(BlueprintReadOnly) TSet<FName> Flags;
 	UPROPERTY(BlueprintReadOnly) TMap<FName, float> TagHistory;   // accumulated player tags (behaviour profile)
 	UPROPERTY(BlueprintReadOnly) TMap<FName, FName> SlotBindings; // current storylet slot -> npc
+	UPROPERTY(BlueprintReadOnly) TMap<FName, FName> RoleBindings; // rolled per run: role -> npc
+
+	// "@x" -> slot binding, else role binding, else the name itself.
+	UFUNCTION(BlueprintCallable) FName Resolve(FName IdOrRef) const;
 
 	// --- Content ---
 	UPROPERTY(BlueprintReadOnly) TMap<FName, FNPCProfile> NPCs;

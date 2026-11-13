@@ -67,3 +67,7 @@ Newest last. Every session: append what was decided/done/blocked.
   - Added the Json and JsonUtilities modules.
 - tools/gen.sh: Cursor CLI (Grok/auto) writes JSON content from the C++ schema plus DESIGN.md, which saves Claude credits. Generated npcs_core.json (6 core NPCs) and storylets_y1_intro.json (8 storylets, including exam_hot_seat with an {accused}=best_friend slot). Schema check passes.
 - Renamed one generated NPC (Morishita -> Tsukishiro) to avoid a COTE character name. Rule going forward: no names copied from COTE or other existing IP.
+- User corrected the theme meaning (developer directing agents, not film), logged in DESIGN. User answers: Piper voices with a distinct voice and accent per NPC; teachers "both, depending on player actions"; cast must be random each run.
+- Implemented the random cast roll (NewRun), @role/@slot refs (Resolve), and Kind/Voice/RoleFit fields. Grok generated 24 students (2 files) plus 8 role-based Y1 storylets. Fixed duplicate ids and renamed Okabe (Steins;Gate) to avoid IP.
+- UStoryPlayerComponent (on the PlayerController): Slate System window with typewriter text, choices, hesitation bar, interpretation readout, UI shake and gamepad rumble. Pure C++, no binary UI assets.
+- Headless test (`UnrealEditor <uproject> -game -nullrhi`): "Loaded 24 NPCs, 8 storylets", map loads, no errors.

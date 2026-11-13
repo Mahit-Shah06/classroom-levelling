@@ -1,0 +1,508 @@
+[
+ {
+  "Id": "stu_arai",
+  "Name": "Arai Shion",
+  "Kind": "student",
+  "Voice": "512",
+  "RoleFit": [
+   "president",
+   "ex1"
+  ],
+  "Stats": {
+   "Sub": {
+    "Intellect.Memory": 71,
+    "Intellect.Insight": 58,
+    "Charisma.Presence": 88,
+    "Charisma.Persuasion": 74,
+    "Charisma.Wit": 66,
+    "Physique.Stamina": 49,
+    "Physique.Agility": 55,
+    "Sanity.Composure": 62,
+    "Sanity.Clarity": 44,
+    "Cunning.Observation": 70,
+    "Cunning.Deception": 61,
+    "Reputation.Status": 79,
+    "Reputation.Influence": 68,
+    "Funds.Income": 42,
+    "Funds.Credit": 55,
+    "Luck.Timing": 73,
+    "Luck.Serendipity": 51
+   }
+  },
+  "Values": {
+   "ambition": 0.7,
+   "honesty": -0.4,
+   "humor": 0.5,
+   "loyalty": 0.2,
+   "withdrawal": -0.6,
+   "empathy": 0.1,
+   "chaos": 0.3
+  },
+  "Perception": 0.72,
+  "Patience": 6.5
+ },
+ {
+  "Id": "stu_fujimori_n",
+  "Name": "Fujimori Nao",
+  "Kind": "student",
+  "Voice": "634",
+  "RoleFit": [
+   "ally",
+   "broker"
+  ],
+  "Stats": {
+   "Sub": {
+    "Intellect.Logic": 54,
+    "Intellect.Analysis": 61,
+    "Charisma.Persuasion": 69,
+    "Charisma.Presence": 48,
+    "Physique.Stamina": 58,
+    "Physique.Strength": 41,
+    "Sanity.Resilience": 72,
+    "Sanity.Composure": 65,
+    "Cunning.Tactics": 57,
+    "Cunning.Observation": 63,
+    "Reputation.Trust": 76,
+    "Reputation.Influence": 52,
+    "Funds.Savings": 48,
+    "Funds.Income": 39,
+    "Luck.Chance": 55,
+    "Luck.Serendipity": 68
+   }
+  },
+  "Values": {
+   "empathy": 0.8,
+   "loyalty": 0.6,
+   "cruelty": -0.7,
+   "chaos": 0.4,
+   "humor": 0.5,
+   "ambition": 0.2,
+   "obedience": -0.1
+  },
+  "Perception": 0.58,
+  "Patience": 11.0
+ },
+ {
+  "Id": "stu_kuroishi",
+  "Name": "Kuroishi Haru",
+  "Kind": "student",
+  "Voice": "701",
+  "RoleFit": [
+   "gremlin"
+  ],
+  "Stats": {
+   "Sub": {
+    "Intellect.Analysis": 82,
+    "Intellect.Logic": 74,
+    "Intellect.Memory": 69,
+    "Charisma.Wit": 45,
+    "Charisma.Presence": 28,
+    "Physique.Agility": 52,
+    "Physique.Stamina": 47,
+    "Sanity.Clarity": 58,
+    "Sanity.Composure": 39,
+    "Cunning.Observation": 86,
+    "Cunning.Tactics": 49,
+    "Reputation.Trust": 41,
+    "Reputation.Status": 33,
+    "Funds.Savings": 36,
+    "Funds.Credit": 29,
+    "Luck.Chance": 77,
+    "Luck.Timing": 81,
+    "Luck.Serendipity": 64
+   }
+  },
+  "Values": {
+   "chaos": 0.6,
+   "withdrawal": 0.5,
+   "honesty": 0.7,
+   "ambition": -0.2,
+   "humor": 0.3,
+   "obedience": -0.5,
+   "empathy": 0.2
+  },
+  "Perception": 0.81,
+  "Patience": 14.0
+ },
+ {
+  "Id": "stu_natsume",
+  "Name": "Natsume Riku",
+  "Kind": "student",
+  "Voice": "458",
+  "RoleFit": [
+   "ally"
+  ],
+  "Stats": {
+   "Sub": {
+    "Intellect.Insight": 56,
+    "Intellect.Memory": 62,
+    "Charisma.Persuasion": 51,
+    "Charisma.Presence": 37,
+    "Physique.Stamina": 44,
+    "Physique.Agility": 40,
+    "Sanity.Resilience": 31,
+    "Sanity.Composure": 28,
+    "Sanity.Clarity": 49,
+    "Cunning.Deception": 22,
+    "Cunning.Observation": 60,
+    "Reputation.Trust": 84,
+    "Reputation.Influence": 46,
+    "Funds.Savings": 51,
+    "Funds.Income": 33,
+    "Luck.Chance": 42,
+    "Luck.Serendipity": 58
+   }
+  },
+  "Values": {
+   "empathy": 0.9,
+   "obedience": 0.7,
+   "betrayal": -0.9,
+   "cruelty": -0.8,
+   "loyalty": 0.8,
+   "withdrawal": 0.4,
+   "ambition": -0.3,
+   "honesty": 0.6
+  },
+  "Perception": 0.44,
+  "Patience": 4.5
+ },
+ {
+  "Id": "stu_sawaguchi",
+  "Name": "Sawaguchi Yui",
+  "Kind": "student",
+  "Voice": "823",
+  "RoleFit": [
+   "gremlin",
+   "broker"
+  ],
+  "Stats": {
+   "Sub": {
+    "Intellect.Insight": 67,
+    "Intellect.Analysis": 55,
+    "Charisma.Presence": 63,
+    "Charisma.Wit": 71,
+    "Physique.Agility": 74,
+    "Physique.Stamina": 66,
+    "Physique.Strength": 48,
+    "Sanity.Clarity": 52,
+    "Sanity.Resilience": 61,
+    "Cunning.Observation": 78,
+    "Cunning.Deception": 54,
+    "Reputation.Influence": 59,
+    "Reputation.Status": 44,
+    "Funds.Savings": 27,
+    "Funds.Income": 35,
+    "Luck.Serendipity": 72,
+    "Luck.Timing": 58
+   }
+  },
+  "Values": {
+   "chaos": 0.8,
+   "obedience": -0.8,
+   "humor": 0.7,
+   "honesty": 0.3,
+   "ambition": 0.4,
+   "cruelty": -0.2,
+   "withdrawal": -0.5
+  },
+  "Perception": 0.66,
+  "Patience": 9.0
+ },
+ {
+  "Id": "stu_murase",
+  "Name": "Murase Toru",
+  "Kind": "student",
+  "Voice": "567",
+  "RoleFit": [
+   "rival"
+  ],
+  "Stats": {
+   "Sub": {
+    "Intellect.Logic": 91,
+    "Intellect.Analysis": 88,
+    "Intellect.Insight": 76,
+    "Charisma.Wit": 64,
+    "Charisma.Persuasion": 58,
+    "Physique.Stamina": 35,
+    "Physique.Agility": 31,
+    "Sanity.Clarity": 71,
+    "Sanity.Composure": 55,
+    "Cunning.Tactics": 73,
+    "Cunning.Observation": 69,
+    "Reputation.Trust": 48,
+    "Reputation.Influence": 57,
+    "Funds.Credit": 40,
+    "Funds.Savings": 46,
+    "Luck.Chance": 38,
+    "Luck.Timing": 44
+   }
+  },
+  "Values": {
+   "honesty": 0.5,
+   "ambition": 0.6,
+   "cunning": 0.4,
+   "empathy": 0.1,
+   "obedience": -0.3,
+   "humor": -0.2,
+   "withdrawal": 0.3
+  },
+  "Perception": 0.77,
+  "Patience": 12.5
+ },
+ {
+  "Id": "stu_hidaka",
+  "Name": "Hidaka Mei",
+  "Kind": "student",
+  "Voice": "889",
+  "RoleFit": [
+   "president",
+   "ally"
+  ],
+  "Stats": {
+   "Sub": {
+    "Intellect.Insight": 72,
+    "Intellect.Memory": 64,
+    "Charisma.Persuasion": 77,
+    "Charisma.Presence": 61,
+    "Physique.Stamina": 69,
+    "Physique.Strength": 52,
+    "Sanity.Resilience": 80,
+    "Sanity.Composure": 74,
+    "Cunning.Tactics": 56,
+    "Cunning.Observation": 65,
+    "Reputation.Trust": 71,
+    "Reputation.Influence": 68,
+    "Funds.Savings": 44,
+    "Funds.Income": 38,
+    "Luck.Serendipity": 53,
+    "Luck.Chance": 47
+   }
+  },
+  "Values": {
+   "loyalty": 0.7,
+   "ambition": 0.5,
+   "empathy": 0.6,
+   "betrayal": -0.6,
+   "chaos": -0.3,
+   "obedience": 0.2,
+   "honesty": 0.4,
+   "cruelty": -0.5
+  },
+  "Perception": 0.63,
+  "Patience": 10.0
+ },
+ {
+  "Id": "stu_enomoto_j",
+  "Name": "Enomoto Jun",
+  "Kind": "student",
+  "Voice": "476",
+  "RoleFit": [
+   "broker"
+  ],
+  "Stats": {
+   "Sub": {
+    "Intellect.Memory": 79,
+    "Intellect.Insight": 68,
+    "Charisma.Wit": 72,
+    "Charisma.Persuasion": 66,
+    "Physique.Agility": 57,
+    "Physique.Stamina": 50,
+    "Sanity.Composure": 59,
+    "Sanity.Clarity": 54,
+    "Cunning.Observation": 90,
+    "Cunning.Deception": 67,
+    "Cunning.Tactics": 61,
+    "Reputation.Influence": 74,
+    "Reputation.Status": 49,
+    "Funds.Income": 58,
+    "Funds.Credit": 52,
+    "Luck.Timing": 70,
+    "Luck.Serendipity": 63
+   }
+  },
+  "Values": {
+   "cunning": 0.7,
+   "honesty": -0.3,
+   "chaos": 0.2,
+   "loyalty": 0.1,
+   "ambition": 0.5,
+   "humor": 0.6,
+   "betrayal": 0.2,
+   "empathy": 0.0
+  },
+  "Perception": 0.88,
+  "Patience": 7.5
+ },
+ {
+  "Id": "stu_shirane",
+  "Name": "Shirane Kazu",
+  "Kind": "student",
+  "Voice": "745",
+  "RoleFit": [
+   "ally",
+   "ex1"
+  ],
+  "Stats": {
+   "Sub": {
+    "Intellect.Logic": 68,
+    "Intellect.Analysis": 73,
+    "Charisma.Presence": 42,
+    "Charisma.Persuasion": 39,
+    "Physique.Stamina": 81,
+    "Physique.Agility": 70,
+    "Physique.Strength": 64,
+    "Sanity.Composure": 91,
+    "Sanity.Clarity": 77,
+    "Sanity.Resilience": 85,
+    "Cunning.Observation": 72,
+    "Cunning.Tactics": 45,
+    "Reputation.Trust": 66,
+    "Reputation.Status": 51,
+    "Funds.Savings": 55,
+    "Funds.Income": 41,
+    "Luck.Chance": 49,
+    "Luck.Timing": 62
+   }
+  },
+  "Values": {
+   "empathy": 0.3,
+   "cruelty": -0.4,
+   "honesty": 0.8,
+   "obedience": 0.5,
+   "withdrawal": 0.6,
+   "chaos": -0.7,
+   "loyalty": 0.4
+  },
+  "Perception": 0.71,
+  "Patience": 13.0
+ },
+ {
+  "Id": "stu_tsujimoto",
+  "Name": "Tsujimoto Aya",
+  "Kind": "student",
+  "Voice": "591",
+  "RoleFit": [
+   "gremlin",
+   "rival"
+  ],
+  "Stats": {
+   "Sub": {
+    "Intellect.Insight": 61,
+    "Intellect.Memory": 53,
+    "Charisma.Presence": 70,
+    "Charisma.Wit": 78,
+    "Charisma.Persuasion": 55,
+    "Physique.Agility": 59,
+    "Physique.Stamina": 46,
+    "Sanity.Clarity": 36,
+    "Sanity.Resilience": 58,
+    "Cunning.Deception": 48,
+    "Cunning.Observation": 57,
+    "Reputation.Status": 62,
+    "Reputation.Influence": 54,
+    "Funds.Credit": 71,
+    "Funds.Savings": 60,
+    "Luck.Serendipity": 84,
+    "Luck.Chance": 76,
+    "Luck.Timing": 41
+   }
+  },
+  "Values": {
+   "chaos": 0.9,
+   "humor": 0.8,
+   "obedience": -0.6,
+   "ambition": 0.3,
+   "empathy": 0.4,
+   "withdrawal": -0.4,
+   "betrayal": -0.1
+  },
+  "Perception": 0.35,
+  "Patience": 5.0
+ },
+ {
+  "Id": "stu_manabe",
+  "Name": "Manabe Osamu",
+  "Kind": "student",
+  "Voice": "903",
+  "RoleFit": [
+   "president"
+  ],
+  "Stats": {
+   "Sub": {
+    "Intellect.Logic": 84,
+    "Intellect.Memory": 90,
+    "Intellect.Analysis": 79,
+    "Charisma.Persuasion": 47,
+    "Charisma.Presence": 53,
+    "Physique.Stamina": 56,
+    "Physique.Agility": 43,
+    "Sanity.Composure": 68,
+    "Sanity.Clarity": 82,
+    "Cunning.Tactics": 71,
+    "Cunning.Observation": 66,
+    "Reputation.Status": 58,
+    "Reputation.Trust": 63,
+    "Funds.Savings": 77,
+    "Funds.Credit": 69,
+    "Luck.Timing": 88,
+    "Luck.Chance": 29
+   }
+  },
+  "Values": {
+   "obedience": 0.8,
+   "chaos": -0.9,
+   "ambition": 0.6,
+   "honesty": 0.5,
+   "cruelty": 0.1,
+   "loyalty": 0.3,
+   "humor": -0.5,
+   "withdrawal": 0.2
+  },
+  "Perception": 0.54,
+  "Patience": 4.0
+ },
+ {
+  "Id": "stu_wakita",
+  "Name": "Wakita Sora",
+  "Kind": "student",
+  "Voice": "668",
+  "RoleFit": [
+   "broker",
+   "rival"
+  ],
+  "Stats": {
+   "Sub": {
+    "Intellect.Analysis": 77,
+    "Intellect.Insight": 85,
+    "Intellect.Logic": 70,
+    "Charisma.Wit": 59,
+    "Charisma.Persuasion": 64,
+    "Physique.Stamina": 42,
+    "Physique.Agility": 48,
+    "Sanity.Clarity": 66,
+    "Sanity.Resilience": 53,
+    "Cunning.Observation": 93,
+    "Cunning.Tactics": 80,
+    "Cunning.Deception": 58,
+    "Reputation.Influence": 72,
+    "Reputation.Trust": 45,
+    "Funds.Income": 50,
+    "Funds.Savings": 47,
+    "Luck.Serendipity": 56,
+    "Luck.Timing": 67
+   }
+  },
+  "Values": {
+   "cunning": 0.8,
+   "ambition": 0.7,
+   "empathy": -0.2,
+   "loyalty": -0.1,
+   "honesty": -0.4,
+   "betrayal": 0.3,
+   "withdrawal": 0.5,
+   "chaos": 0.1
+  },
+  "Perception": 0.92,
+  "Patience": 8.0
+ }
+]

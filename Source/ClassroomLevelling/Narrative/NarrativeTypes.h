@@ -50,7 +50,10 @@ struct FNPCProfile
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FName Id;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FText Name;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) FName Role;            // rival, ally, gremlin, president, ex1, broker...
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) FName Kind = "student"; // student | teacher | staff
+	UPROPERTY(BlueprintReadOnly) FName Role;                                  // rolled per run: rival, ally, gremlin, president, ex1, broker, bg
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) FString Voice;               // TTS voice id
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) TArray<FName> RoleFit;       // roles this personality suits (empty = any)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FStatBlock Stats;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TMap<FName, float> Values; // tag -> how much they like it (-1..1)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) float Perception = 0.5f;   // 0 = misreads often, 1 = reads truth

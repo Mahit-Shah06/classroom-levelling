@@ -6,7 +6,7 @@ SCHEMA="$(sed -n '/USTRUCT/,$p' "$ROOT/Source/ClassroomLevelling/Narrative/Narra
 CTX="$(sed -n '1,200p' "$ROOT/docs/DESIGN.md")"
 TMP=$(mktemp -d); cd "$TMP"
 ~/.local/bin/agent -p --trust --model "${MODEL:-auto}" "You write game content as JSON only. Output ONLY a JSON array, no prose, no code fences.
-Field names must match these UE structs exactly (Sub-stat keys look like \"Intellect.Logic\"; tags are lowercase words such as obedience, empathy, ambition, cunning, betrayal, chaos, withdrawal, loyalty, honesty, cruelty, humor; conditions use: flag:x, !flag:x, stat:Key>=N, rel:npc>N, rel:@slot>N, tag:x>=N, uniq>N):
+Field names must match these UE structs exactly (Sub-stat keys look like \"Intellect.Logic\"; tags are lowercase words such as obedience, empathy, ambition, cunning, betrayal, chaos, withdrawal, loyalty, honesty, cruelty, humor; NPC refs: never hardcode NPC ids in storylets; use @rival @ally @gremlin @president @ex1 @broker (rolled per run) or @slotname, and {rival}/{slotname} in Text; NO names from existing anime/games (e.g. Classroom of the Elite); conditions use: flag:x, !flag:x, stat:Key>=N, rel:npc>N, rel:@slot>N, tag:x>=N, uniq>N):
 $SCHEMA
 Game design context:
 $CTX

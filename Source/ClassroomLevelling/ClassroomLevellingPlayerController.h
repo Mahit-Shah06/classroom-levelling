@@ -18,6 +18,12 @@ class AClassroomLevellingPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
+public:
+	AClassroomLevellingPlayerController();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Narrative")
+	TObjectPtr<class UStoryPlayerComponent> Story;
+
 protected:
 
 	/** Input Mapping Contexts */
