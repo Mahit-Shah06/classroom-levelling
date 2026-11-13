@@ -1,0 +1,1237 @@
+[
+ {
+  "Id": "exam_group_brief",
+  "Kind": "exam",
+  "Conditions": [
+   "flag:exam_hot_seat_done",
+   "flag:met_rival"
+  ],
+  "Priority": 40,
+  "bOnce": true,
+  "Slots": {
+   "rival": "rival",
+   "ally": "ally",
+   "gremlin": "gremlin"
+  },
+  "Location": "classroom",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "Desks scrape into clusters. A projected rubric blooms: Group Project From Hell — one grade, shared blame.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@homeroom",
+    "Text": "Your team will produce a campus survival brief. Points are pooled. Sabotage is… discouraged. Not forbidden.",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "system",
+    "Text": "EXAM LIVE: Group Project From Hell. Team cohesion tracked. Free riders flagged.",
+    "Shot": "pan"
+   },
+   {
+    "Speaker": "@rival",
+    "Text": "{rival} taps the rubric twice. \"We win clean, or we win loud. Pick.\"",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "@gremlin",
+    "Text": "{gremlin} is already doodling a false cover page titled 'Definitely Not Chaos.'",
+    "Shot": "low"
+   }
+  ],
+  "PromptSpeaker": "@homeroom",
+  "Text": "Homeroom waits. How do you open the first team huddle?",
+  "Choices": [
+   {
+    "Id": "exam_group_brief_plan",
+    "Text": "Draft a ruthless schedule.",
+    "Requires": [],
+    "Tags": {
+     "ambition": 1,
+     "obedience": 0.5
+    },
+    "StatDeltas": {
+     "Intellect.Logic": 1,
+     "Cunning.Planning": 1
+    },
+    "SetFlags": [
+     "group_project_started"
+    ],
+    "Next": "exam_group_roles"
+   },
+   {
+    "Id": "exam_group_brief_bond",
+    "Text": "Ask what everyone wants.",
+    "Requires": [],
+    "Tags": {
+     "empathy": 1,
+     "loyalty": 0.5
+    },
+    "StatDeltas": {
+     "Charisma.Empathy": 1,
+     "Sanity.Composure": 0.5
+    },
+    "SetFlags": [
+     "group_project_started",
+     "group_soft_start"
+    ],
+    "Next": "exam_group_roles"
+   },
+   {
+    "Id": "exam_group_brief_joke",
+    "Text": "Let {gremlin} pitch first.",
+    "Requires": [],
+    "Tags": {
+     "chaos": 1,
+     "humor": 1
+    },
+    "StatDeltas": {
+     "Charisma.Presence": 0.5,
+     "Luck.Chaos": 1
+    },
+    "SetFlags": [
+     "group_project_started",
+     "group_gremlin_lead"
+    ],
+    "Next": "exam_group_roles"
+   },
+   {
+    "Id": "exam_group_brief_shadow",
+    "Text": "Say little. Map everyone's ego.",
+    "Requires": [
+     "stat:Cunning>=10"
+    ],
+    "Tags": {
+     "cunning": 1,
+     "withdrawal": 0.5
+    },
+    "StatDeltas": {
+     "Cunning.Observation": 1.5,
+     "Intellect.Analysis": 1
+    },
+    "SetFlags": [
+     "group_project_started",
+     "group_shadow_open"
+    ],
+    "Next": "exam_group_roles"
+   }
+  ]
+ },
+ {
+  "Id": "exam_group_roles",
+  "Kind": "exam",
+  "Conditions": [
+   "flag:group_project_started"
+  ],
+  "Priority": 41,
+  "bOnce": true,
+  "Slots": {
+   "rival": "rival",
+   "ally": "ally",
+   "gremlin": "gremlin"
+  },
+  "Location": "library",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "The library smells of toner and dread. Roles must be claimed before the quiet hour ends.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@ally",
+    "Text": "{ally} slides a notepad over. \"Research, write, present, or… clean up disasters.\"",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@rival",
+    "Text": "{rival} already circled Presenter. \"If I speak, we look competent.\"",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "@gremlin",
+    "Text": "{gremlin} whispers, \"What if the presentation is a puppet show?\"",
+    "Shot": "low"
+   },
+   {
+    "Speaker": "system",
+    "Text": "Role assignment logged. Unequal load may trigger peer reports.",
+    "Shot": "pan"
+   }
+  ],
+  "PromptSpeaker": "@ally",
+  "Text": "{ally} asks who owns the ugliest job: fact-check and citation hell.",
+  "Choices": [
+   {
+    "Id": "exam_group_roles_take",
+    "Text": "Take citation hell yourself.",
+    "Requires": [],
+    "Tags": {
+     "loyalty": 1,
+     "honesty": 0.5
+    },
+    "StatDeltas": {
+     "Intellect.Research": 1.5,
+     "Sanity.Grit": 1
+    },
+    "SetFlags": [
+     "group_role_grind"
+    ],
+    "Next": "exam_group_crunch"
+   },
+   {
+    "Id": "exam_group_roles_rival",
+    "Text": "Give {rival} the spotlight.",
+    "Requires": [],
+    "Tags": {
+     "ambition": 0.5,
+     "obedience": 0.5
+    },
+    "StatDeltas": {
+     "Charisma.Negotiation": 0.5,
+     "Reputation.Class": 0.5
+    },
+    "SetFlags": [
+     "group_rival_present"
+    ],
+    "Next": "exam_group_crunch"
+   },
+   {
+    "Id": "exam_group_roles_ally",
+    "Text": "Shield {ally}; take heat later.",
+    "Requires": [
+     "rel:@ally>10"
+    ],
+    "Tags": {
+     "loyalty": 1.5,
+     "empathy": 1
+    },
+    "StatDeltas": {
+     "Charisma.Bond": 1,
+     "Sanity.Purpose": 0.5
+    },
+    "SetFlags": [
+     "group_protect_ally"
+    ],
+    "Next": "exam_group_crunch"
+   },
+   {
+    "Id": "exam_group_roles_swap",
+    "Text": "Forge a fake role chart.",
+    "Requires": [
+     "stat:Cunning>=12"
+    ],
+    "Tags": {
+     "cunning": 1.5,
+     "betrayal": 0.5
+    },
+    "StatDeltas": {
+     "Cunning.Deceit": 1.5,
+     "Reputation.Risk": -0.5
+    },
+    "SetFlags": [
+     "group_fake_roles"
+    ],
+    "Next": "exam_group_crunch"
+   }
+  ]
+ },
+ {
+  "Id": "exam_group_crunch",
+  "Kind": "exam",
+  "Conditions": [
+   "flag:group_project_started"
+  ],
+  "Priority": 42,
+  "bOnce": true,
+  "Slots": {
+   "rival": "rival",
+   "ally": "ally",
+   "gremlin": "gremlin",
+   "proctor": "proctor"
+  },
+  "Location": "classroom",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "Midnight draft. Half the slides are blank. Someone deleted the shared folder 'by accident.'",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@proctor",
+    "Text": "A hallway speaker crackles: \"Reminder: mid-checkpoint in six hours. Integrity scanners active.\"",
+    "Shot": "pan"
+   },
+   {
+    "Speaker": "@ally",
+    "Text": "{ally}'s voice frays. \"If we submit this, we all tank.\"",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@rival",
+    "Text": "{rival} stares at you. \"Someone covered tracks. Find them, or frame them.\"",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "@gremlin",
+    "Text": "{gremlin} holds up a USB like a holy relic. \"I… may have backups of backups.\"",
+    "Shot": "low"
+   }
+  ],
+  "PromptSpeaker": "narrator",
+  "Text": "The folder is gone. The clock is not. What do you do?",
+  "Choices": [
+   {
+    "Id": "exam_group_crunch_rebuild",
+    "Text": "Rebuild from memory, no blame.",
+    "Requires": [],
+    "Tags": {
+     "honesty": 1,
+     "loyalty": 0.5
+    },
+    "StatDeltas": {
+     "Intellect.Focus": 1,
+     "Sanity.Stress": -1,
+     "Physique.Endurance": 0.5
+    },
+    "SetFlags": [
+     "group_rebuild"
+    ],
+    "Next": "exam_group_sabotage"
+   },
+   {
+    "Id": "exam_group_crunch_accuse",
+    "Text": "Publicly accuse a freeloader.",
+    "Requires": [],
+    "Tags": {
+     "cruelty": 1,
+     "ambition": 0.5
+    },
+    "StatDeltas": {
+     "Charisma.Dominance": 1,
+     "Reputation.Fear": 1
+    },
+    "SetFlags": [
+     "group_accused"
+    ],
+    "Next": "exam_group_sabotage"
+   },
+   {
+    "Id": "exam_group_crunch_usb",
+    "Text": "Trust {gremlin}'s cursed USB.",
+    "Requires": [
+     "flag:group_gremlin_lead"
+    ],
+    "Tags": {
+     "chaos": 1,
+     "humor": 0.5
+    },
+    "StatDeltas": {
+     "Luck.Chaos": 1.5,
+     "Sanity.Absurd": 1
+    },
+    "SetFlags": [
+     "group_usb_save"
+    ],
+    "Next": "exam_group_sabotage"
+   },
+   {
+    "Id": "exam_group_crunch_hack",
+    "Text": "Trace the delete silently.",
+    "Requires": [
+     "stat:Intellect.Logic>=8",
+     "stat:Cunning>=11"
+    ],
+    "Tags": {
+     "cunning": 1,
+     "withdrawal": 0.5
+    },
+    "StatDeltas": {
+     "Intellect.Logic": 1,
+     "Cunning.Investigation": 1.5
+    },
+    "SetFlags": [
+     "group_traced_delete"
+    ],
+    "Next": "exam_group_sabotage"
+   }
+  ]
+ },
+ {
+  "Id": "exam_group_sabotage",
+  "Kind": "exam",
+  "Conditions": [
+   "flag:group_project_started"
+  ],
+  "Priority": 43,
+  "bOnce": true,
+  "Slots": {
+   "rival": "rival",
+   "ally": "ally",
+   "gremlin": "gremlin",
+   "broker": "broker"
+  },
+  "Location": "library",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "A rival team leaves their draft unattended by the printers. Temptation smells like warm paper.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@broker",
+    "Text": "{broker} appears with a grin. \"For a favor, I can… improve their typos permanently.\"",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@rival",
+    "Text": "{rival} mutters, \"If we don't, someone else will. That's how this school works.\"",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "@ally",
+    "Text": "{ally} shakes their head. \"We can still win without becoming them.\"",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "system",
+    "Text": "Peer integrity variance detected. Optional deviation pathways available.",
+    "Shot": "pan"
+   }
+  ],
+  "PromptSpeaker": "@broker",
+  "Text": "{broker} offers a dirty edge. Do you take it?",
+  "Choices": [
+   {
+    "Id": "exam_group_sabotage_refuse",
+    "Text": "Refuse. Win ugly but clean.",
+    "Requires": [],
+    "Tags": {
+     "honesty": 1.5,
+     "loyalty": 0.5
+    },
+    "StatDeltas": {
+     "Sanity.Integrity": 1.5,
+     "Reputation.Trust": 1
+    },
+    "SetFlags": [
+     "group_no_sabotage"
+    ],
+    "Next": "exam_group_submit"
+   },
+   {
+    "Id": "exam_group_sabotage_swap",
+    "Text": "Swap two of their slides.",
+    "Requires": [],
+    "Tags": {
+     "betrayal": 1,
+     "cunning": 1
+    },
+    "StatDeltas": {
+     "Cunning.Sabotage": 1.5,
+     "Reputation.Trust": -1
+    },
+    "SetFlags": [
+     "group_mild_sabotage"
+    ],
+    "Next": "exam_group_submit"
+   },
+   {
+    "Id": "exam_group_sabotage_deal",
+    "Text": "Buy {broker}'s full hit.",
+    "Requires": [
+     "rel:@broker>15"
+    ],
+    "Tags": {
+     "betrayal": 1.5,
+     "ambition": 1
+    },
+    "StatDeltas": {
+     "Funds.Liquidity": -1,
+     "Cunning.Network": 1.5,
+     "Reputation.Fear": 1
+    },
+    "SetFlags": [
+     "group_broker_hit"
+    ],
+    "Next": "exam_group_submit"
+   },
+   {
+    "Id": "exam_group_sabotage_circus",
+    "Text": "Replace their file with memes.",
+    "Requires": [
+     "tag:chaos>=2"
+    ],
+    "Tags": {
+     "chaos": 2,
+     "humor": 1.5
+    },
+    "StatDeltas": {
+     "Luck.Chaos": 2,
+     "Sanity.Absurd": 1.5,
+     "Reputation.Class": -0.5
+    },
+    "SetFlags": [
+     "group_meme_war"
+    ],
+    "Next": "exam_group_submit"
+   }
+  ]
+ },
+ {
+  "Id": "exam_group_submit",
+  "Kind": "exam",
+  "Conditions": [
+   "flag:group_project_started"
+  ],
+  "Priority": 44,
+  "bOnce": true,
+  "Slots": {
+   "rival": "rival",
+   "ally": "ally",
+   "gremlin": "gremlin",
+   "homeroom": "homeroom",
+   "proctor": "proctor"
+  },
+  "Location": "classroom",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "Submission minute. The projector hums like a guillotine. Your team stands in a mismatched line.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@proctor",
+    "Text": "Teams will present once. Questions are traps. Smile anyway.",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@homeroom",
+    "Text": "Remember: one grade. One story the System will keep forever.",
+    "Shot": "pan"
+   },
+   {
+    "Speaker": "@ally",
+    "Text": "{ally} squeezes your sleeve. \"Whatever you chose… we finish it.\"",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "@gremlin",
+    "Text": "{gremlin} mouths 'circus' like a prayer or a threat.",
+    "Shot": "low"
+   }
+  ],
+  "PromptSpeaker": "@proctor",
+  "Text": "Final call: how do you steer the presentation?",
+  "Choices": [
+   {
+    "Id": "exam_group_submit_script",
+    "Text": "Follow the rubric perfectly.",
+    "Requires": [],
+    "Tags": {
+     "obedience": 1.5,
+     "ambition": 0.5
+    },
+    "StatDeltas": {
+     "Intellect.Presentation": 1,
+     "Reputation.System": 1.5
+    },
+    "SetFlags": [
+     "group_project_done",
+     "group_canon_path"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "exam_group_submit_credit",
+    "Text": "Give {ally} the closing line.",
+    "Requires": [
+     "flag:group_protect_ally"
+    ],
+    "Tags": {
+     "loyalty": 1.5,
+     "empathy": 1
+    },
+    "StatDeltas": {
+     "Charisma.Bond": 1.5,
+     "Reputation.Class": 1
+    },
+    "SetFlags": [
+     "group_project_done",
+     "group_kingmaker_seed"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "exam_group_submit_expose",
+    "Text": "Expose the delete trail live.",
+    "Requires": [
+     "flag:group_traced_delete"
+    ],
+    "Tags": {
+     "honesty": 1,
+     "cruelty": 0.5,
+     "cunning": 0.5
+    },
+    "StatDeltas": {
+     "Cunning.Investigation": 1,
+     "Reputation.Fear": 1,
+     "Intellect.Rhetoric": 1
+    },
+    "SetFlags": [
+     "group_project_done",
+     "group_exposed_saboteur"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "exam_group_submit_absurdist",
+    "Text": "Pivot into absurdist theatre.",
+    "Requires": [
+     "flag:group_meme_war"
+    ],
+    "Tags": {
+     "chaos": 2,
+     "humor": 1.5,
+     "withdrawal": 0.5
+    },
+    "StatDeltas": {
+     "Sanity.Absurd": 2,
+     "Luck.Chaos": 1.5,
+     "Reputation.System": -1
+    },
+    "SetFlags": [
+     "group_project_done",
+     "group_clown_seed"
+    ],
+    "Next": "None"
+   }
+  ]
+ },
+ {
+  "Id": "exam_market_open",
+  "Kind": "exam",
+  "Conditions": [
+   "flag:group_project_done"
+  ],
+  "Priority": 50,
+  "bOnce": true,
+  "Slots": {
+   "rival": "rival",
+   "ally": "ally",
+   "gremlin": "gremlin",
+   "broker": "broker",
+   "proctor": "proctor"
+  },
+  "Location": "cafeteria",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "Lunch trays become trading floors. Menu boards flicker with fake stock tickers for every dish.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@proctor",
+    "Text": "Cafeteria Stock Market is live. Buy, short, bribe, or starve. Credits reset at close bell.",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "system",
+    "Text": "EXAM LIVE: Liquidity, rumor velocity, and social pressure scored. Hoarding penalized after peak.",
+    "Shot": "pan"
+   },
+   {
+    "Speaker": "@broker",
+    "Text": "{broker} leans on a juice fridge. \"Milk futures are lying to you. Ask me nice.\"",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "@gremlin",
+    "Text": "{gremlin} is auctioning a single fry like a crown jewel.",
+    "Shot": "low"
+   }
+  ],
+  "PromptSpeaker": "@proctor",
+  "Text": "Opening bell. What is your first market move?",
+  "Choices": [
+   {
+    "Id": "exam_market_open_safe",
+    "Text": "Buy staples: rice and water.",
+    "Requires": [],
+    "Tags": {
+     "obedience": 0.5,
+     "ambition": 0.5
+    },
+    "StatDeltas": {
+     "Funds.Liquidity": 0.5,
+     "Intellect.Economy": 0.5
+    },
+    "SetFlags": [
+     "market_started",
+     "market_safe_open"
+    ],
+    "Next": "exam_market_tips"
+   },
+   {
+    "Id": "exam_market_open_short",
+    "Text": "Short the dessert craze.",
+    "Requires": [],
+    "Tags": {
+     "cunning": 1,
+     "ambition": 1
+    },
+    "StatDeltas": {
+     "Cunning.Market": 1,
+     "Funds.Risk": 1
+    },
+    "SetFlags": [
+     "market_started",
+     "market_short_dessert"
+    ],
+    "Next": "exam_market_tips"
+   },
+   {
+    "Id": "exam_market_open_ally",
+    "Text": "Pool capital with {ally}.",
+    "Requires": [
+     "rel:@ally>8"
+    ],
+    "Tags": {
+     "loyalty": 1,
+     "empathy": 0.5
+    },
+    "StatDeltas": {
+     "Charisma.Bond": 1,
+     "Funds.Liquidity": 0.5
+    },
+    "SetFlags": [
+     "market_started",
+     "market_ally_pool"
+    ],
+    "Next": "exam_market_tips"
+   },
+   {
+    "Id": "exam_market_open_fry",
+    "Text": "Bid absurdly on {gremlin}'s fry.",
+    "Requires": [
+     "tag:chaos>=1"
+    ],
+    "Tags": {
+     "chaos": 1.5,
+     "humor": 1
+    },
+    "StatDeltas": {
+     "Luck.Chaos": 1.5,
+     "Funds.Liquidity": -1,
+     "Sanity.Absurd": 1
+    },
+    "SetFlags": [
+     "market_started",
+     "market_fry_cult"
+    ],
+    "Next": "exam_market_tips"
+   }
+  ]
+ },
+ {
+  "Id": "exam_market_tips",
+  "Kind": "exam",
+  "Conditions": [
+   "flag:market_started"
+  ],
+  "Priority": 51,
+  "bOnce": true,
+  "Slots": {
+   "rival": "rival",
+   "broker": "broker",
+   "ally": "ally",
+   "gremlin": "gremlin"
+  },
+  "Location": "store",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "The campus store's back aisle is quieter. Rumors trade faster than snacks.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@broker",
+    "Text": "{broker} taps a sealed crate. \"Official tip: soup cans spike after third period. Unofficial tip costs more.\"",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@rival",
+    "Text": "{rival} pretends to browse gum. \"They're seeding panic. Don't be average.\"",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "@ally",
+    "Text": "{ally} texts: kitchen staff looked nervous near the freezers.",
+    "Shot": "pan"
+   },
+   {
+    "Speaker": "system",
+    "Text": "Information asymmetry detected. Purchasing intel alters exam difficulty.",
+    "Shot": "low"
+   }
+  ],
+  "PromptSpeaker": "@broker",
+  "Text": "{broker} waits for your wallet — or your bluff.",
+  "Choices": [
+   {
+    "Id": "exam_market_tips_buy",
+    "Text": "Pay for the unofficial tip.",
+    "Requires": [],
+    "Tags": {
+     "ambition": 0.5,
+     "cunning": 0.5
+    },
+    "StatDeltas": {
+     "Funds.Liquidity": -1,
+     "Intellect.Economy": 1,
+     "Cunning.Network": 0.5
+    },
+    "SetFlags": [
+     "market_tip_bought"
+    ],
+    "Next": "exam_market_crash"
+   },
+   {
+    "Id": "exam_market_tips_bluff",
+    "Text": "Bluff that you already know.",
+    "Requires": [
+     "stat:Charisma>=10"
+    ],
+    "Tags": {
+     "cunning": 1,
+     "honesty": -0.5
+    },
+    "StatDeltas": {
+     "Charisma.Presence": 1,
+     "Cunning.Deceit": 1
+    },
+    "SetFlags": [
+     "market_tip_bluff"
+    ],
+    "Next": "exam_market_crash"
+   },
+   {
+    "Id": "exam_market_tips_favor",
+    "Text": "Trade a future favor instead.",
+    "Requires": [
+     "rel:@broker>15"
+    ],
+    "Tags": {
+     "loyalty": 0.5,
+     "cunning": 1
+    },
+    "StatDeltas": {
+     "Cunning.Network": 1.5,
+     "Reputation.Debt": 1
+    },
+    "SetFlags": [
+     "market_broker_debt",
+     "market_tip_bought"
+    ],
+    "Next": "exam_market_crash"
+   },
+   {
+    "Id": "exam_market_tips_ignore",
+    "Text": "Ignore tips; watch the floor.",
+    "Requires": [],
+    "Tags": {
+     "withdrawal": 1,
+     "honesty": 0.5
+    },
+    "StatDeltas": {
+     "Cunning.Observation": 1,
+     "Sanity.Composure": 0.5
+    },
+    "SetFlags": [
+     "market_no_tip"
+    ],
+    "Next": "exam_market_crash"
+   }
+  ]
+ },
+ {
+  "Id": "exam_market_crash",
+  "Kind": "exam",
+  "Conditions": [
+   "flag:market_started"
+  ],
+  "Priority": 52,
+  "bOnce": true,
+  "Slots": {
+   "rival": "rival",
+   "ally": "ally",
+   "gremlin": "gremlin",
+   "proctor": "proctor"
+  },
+  "Location": "cafeteria",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "A false allergy alert empties half the hall. Prices spasm. Someone screams about expired yogurt futures.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@proctor",
+    "Text": "Remain orderly! Panic selling is still selling!",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@rival",
+    "Text": "{rival}'s eyes sharpen. \"This is the test inside the test.\"",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "@ally",
+    "Text": "{ally} clutches your sleeve. \"People will go hungry for points.\"",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@gremlin",
+    "Text": "{gremlin} climbs a table and declares a fry-backed currency.",
+    "Shot": "low"
+   }
+  ],
+  "PromptSpeaker": "narrator",
+  "Text": "Crash minute. Your holdings swing. Choose a response.",
+  "Choices": [
+   {
+    "Id": "exam_market_crash_hold",
+    "Text": "Hold and wait for rebound.",
+    "Requires": [],
+    "Tags": {
+     "obedience": 0.5,
+     "ambition": 0.5
+    },
+    "StatDeltas": {
+     "Sanity.Composure": 1,
+     "Funds.Risk": 0.5
+    },
+    "SetFlags": [
+     "market_held_crash"
+    ],
+    "Next": "exam_market_corner"
+   },
+   {
+    "Id": "exam_market_crash_dump",
+    "Text": "Dump everything into rumor.",
+    "Requires": [],
+    "Tags": {
+     "chaos": 1,
+     "cunning": 0.5
+    },
+    "StatDeltas": {
+     "Cunning.Market": 1,
+     "Reputation.Noise": 1,
+     "Funds.Liquidity": -0.5
+    },
+    "SetFlags": [
+     "market_dumped"
+    ],
+    "Next": "exam_market_corner"
+   },
+   {
+    "Id": "exam_market_crash_feed",
+    "Text": "Feed panicked underclassmen.",
+    "Requires": [
+     "tag:empathy>=1"
+    ],
+    "Tags": {
+     "empathy": 1.5,
+     "loyalty": 1
+    },
+    "StatDeltas": {
+     "Charisma.Empathy": 1.5,
+     "Funds.Liquidity": -1,
+     "Reputation.Trust": 1.5
+    },
+    "SetFlags": [
+     "market_fed_crowd"
+    ],
+    "Next": "exam_market_corner"
+   },
+   {
+    "Id": "exam_market_crash_tipplay",
+    "Text": "Strike using {broker}'s tip.",
+    "Requires": [
+     "flag:market_tip_bought"
+    ],
+    "Tags": {
+     "cunning": 1.5,
+     "ambition": 1
+    },
+    "StatDeltas": {
+     "Intellect.Economy": 1.5,
+     "Funds.Liquidity": 2,
+     "Cunning.Market": 1
+    },
+    "SetFlags": [
+     "market_tip_play"
+    ],
+    "Next": "exam_market_corner"
+   }
+  ]
+ },
+ {
+  "Id": "exam_market_corner",
+  "Kind": "exam",
+  "Conditions": [
+   "flag:market_started"
+  ],
+  "Priority": 53,
+  "bOnce": true,
+  "Slots": {
+   "rival": "rival",
+   "broker": "broker",
+   "gremlin": "gremlin",
+   "ally": "ally"
+  },
+  "Location": "store",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "Late afternoon. Only the premium protein bars remain — and whoever corners them owns lunch tomorrow.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@broker",
+    "Text": "{broker} whispers, \"I can route the last crate through a 'maintenance hold.'\"",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@rival",
+    "Text": "{rival} blocks the aisle. \"If you take the corner, I take your reputation.\"",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "@gremlin",
+    "Text": "{gremlin} offers to replace barcodes with stickers of ducks.",
+    "Shot": "low"
+   },
+   {
+    "Speaker": "system",
+    "Text": "Corner attempt probability rising. Monopoly outcomes rewrite class standing.",
+    "Shot": "pan"
+   }
+  ],
+  "PromptSpeaker": "@rival",
+  "Text": "{rival} challenges you at the last crate. Your move?",
+  "Choices": [
+   {
+    "Id": "exam_market_corner_split",
+    "Text": "Split the crate, uneasy peace.",
+    "Requires": [],
+    "Tags": {
+     "honesty": 1,
+     "loyalty": 0.5
+    },
+    "StatDeltas": {
+     "Charisma.Negotiation": 1,
+     "Reputation.Trust": 1
+    },
+    "SetFlags": [
+     "market_split_crate"
+    ],
+    "Next": "exam_market_settle"
+   },
+   {
+    "Id": "exam_market_corner_seize",
+    "Text": "Seize the monopoly cold.",
+    "Requires": [],
+    "Tags": {
+     "ambition": 1.5,
+     "cruelty": 1,
+     "betrayal": 0.5
+    },
+    "StatDeltas": {
+     "Funds.Liquidity": 2,
+     "Reputation.Fear": 1.5,
+     "Charisma.Dominance": 1
+    },
+    "SetFlags": [
+     "market_monopoly"
+    ],
+    "Next": "exam_market_settle"
+   },
+   {
+    "Id": "exam_market_corner_broker",
+    "Text": "Let {broker} ghost the crate.",
+    "Requires": [
+     "rel:@broker>15",
+     "stat:Cunning>=12"
+    ],
+    "Tags": {
+     "cunning": 2,
+     "betrayal": 1
+    },
+    "StatDeltas": {
+     "Cunning.Network": 2,
+     "Funds.Liquidity": 1.5,
+     "Reputation.Trust": -1
+    },
+    "SetFlags": [
+     "market_ghost_crate"
+    ],
+    "Next": "exam_market_settle"
+   },
+   {
+    "Id": "exam_market_corner_ducks",
+    "Text": "Deploy {gremlin}'s duck codes.",
+    "Requires": [
+     "tag:chaos>=2",
+     "flag:market_fry_cult"
+    ],
+    "Tags": {
+     "chaos": 2,
+     "humor": 2
+    },
+    "StatDeltas": {
+     "Luck.Chaos": 2,
+     "Sanity.Absurd": 2,
+     "Reputation.System": -1.5
+    },
+    "SetFlags": [
+     "market_duck_economy"
+    ],
+    "Next": "exam_market_settle"
+   }
+  ]
+ },
+ {
+  "Id": "exam_market_settle",
+  "Kind": "exam",
+  "Conditions": [
+   "flag:market_started"
+  ],
+  "Priority": 54,
+  "bOnce": true,
+  "Slots": {
+   "proctor": "proctor",
+   "rival": "rival",
+   "ally": "ally",
+   "broker": "broker",
+   "gremlin": "gremlin",
+   "homeroom": "homeroom"
+  },
+  "Location": "cafeteria",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "Closing bell. Trays freeze mid-trade. Rankings refresh in cold white text across the walls.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@proctor",
+    "Text": "Settlement complete. Credits convert to exam points. Complaints convert to nothing.",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@homeroom",
+    "Text": "Year One's market lesson: appetite is policy. Some of you learned that too well.",
+    "Shot": "pan"
+   },
+   {
+    "Speaker": "@ally",
+    "Text": "{ally} watches the board. \"Whatever you became in that crash… people noticed.\"",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "system",
+    "Text": "EXAM CLOSED: Cafeteria Stock Market. Behavioural fingerprints archived.",
+    "Shot": "low"
+   }
+  ],
+  "PromptSpeaker": "system",
+  "Text": "Final settlement prompt. How do you cash out your story?",
+  "Choices": [
+   {
+    "Id": "exam_market_settle_rank",
+    "Text": "Cash out for pure rank.",
+    "Requires": [],
+    "Tags": {
+     "ambition": 1.5,
+     "obedience": 1
+    },
+    "StatDeltas": {
+     "Reputation.System": 2,
+     "Funds.Liquidity": 1
+    },
+    "SetFlags": [
+     "market_done",
+     "market_canon_path"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "exam_market_settle_share",
+    "Text": "Redistribute gains to {ally}.",
+    "Requires": [
+     "flag:market_ally_pool"
+    ],
+    "Tags": {
+     "loyalty": 1.5,
+     "empathy": 1
+    },
+    "StatDeltas": {
+     "Charisma.Bond": 2,
+     "Reputation.Trust": 1.5,
+     "Funds.Liquidity": -0.5
+    },
+    "SetFlags": [
+     "market_done",
+     "market_kingmaker_seed"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "exam_market_settle_expose",
+    "Text": "Leak the ghost-crate route.",
+    "Requires": [
+     "flag:market_ghost_crate"
+    ],
+    "Tags": {
+     "honesty": 1,
+     "betrayal": 0.5,
+     "cunning": 0.5
+    },
+    "StatDeltas": {
+     "Reputation.Fear": 1,
+     "Cunning.Investigation": 1,
+     "rel_placeholder": 0
+    },
+    "SetFlags": [
+     "market_done",
+     "market_exposed_broker"
+    ],
+    "Next": "None"
+   },
+   {
+    "Id": "exam_market_settle_circus",
+    "Text": "Declare duck currency forever.",
+    "Requires": [
+     "flag:market_duck_economy"
+    ],
+    "Tags": {
+     "chaos": 2,
+     "humor": 2,
+     "withdrawal": 0.5
+    },
+    "StatDeltas": {
+     "Sanity.Absurd": 2,
+     "Luck.Chaos": 2,
+     "Reputation.System": -2
+    },
+    "SetFlags": [
+     "market_done",
+     "market_clown_seed"
+    ],
+    "Next": "None"
+   }
+  ]
+ }
+]

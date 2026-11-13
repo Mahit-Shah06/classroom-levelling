@@ -20,27 +20,26 @@ ENV_PATH = REPO_ROOT / ".env"
 OUT_DIR = REPO_ROOT / "Assets" / "Generated"
 
 STYLE = (
-    "stylised black-and-white school game asset, low-poly, game-ready, "
-    "clean topology, plain white and grey materials only, no text, no logos, "
-    "no colour accents, simple silhouette"
+    "stylised school game asset, low-poly, game-ready, clean topology, "
+    "soft pastel colours with clean flat textures, no text, no logos, simple readable silhouette"
 )
 
 # id -> (provider, prompt)
 ASSETS: dict[str, tuple[str, str]] = {
     "desk": (
-        "tripo",
+        "rodin",
         f"school classroom wooden desk, {STYLE}",
     ),
     "chair": (
-        "tripo",
+        "rodin",
         f"school classroom chair, {STYLE}",
     ),
     "locker_row": (
-        "tripo",
+        "rodin",
         f"row of school lockers, {STYLE}",
     ),
     "chalkboard": (
-        "tripo",
+        "rodin",
         f"classroom chalkboard on a stand, blank board, {STYLE}",
     ),
     "podium": (
@@ -48,11 +47,11 @@ ASSETS: dict[str, tuple[str, str]] = {
         f"teacher podium lectern for a classroom, {STYLE}",
     ),
     "bench": (
-        "tripo",
+        "rodin",
         f"outdoor school courtyard bench, {STYLE}",
     ),
     "tree_stylised": (
-        "tripo",
+        "rodin",
         f"stylised school courtyard tree, {STYLE}",
     ),
     "vending_machine": (
@@ -60,7 +59,7 @@ ASSETS: dict[str, tuple[str, str]] = {
         f"school hallway vending machine, blank panels, {STYLE}",
     ),
     "cafeteria_table": (
-        "tripo",
+        "rodin",
         f"school cafeteria table with attached seats, {STYLE}",
     ),
     "school_gate": (
@@ -72,23 +71,15 @@ ASSETS: dict[str, tuple[str, str]] = {
         f"classroom bookshelf with plain book blocks, {STYLE}",
     ),
     "potted_plant": (
-        "tripo",
+        "rodin",
         f"potted plant for a school hallway, {STYLE}",
     ),
-    "student_male_stylised": (
-        "tripo",
-        "low-poly stylised high-school student male in blazer uniform, T-pose, "
-        f"{STYLE}",
-    ),
-    "student_female_stylised": (
-        "tripo",
-        "low-poly stylised high-school student female in blazer and skirt uniform, "
-        f"T-pose, {STYLE}",
-    ),
-    "teacher_stylised": (
-        "tripo",
-        f"low-poly stylised high-school teacher in suit, T-pose, {STYLE}",
-    ),
+    "basketball_hoop": ("rodin", f"indoor gym basketball hoop on a stand, {STYLE}"),
+    "dorm_bed": ("rodin", f"single dormitory bed with folded blanket, {STYLE}"),
+    "bus_stop": ("rodin", f"city bus stop shelter with bench, {STYLE}"),
+    "street_lamp": ("rodin", f"modern campus street lamp post, {STYLE}"),
+    "fountain": ("rodin", f"round stone courtyard fountain, {STYLE}"),
+    "trophy_case": ("rodin", f"school trophy display cabinet with trophies, {STYLE}"),
 }
 
 TRIPO_BASE = "https://api.tripo3d.ai/v2/openapi"

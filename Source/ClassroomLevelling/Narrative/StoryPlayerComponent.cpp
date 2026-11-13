@@ -243,8 +243,9 @@ void UStoryPlayerComponent::SetUIMode(bool bUI)
 	APlayerController* PC = Cast<APlayerController>(GetOwner());
 	if (!PC) return;
 	PC->SetShowMouseCursor(bUI);
-	PC->SetIgnoreMoveInput(bUI);
-	PC->SetIgnoreLookInput(bUI);
+	// Ignore-input calls are reference counted; lock at most once and always fully unlock.
+	if (bUI) { if (!PC->IsMoveInputIgnored()) PC->SetIgnoreMoveInput(true); if (!PC->IsLookInputIgnored()) PC->SetIgnoreLookInput(true); }
+	else PC->ResetIgnoreInputFlags();
 	if (bUI && Window.IsValid()) { FInputModeUIOnly M; M.SetWidgetToFocus(Window); PC->SetInputMode(M); }
 	else PC->SetInputMode(FInputModeGameOnly());
 }
@@ -362,6 +363,8 @@ void UStoryPlayerComponent::ShowStep()
 		Labels.Add(N->ResolveText(Current.Choices[i].Text).ToString());
 	}
 	bAwaitingChoice = Labels.Num() > 0;
+	ChoiceWords = 0;
+	for (const FString& L : Labels) { TArray<FString> W; L.ParseIntoArrayWS(W); ChoiceWords += W.Num(); }
 	if (bAwaitingChoice) Window->SetChoices(Labels); else Window->SetContinue(TEXT("Continue"));
 
 	CachedWitnesses = Witnesses();
@@ -506,10 +509,10 @@ void UStoryPlayerComponent::TickComponent(float Dt, ELevelTick TickType, FActorC
 	// Hesitation: only after the prompt is fully on screen + time to read it.
 	if (bAwaitingChoice && !Window->IsTyping() && FGamePrefs::Get().bHesitation)
 	{
-		if (Grace < 0.f) Grace = 1.5f + Window->WordCount() * 0.3f;
+		if (Grace < 0.f) Grace = 3.f + (Window->WordCount() + ChoiceWords) * 0.3f; // read the prompt AND every option first
 		if (Grace > 0.f) { Grace -= Dt; return; }
 		ChoiceTime += Dt;
-		const float Patience = FMath::Max(CachedPatience, 3.f);
+		const float Patience = FMath::Max(CachedPatience, 8.f);
 		const bool bLate = ChoiceTime > Patience;
 		Window->SetHesitation(FMath::Clamp(ChoiceTime / Patience, 0.f, 1.f), true, bLate);
 		if (bLate && !bWarnedHesitation) { bWarnedHesitation = true; Shake(0.25f); if (UGameAudio* Au = UGameAudio::Get(this)) Au->PlaySfx(this, "hesitation"); }

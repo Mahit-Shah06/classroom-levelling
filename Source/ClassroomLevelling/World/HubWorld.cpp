@@ -19,11 +19,17 @@
 #include "Kismet/GameplayStatics.h"
 #include "UObject/ConstructorHelpers.h"
 
-static const float Tones[] = { 0.92f, 0.55f, 0.22f, 0.05f }; // white, grey, dark, black
+// Real colours (menus show them); gameplay desaturates to the B/W look via post-process. Ordered light -> dark
+// so the grayscale reading matches the original tone design.
+static const float Tones[] = { 0.92f, 0.55f, 0.22f, 0.05f };
+static const FLinearColor CubePal[] = { FLinearColor(0.93f, 0.86f, 0.72f), FLinearColor(0.32f, 0.55f, 0.30f), FLinearColor(0.62f, 0.24f, 0.16f), FLinearColor(0.06f, 0.08f, 0.16f) }; // cream, grass, brick, navy
+static const FLinearColor CylPal[] = { FLinearColor(0.95f, 0.93f, 0.88f), FLinearColor(0.35f, 0.62f, 0.85f), FLinearColor(0.70f, 0.30f, 0.20f), FLinearColor(0.20f, 0.12f, 0.06f) };  // white, sky, clay, bark
+static const FLinearColor SphPal[] = { FLinearColor(0.20f, 0.52f, 0.22f), FLinearColor(0.85f, 0.75f, 0.30f), FLinearColor(0.55f, 0.20f, 0.35f), FLinearColor(0.05f, 0.05f, 0.05f) }; // leaves, gold, plum
 
 AHubWorld::AHubWorld()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bTickEvenWhenPaused = true;
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> CubM(TEXT("/Engine/BasicShapes/Cube.Cube"));
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> CylM(TEXT("/Engine/BasicShapes/Cylinder.Cylinder"));
@@ -59,10 +65,15 @@ void AHubWorld::BeginPlay()
 	for (TActorIterator<AStaticMeshActor> It(GetWorld()); It; ++It) It->Destroy();
 	for (TActorIterator<ATextRenderActor> It(GetWorld()); It; ++It) It->Destroy();
 
+	const FLinearColor* Pals[] = { CubePal, CylPal, SphPal };
+	int32 k = 0;
 	for (auto* Arr : { &Cubes, &Cyls, &Spheres })
+	{
 		for (int32 t = 0; t < Arr->Num(); ++t)
 			if (UMaterialInstanceDynamic* M = (*Arr)[t]->CreateDynamicMaterialInstance(0))
-				M->SetVectorParameterValue(TEXT("Color"), FLinearColor(Tones[t], Tones[t], Tones[t]));
+				M->SetVectorParameterValue(TEXT("Color"), Pals[k][t]);
+		++k;
+	}
 
 	Build();
 
@@ -70,11 +81,12 @@ void AHubWorld::BeginPlay()
 	FActorSpawnParameters SP; SP.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	if (APostProcessVolume* PP = GetWorld()->SpawnActor<APostProcessVolume>(SP))
 	{
+		Post = PP;
 		PP->bUnbound = true;
 		FPostProcessSettings& S = PP->Settings;
-		S.bOverride_ColorSaturation = true; S.ColorSaturation = FVector4(0, 0, 0, 1);
-		S.bOverride_ColorContrast = true; S.ColorContrast = FVector4(1.15f, 1.15f, 1.15f, 1);
-		S.bOverride_VignetteIntensity = true; S.VignetteIntensity = 0.55f;
+		S.bOverride_ColorSaturation = true; S.ColorSaturation = FVector4(1, 1, 1, 1); // starts in colour (title menu)
+		S.bOverride_ColorContrast = true; S.ColorContrast = FVector4(1, 1, 1, 1);
+		S.bOverride_VignetteIntensity = true; S.VignetteIntensity = 0.3f;
 		S.bOverride_MotionBlurAmount = true; S.MotionBlurAmount = 0.f; // cleaner cuts + cheaper
 		S.bOverride_AutoExposureBias = true; S.AutoExposureBias = 1.0f;
 	}
@@ -136,6 +148,36 @@ void AHubWorld::AddArea(FName Name, const FVector& Center, const FVector2D& Size
 	Areas.Add(A);
 }
 
+bool AHubWorld::Prop(FName Id, const FVector& Loc, float Yaw, float Height, float CullDist)
+{
+	TObjectPtr<UInstancedStaticMeshComponent>* Found = Props.Find(Id);
+	if (!Found)
+	{
+		const FString N = Id.ToString();
+		UStaticMesh* M = LoadObject<UStaticMesh>(nullptr, *FString::Printf(TEXT("/Game/Generated/%s/%s/StaticMeshes/%s.%s"), *N, *N, *N, *N), nullptr, LOAD_NoWarn | LOAD_Quiet);
+		UInstancedStaticMeshComponent* C = nullptr;
+		if (M)
+		{
+			C = NewObject<UInstancedStaticMeshComponent>(this);
+			C->SetStaticMesh(M);
+			C->SetupAttachment(RootComponent);
+			C->SetMobility(EComponentMobility::Static);
+			C->SetCullDistances(CullDist * 0.6f, CullDist);
+			C->SetCollisionProfileName(TEXT("BlockAll"));
+			C->RegisterComponent();
+		}
+		Found = &Props.Add(Id, C);
+	}
+	UInstancedStaticMeshComponent* C = *Found;
+	if (!C) return false;
+	const FBox B = C->GetStaticMesh()->GetBoundingBox();
+	const float S = Height / FMath::Max(B.GetSize().Z, 1.f);
+	const FVector Base(B.GetCenter().X, B.GetCenter().Y, B.Min.Z); // model footprint centre goes on Loc
+	const FRotator R(0, Yaw, 0);
+	C->AddInstance(FTransform(R, Loc - R.RotateVector(Base * S), FVector(S)), true);
+	return true;
+}
+
 // ---------------- layout ----------------
 // X = north. Gate (south) -> courtyard -> main building (corridor + rooms). Cafeteria east, rooftop tower west.
 void AHubWorld::Build()
@@ -147,8 +189,8 @@ void AHubWorld::Build()
 	Box(3, FVector(-3000, 0, 1), FVector(1400, 40000, 2));                       // road
 	for (int32 i = -20; i <= 20; ++i) Box(0, FVector(-3000, i * 1000.f, 3), FVector(30, 400, 2)); // lane marks
 	Box(0, FVector(-1600, 0, 8), FVector(1200, 40000, 16));                      // sidewalk
-	Box(2, FVector(-2050, 1500, 260), FVector(400, 900, 20)); Box(2, FVector(-1900, 1500, 130), FVector(20, 900, 260)); // shelter
-	Box(1, FVector(-2050, 1500, 50), FVector(120, 700, 20)); Cyl(3, FVector(-2200, 2100, 0), 20, 300); Box(0, FVector(-2200, 2100, 300), FVector(10, 160, 80)); // bench + sign
+	if (!Prop("bus_stop", FVector(-2000, 1500, 16), 90, 300)) { Box(2, FVector(-2050, 1500, 260), FVector(400, 900, 20)); Box(2, FVector(-1900, 1500, 130), FVector(20, 900, 260)); Box(1, FVector(-2050, 1500, 50), FVector(120, 700, 20)); }
+	 Cyl(3, FVector(-2200, 2100, 0), 20, 300); Box(0, FVector(-2200, 2100, 300), FVector(10, 160, 80)); // bench + sign
 	AddArea("station", FVector(-1700, 1500, 16), FVector2D(1400, 2000));
 	for (int32 i = 0; i < 70; ++i) // skyline beyond the road and around the campus
 	{
@@ -171,6 +213,7 @@ void AHubWorld::Build()
 	Cyl(3, FVector(0, -450, 0), 120, 500); Cyl(3, FVector(0, 450, 0), 120, 500);
 	Box(3, FVector(0, 0, 540), FVector(140, 1100, 80));
 	Box(0, FVector(0, 0, 640), FVector(40, 900, 120)); // crest plate
+	Prop("school_gate", FVector(-150, 0, 0), 90, 520, 20000);
 	AddArea("gate", FVector(300, 0, 0), FVector2D(1400, 1400));
 
 	// ---- Paths ----
@@ -184,18 +227,20 @@ void AHubWorld::Build()
 		const float X = 800 + i * 900.f;
 		for (const float Y : { 7600.f, 8400.f, -8100.f, -8900.f })
 		{
-			if ((i + (int32)Y) % 2) { Cyl(3, FVector(X, Y + FMath::Sign(Y) * 150.f, 0), 40, 300); Spheres[0]->AddInstance(FTransform(FRotator::ZeroRotator, FVector(X, Y + FMath::Sign(Y) * 150.f, 390), FVector(2.2f)), true); }
-			else { Cyl(3, FVector(X, Y, 0), 16, 420); Spheres[0]->AddInstance(FTransform(FRotator::ZeroRotator, FVector(X, Y, 430), FVector(0.35f)), true); }
+			if ((i + (int32)Y) % 2) { if (!Prop("tree_stylised", FVector(X, Y + FMath::Sign(Y) * 150.f, 0), i * 37.f, 520, 16000)) { Cyl(3, FVector(X, Y + FMath::Sign(Y) * 150.f, 0), 40, 300); Spheres[0]->AddInstance(FTransform(FRotator::ZeroRotator, FVector(X, Y + FMath::Sign(Y) * 150.f, 390), FVector(2.2f)), true); } }
+			else if (!Prop("street_lamp", FVector(X, Y, 0), Y > 0 ? 0 : 180, 450, 14000)) { Cyl(3, FVector(X, Y, 0), 16, 420); Spheres[0]->AddInstance(FTransform(FRotator::ZeroRotator, FVector(X, Y, 430), FVector(0.35f)), true); }
 		}
 	}
 
-	// ---- Courtyard ----
-	Cyl(0, FVector(2600, 0, 0), 600, 60); Cyl(1, FVector(2600, 0, 60), 120, 160);
+	// ---- Courtyard: chessboard plaza under the fountain (the B/W nod) ----
+	for (int32 r = 0; r < 8; ++r) for (int32 c = 0; c < 8; ++c)
+		Box((r + c) % 2 ? 3 : 0, FVector(2600 - 700 + r * 200.f, -700 + c * 200.f, 3), FVector(200, 200, 6));
+	if (!Prop("fountain", FVector(2600, 0, 6), 0, 260, 15000)) { Cyl(0, FVector(2600, 0, 0), 600, 60); Cyl(1, FVector(2600, 0, 60), 120, 160); }
 	for (int32 i = 0; i < 8; ++i)
 	{
 		const float X = 1300 + (i / 2) * 800, Y = (i % 2 ? 1 : -1) * 1300;
-		Cyl(3, FVector(X, Y, 0), 50, 320); Spheres[0]->AddInstance(FTransform(FRotator::ZeroRotator, FVector(X, Y, 420), FVector(2.6f)), true);
-		Box(2, FVector(X, Y * 0.62f, 45), FVector(260, 70, 20)); Box(3, FVector(X, Y * 0.62f, 20), FVector(200, 50, 40));
+		if (!Prop("tree_stylised", FVector(X, Y, 0), i * 53.f, 600, 16000)) { Cyl(3, FVector(X, Y, 0), 50, 320); Spheres[0]->AddInstance(FTransform(FRotator::ZeroRotator, FVector(X, Y, 420), FVector(2.6f)), true); }
+		if (!Prop("bench", FVector(X, Y * 0.62f, 0), Y > 0 ? 180 : 0, 90)) { Box(2, FVector(X, Y * 0.62f, 45), FVector(260, 70, 20)); Box(3, FVector(X, Y * 0.62f, 20), FVector(200, 50, 40)); }
 	}
 	AddArea("courtyard", FVector(2600, 900, 0), FVector2D(3000, 2600));
 
@@ -204,34 +249,37 @@ void AHubWorld::Build()
 	Box(2, FVector(5300, 0, 5), FVector(700, 7600, 10));
 	Box(0, FVector(4950, -2400, H * 0.5f), FVector(30, 2800, H)); Box(0, FVector(4950, 2400, H * 0.5f), FVector(30, 2800, H));
 	Box(3, FVector(4950, 0, H - 40), FVector(30, 2000, 80));
-	for (int32 i = -5; i <= 5; ++i) if (FMath::Abs(i) > 1) Box(1, FVector(5000, i * 640.f, 100), FVector(50, 300, 200)); // lockers
+	for (int32 i = -5; i <= 5; ++i) if (FMath::Abs(i) > 1) if (!Prop("locker_row", FVector(5010, i * 640.f, 10), 90, 200)) Box(1, FVector(5000, i * 640.f, 100), FVector(50, 300, 200)); // lockers
+	for (int32 i = -3; i <= 3; i += 2) Prop("potted_plant", FVector(5550, i * 900.f, 10), 0, 120);
+	Prop("trophy_case", FVector(5550, 3300, 10), 180, 220);
 	for (int32 i = -3; i <= 3; ++i) Box(3, FVector(4935, i * 1000.f + 500.f, 260), FVector(10, 500, 140)); // facade windows
 	AddArea("corridor", FVector(5300, -1600, 0), FVector2D(600, 3000));
 
 	Room(FVector(6900, -2700, 0), FVector2D(2600, 2200), H + 100, 0); // hall
-	Box(3, FVector(7900, -2700, 50), FVector(500, 1600, 100)); Box(1, FVector(7750, -2700, 160), FVector(80, 160, 120));
+	Box(3, FVector(7900, -2700, 50), FVector(500, 1600, 100)); if (!Prop("podium", FVector(7800, -2700, 100), -90, 130)) Box(1, FVector(7750, -2700, 160), FVector(80, 160, 120));
 	for (int32 r = 0; r < 5; ++r) for (int32 c = 0; c < 8; ++c) Box(2, FVector(6100 + r * 175.f, -3500 + c * 220.f, 45), FVector(80, 80, 90));
 	AddArea("hall", FVector(7350, -2700, 0), FVector2D(1600, 1600));
 
 	Room(FVector(6600, 0, 0), FVector2D(2000, 1800), H, 0); // classroom
-	Box(3, FVector(7580, 0, 220), FVector(10, 1200, 260));
+	if (!Prop("chalkboard", FVector(7540, 0, 10), -90, 260)) Box(3, FVector(7580, 0, 220), FVector(10, 1200, 260));
 	for (int32 r = 0; r < 4; ++r) for (int32 c = 0; c < 5; ++c)
 	{
-		const FVector D(5850 + r * 240.f, -700 + c * 350.f, 0);
-		Box(1, D + FVector(0, 0, 75), FVector(110, 160, 8)); Box(2, D + FVector(0, 0, 37), FVector(100, 140, 74)); Box(3, D + FVector(-110, 0, 45), FVector(60, 60, 90));
+		const FVector D(5850 + r * 240.f, -700 + c * 350.f, 10);
+		if (!Prop("desk", D, 0, 76)) { Box(1, D + FVector(0, 0, 65), FVector(110, 160, 8)); Box(2, D + FVector(0, 0, 27), FVector(100, 140, 74)); }
+		if (!Prop("chair", D + FVector(-90, 0, 0), 0, 90)) Box(3, D + FVector(-110, 0, 35), FVector(60, 60, 90));
 	}
 	AddArea("classroom", FVector(7150, 0, 0), FVector2D(1400, 1400));
 
 	Room(FVector(6600, 2600, 0), FVector2D(2000, 1800), H, 0); // office
-	Box(3, FVector(7000, 2600, 40), FVector(200, 600, 80)); for (int32 i = 0; i < 4; ++i) Box(1, FVector(7500, 1900 + i * 450.f, 150), FVector(120, 400, 300));
+	Box(3, FVector(7000, 2600, 40), FVector(200, 600, 80)); for (int32 i = 0; i < 4; ++i) if (!Prop("bookshelf", FVector(7520, 1900 + i * 450.f, 10), -90, 260)) Box(1, FVector(7500, 1900 + i * 450.f, 150), FVector(120, 400, 300));
 	AddArea("office", FVector(6400, 2600, 0), FVector2D(1400, 1400));
 
 	// ---- Cafeteria pavilion ----
 	Box(2, FVector(2600, 4200, 5), FVector(2600, 2200, 10));
 	for (int32 i = 0; i < 4; ++i) Cyl(0, FVector(1400 + (i % 2) * 2400.f, 3200 + (i / 2) * 2000.f, 0), 60, 450);
 	Box(0, FVector(2600, 4200, 470), FVector(2800, 2400, 40));
-	for (int32 r = 0; r < 3; ++r) for (int32 c = 0; c < 2; ++c) { const FVector T(1900 + r * 700.f, 3700 + c * 1000.f, 0); Box(0, T + FVector(0, 0, 75), FVector(500, 160, 10)); Box(3, T + FVector(0, 0, 35), FVector(460, 40, 70)); }
-	Box(3, FVector(3700, 5150, 110), FVector(120, 90, 220));
+	for (int32 r = 0; r < 3; ++r) for (int32 c = 0; c < 2; ++c) { const FVector T(1900 + r * 700.f, 3700 + c * 1000.f, 10); if (!Prop("cafeteria_table", T, 0, 80)) { Box(0, T + FVector(0, 0, 65), FVector(500, 160, 10)); Box(3, T + FVector(0, 0, 25), FVector(460, 40, 70)); } }
+	if (!Prop("vending_machine", FVector(3700, 5150, 10), 180, 200)) Box(3, FVector(3700, 5150, 110), FVector(120, 90, 220));
 	AddArea("cafeteria", FVector(2600, 4200, 0), FVector2D(2000, 1600));
 
 	// ---- Rooftop tower ----
@@ -250,14 +298,14 @@ void AHubWorld::Build()
 
 	// ---- Library (east) ----
 	Room(FVector(5600, 9800, 0), FVector2D(2800, 2600), 520, 2);
-	for (int32 r = 0; r < 6; ++r) Box(3, FVector(4700 + r * 380.f, 10400, 130), FVector(60, 1200, 260)); // stacks
+	for (int32 r = 0; r < 6; ++r) for (int32 k = -2; k <= 2; ++k) if (!Prop("bookshelf", FVector(4700 + r * 380.f, 10400 + k * 240.f, 0), 0, 240)) { if (k == 0) Box(3, FVector(4700 + r * 380.f, 10400, 130), FVector(60, 1200, 260)); } // stacks
 	for (int32 t = 0; t < 3; ++t) { Box(0, FVector(4800 + t * 700.f, 9100, 75), FVector(400, 200, 10)); Box(2, FVector(4800 + t * 700.f, 9100, 37), FVector(360, 160, 74)); }
 	AddArea("library", FVector(5600, 9200, 0), FVector2D(2000, 1200));
 
 	// ---- Gym (north-east) ----
 	Room(FVector(11500, 6000, 0), FVector2D(4200, 3400), 700, 0);
 	Box(0, FVector(11500, 6000, 6), FVector(3000, 1800, 2)); // court lines
-	for (int32 s = -1; s <= 1; s += 2) { Cyl(3, FVector(11500 + s * 1650.f, 6000, 0), 20, 380); Box(0, FVector(11500 + s * 1600.f, 6000, 380), FVector(10, 180, 120)); }
+	for (int32 s = -1; s <= 1; s += 2) if (!Prop("basketball_hoop", FVector(11500 + s * 1650.f, 6000, 0), s > 0 ? 180 : 0, 400)) { Cyl(3, FVector(11500 + s * 1650.f, 6000, 0), 20, 380); Box(0, FVector(11500 + s * 1600.f, 6000, 380), FVector(10, 180, 120)); }
 	for (int32 r = 0; r < 4; ++r) Box(2, FVector(11500, 7450 + r * 90.f, 30 + r * 60.f), FVector(3600, 90, 60 + r * 120.f)); // bleachers
 	AddArea("gym", FVector(10400, 6000, 0), FVector2D(1600, 2000));
 
@@ -271,7 +319,7 @@ void AHubWorld::Build()
 
 	// ---- Dorm (west) ----
 	Room(FVector(6000, -10000, 0), FVector2D(3200, 2600), 420, 3);
-	for (int32 i = 0; i < 6; ++i) { const float X = 4800 + i * 480.f; Box(0, FVector(X, -10700, 30), FVector(200, 400, 60)); Box(3, FVector(X, -10900, 70), FVector(200, 40, 140)); }
+	for (int32 i = 0; i < 6; ++i) { const float X = 4800 + i * 480.f; if (!Prop("dorm_bed", FVector(X, -10700, 10), 90, 90)) { Box(0, FVector(X, -10700, 30), FVector(200, 400, 60)); Box(3, FVector(X, -10900, 70), FVector(200, 40, 140)); } }
 	AddArea("dorm", FVector(6000, -9800, 0), FVector2D(2400, 1400));
 
 	// ---- Garden (south-west) ----
@@ -344,6 +392,17 @@ void AHubWorld::Tick(float Dt)
 {
 	Super::Tick(Dt);
 	APlayerController* PC = GetWorld()->GetFirstPlayerController();
+	// Colour <-> B/W fade (ticks while paused so the pause menu regains colour).
+	const float RealDt = FApp::GetDeltaTime();
+	if (Post && !FMath::IsNearlyEqual(Gray, GrayTarget))
+	{
+		Gray = FMath::FInterpConstantTo(Gray, GrayTarget, RealDt, 1.f / FMath::Max(GrayTime, 0.05f));
+		const float G = FMath::SmoothStep(0.f, 1.f, Gray);
+		FPostProcessSettings& S = Post->Settings;
+		S.ColorSaturation = FVector4(1, 1, 1, 1) * (1.f - G) + FVector4(0, 0, 0, 1) * G; S.ColorSaturation.W = 1.f;
+		const float C = FMath::Lerp(1.f, 1.15f, G); S.ColorContrast = FVector4(C, C, C, 1);
+		S.VignetteIntensity = FMath::Lerp(0.3f, 0.55f, G);
+	}
 	if (bOrbit && Cam)
 	{
 		if (PC && PC->GetViewTarget() != Cam) PC->SetViewTarget(Cam); // possession resets the view target
@@ -463,3 +522,5 @@ ANPCStandIn* AHubWorld::NearestNamed(const FVector& P, float MaxDist) const
 		if (KV.Value) { const float D = FVector::DistSquared(KV.Value->GetActorLocation(), P); if (D < BestD) { BestD = D; Best = KV.Value; } }
 	return Best;
 }
+
+void AHubWorld::SetGrayscale(bool bGray, float Seconds) { GrayTarget = bGray ? 1.f : 0.f; GrayTime = Seconds; }

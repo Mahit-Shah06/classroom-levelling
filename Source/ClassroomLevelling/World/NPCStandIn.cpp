@@ -54,20 +54,25 @@ ANPCStandIn::ANPCStandIn()
 	Talk->SetVisibility(false);
 }
 
-void ANPCStandIn::ApplyBody(USkeletalMeshComponent* Mesh, bool bFemale, float Tone)
+void ANPCStandIn::ApplyBody(USkeletalMeshComponent* Mesh, bool bFemale, const FLinearColor& Tint)
 {
 	if (!Mesh) return;
 	if (USkeletalMesh* SK = LoadObject<USkeletalMesh>(nullptr, bFemale ? GQuinn : GManny)) Mesh->SetSkeletalMeshAsset(SK);
 	for (int32 i = 0; i < Mesh->GetNumMaterials(); ++i)
 		if (UMaterialInstanceDynamic* MID = Mesh->CreateDynamicMaterialInstance(i))
-			MID->SetVectorParameterValue(TEXT("Paint Tint"), FLinearColor(Tone, Tone, Tone));
+			MID->SetVectorParameterValue(TEXT("Paint Tint"), Tint);
 }
 
 void ANPCStandIn::Init(FName InId, const FString& Name, bool bStaff, bool bFemale, float Height, const FVector& AreaCenter, const FVector2D& AreaSize)
 {
 	Id = InId; Home = AreaCenter; Range = AreaSize * 0.4f; Target = GetActorLocation();
 	// Staff: dark suits. Students: mid-grey uniforms. Extras: lighter, varied.
-	ApplyBody(GetMesh(), bFemale, bStaff ? 0.04f : InId.IsNone() ? FMath::FRandRange(0.35f, 0.8f) : 0.18f);
+	// Colour reads in menus; luminance keeps the B/W hierarchy (staff darkest, named students mid, extras varied).
+	static const FLinearColor Suits[] = { FLinearColor(0.10f, 0.02f, 0.03f), FLinearColor(0.02f, 0.07f, 0.04f), FLinearColor(0.04f, 0.04f, 0.05f) };
+	const uint32 H = GetTypeHash(InId);
+	FLinearColor Tint = bStaff ? Suits[H % 3] : FLinearColor(0.06f, 0.10f, 0.30f); // navy uniform
+	if (InId.IsNone()) Tint = FLinearColor::MakeFromHSV8((uint8)FMath::RandRange(0, 255), 120, (uint8)FMath::RandRange(110, 210));
+	ApplyBody(GetMesh(), bFemale, Tint);
 	SetActorScale3D(FVector(Height / 180.f));
 	Tag->SetText(FText::FromString(Name));
 	Tag->SetVisibility(!Name.IsEmpty());

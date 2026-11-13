@@ -26,7 +26,7 @@ public:
 	static inline bool bHideTags = false; // during cutscenes
 
 	// Shared mesh/tint helpers (also used for the player body).
-	static void ApplyBody(USkeletalMeshComponent* Mesh, bool bFemale, float Tone);
+	static void ApplyBody(USkeletalMeshComponent* Mesh, bool bFemale, const FLinearColor& Tint);
 
 protected:
 	virtual void Tick(float Dt) override;

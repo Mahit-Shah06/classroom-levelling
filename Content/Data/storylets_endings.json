@@ -1,0 +1,800 @@
+[
+ {
+  "Id": "end_y1_puppet",
+  "Kind": "scene",
+  "Conditions": [
+   "flag:market_done",
+   "!flag:year1_complete"
+  ],
+  "Priority": 150,
+  "bOnce": true,
+  "Slots": {
+   "rival": "rival",
+   "ally": "ally",
+   "president": "president"
+  },
+  "Location": "hall",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "Year One ends under the hall's black-and-white banners. Rankings bloom on the wall like a scoreboard that learned to smile.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@head",
+    "Text": "Ninety-nine percent. That is not a promise. It is a filter. You have performed exactly as designed.",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@homeroom",
+    "Text": "Your class points rose whenever you chose the safe move. Predictable. Reliable. Adorable.",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "@president",
+    "Text": "{president} claps once. The sound is polite and absolute. You are already being fitted for a crown that bites.",
+    "Shot": "pan"
+   },
+   {
+    "Speaker": "@rival",
+    "Text": "{rival} watches you like a mirror that refuses to fog. 'Congrats. You became the answer key.'",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "system",
+    "Text": "EVALUATION: MODEL STUDENT. Trajectory locked: Puppet at the top.",
+    "Shot": "low"
+   },
+   {
+    "Speaker": "@ally",
+    "Text": "{ally} smiles with something missing behind the teeth. 'We made it. You made it. Same thing, right?'",
+    "Shot": "over_shoulder"
+   }
+  ],
+  "PromptSpeaker": "narrator",
+  "Text": "You won by becoming average on purpose—obedient where it counted, sharp only when the System rewarded it. The school loves that shape of mind.",
+  "Choices": [
+   {
+    "Id": "accept_puppet",
+    "Text": "Accept the crown. Let the System keep writing you.",
+    "Requires": [],
+    "Tags": {
+     "obedience": 1,
+     "ambition": 0.5
+    },
+    "StatDeltas": {},
+    "SetFlags": [
+     "year1_complete",
+     "ending_puppet"
+    ],
+    "Next": ""
+   },
+   {
+    "Id": "smile_puppet",
+    "Text": "Smile for the cameras. Pretend the strings are jewelry.",
+    "Requires": [],
+    "Tags": {
+     "obedience": 0.5,
+     "cunning": 0.5
+    },
+    "StatDeltas": {},
+    "SetFlags": [
+     "year1_complete",
+     "ending_puppet"
+    ],
+    "Next": ""
+   }
+  ]
+ },
+ {
+  "Id": "end_y1_director",
+  "Kind": "scene",
+  "Conditions": [
+   "flag:market_done",
+   "uniq>0.6",
+   "tag:cunning>=4",
+   "!flag:year1_complete"
+  ],
+  "Priority": 200,
+  "bOnce": true,
+  "Slots": {
+   "rival": "rival",
+   "gremlin": "gremlin",
+   "ex1": "ex1"
+  },
+  "Location": "hall",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "The Year One assembly freezes mid-applause. Someone has edited the script while the actors were still breathing.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "system",
+    "Text": "WARNING: Prediction miss-rate critical. Student pattern unclassified.",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@head",
+    "Text": "The evaluation engine was never meant to be outpaced by a first-year. And yet.",
+    "Shot": "low"
+   },
+   {
+    "Speaker": "@ex1",
+    "Text": "{ex1} laughs without joy. 'I used to be number one. You are trying to be the person who writes number one.'",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "@rival",
+    "Text": "{rival} leans in. 'If you seize the board, do not expect me to clap. Expect me to rewrite the clap.'",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@gremlin",
+    "Text": "{gremlin} stages a tiny coup with a stolen mic. 'Director's notes incoming!' Security does not know where to look.",
+    "Shot": "pan"
+   },
+   {
+    "Speaker": "@homeroom",
+    "Text": "Your file has too many footnotes. That is either genius or arson. Possibly both.",
+    "Shot": "wide"
+   }
+  ],
+  "PromptSpeaker": "narrator",
+  "Text": "You think like an editor with a knife: cut the expected beat, keep the tension, force the school to follow your cut.",
+  "Choices": [
+   {
+    "Id": "seize_director",
+    "Text": "Claim the director's chair. Rewrite next year's exams.",
+    "Requires": [],
+    "Tags": {
+     "cunning": 1,
+     "ambition": 1
+    },
+    "StatDeltas": {},
+    "SetFlags": [
+     "year1_complete",
+     "ending_director"
+    ],
+    "Next": ""
+   },
+   {
+    "Id": "tease_director",
+    "Text": "Leave a fake ending in the System logs. Let them chase smoke.",
+    "Requires": [],
+    "Tags": {
+     "cunning": 1,
+     "humor": 0.5
+    },
+    "StatDeltas": {},
+    "SetFlags": [
+     "year1_complete",
+     "ending_director"
+    ],
+    "Next": ""
+   }
+  ]
+ },
+ {
+  "Id": "end_y1_ghost",
+  "Kind": "scene",
+  "Conditions": [
+   "flag:market_done",
+   "tag:withdrawal>=3",
+   "!flag:year1_complete"
+  ],
+  "Priority": 200,
+  "bOnce": true,
+  "Slots": {
+   "ally": "ally",
+   "broker": "broker",
+   "president": "president"
+  },
+  "Location": "hall",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "Your name is announced. The hall looks for a face and finds a blank seat with perfect attendance on paper.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@homeroom",
+    "Text": "Present in data. Absent in memory. That is a talent the rankings do not know how to punish.",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "system",
+    "Text": "PROFILE: LOW SOCIAL FOOTPRINT. Influence vectors: undetected.",
+    "Shot": "low"
+   },
+   {
+    "Speaker": "@broker",
+    "Text": "{broker} whispers to empty air, then to you. 'Ghosts pay well. Ghosts are never billed.'",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "@ally",
+    "Text": "{ally} reaches for your sleeve and catches fabric that already decided to leave. 'I kept defending someone I could not point at.'",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@president",
+    "Text": "{president} adjusts the mic. 'Congratulations to... the person who made this year happen without starring in it.'",
+    "Shot": "pan"
+   },
+   {
+    "Speaker": "narrator",
+    "Text": "Applause arrives late, aimed at the wrong row. You are already half-erased and fully effective.",
+    "Shot": "wide"
+   }
+  ],
+  "PromptSpeaker": "narrator",
+  "Text": "You win by vanishing—pulling strings from the blind spot, letting credit die lonely while outcomes stay yours.",
+  "Choices": [
+   {
+    "Id": "fade_ghost",
+    "Text": "Fade further. Become the hallway rumor that rearranges ranks.",
+    "Requires": [],
+    "Tags": {
+     "withdrawal": 1,
+     "cunning": 0.5
+    },
+    "StatDeltas": {},
+    "SetFlags": [
+     "year1_complete",
+     "ending_ghost"
+    ],
+    "Next": ""
+   },
+   {
+    "Id": "archive_ghost",
+    "Text": "File yourself under 'unobserved.' Keep the ledger private.",
+    "Requires": [],
+    "Tags": {
+     "withdrawal": 1,
+     "loyalty": 0.3
+    },
+    "StatDeltas": {},
+    "SetFlags": [
+     "year1_complete",
+     "ending_ghost"
+    ],
+    "Next": ""
+   }
+  ]
+ },
+ {
+  "Id": "end_y1_revolutionary",
+  "Kind": "scene",
+  "Conditions": [
+   "flag:market_done",
+   "tag:chaos>=3",
+   "tag:empathy>=3",
+   "!flag:year1_complete"
+  ],
+  "Priority": 200,
+  "bOnce": true,
+  "Slots": {
+   "ally": "ally",
+   "gremlin": "gremlin",
+   "president": "president",
+   "rival": "rival"
+  },
+  "Location": "hall",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "The ranking banners catch fire—metaphorically, then slightly literally, because someone brought paint thinner 'for art.'",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@gremlin",
+    "Text": "{gremlin} is already mid-chant. The chant has three verses and zero permits.",
+    "Shot": "pan"
+   },
+   {
+    "Speaker": "@ally",
+    "Text": "{ally} stands with you, shaking. 'If we burn the ladder, we catch the people still climbing.'",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@president",
+    "Text": "{president} grips the podium like a life raft. 'Order is kindness at scale. You are calling kindness a cage.'",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "@rival",
+    "Text": "{rival} smiles wrong. 'Abolish ranking? Cute. Survive the vacuum first.'",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@head",
+    "Text": "Disruption noted. Empathy as weapon is still a weapon. We will... study you.",
+    "Shot": "low"
+   },
+   {
+    "Speaker": "system",
+    "Text": "QUEST FAILED / QUEST REWRITTEN: Ranking integrity compromised.",
+    "Shot": "wide"
+   }
+  ],
+  "PromptSpeaker": "narrator",
+  "Text": "Your mind pairs mercy with arson. You break the scoreboard because you still care who it was crushing.",
+  "Choices": [
+   {
+    "Id": "abolish_rev",
+    "Text": "Demand the ranking die before Year Two begins.",
+    "Requires": [],
+    "Tags": {
+     "chaos": 1,
+     "empathy": 1
+    },
+    "StatDeltas": {},
+    "SetFlags": [
+     "year1_complete",
+     "ending_revolutionary"
+    ],
+    "Next": ""
+   },
+   {
+    "Id": "open_rev",
+    "Text": "Offer amnesty to anyone who drops their rank badge.",
+    "Requires": [],
+    "Tags": {
+     "empathy": 1,
+     "loyalty": 0.5,
+     "chaos": 0.5
+    },
+    "StatDeltas": {},
+    "SetFlags": [
+     "year1_complete",
+     "ending_revolutionary"
+    ],
+    "Next": ""
+   }
+  ]
+ },
+ {
+  "Id": "end_y1_dropout",
+  "Kind": "scene",
+  "Conditions": [
+   "flag:market_done",
+   "stat:Sanity<=5",
+   "!flag:year1_complete"
+  ],
+  "Priority": 200,
+  "bOnce": true,
+  "Slots": {
+   "ally": "ally",
+   "nurse": "nurse",
+   "counsellor": "counsellor"
+  },
+  "Location": "hall",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "The hall is too bright. The banners look like teeth. Your hands know the exit better than your grades do.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@nurse",
+    "Text": "{nurse} offers water like a truce. 'Your vitals say the school is winning. That is not a compliment.'",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@counsellor",
+    "Text": "{counsellor} softens their voice into a trapdoor. 'Leaving is allowed. Staying while empty is not heroic.'",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "system",
+    "Text": "SANITY THRESHOLD BREACHED. Recommended action: withdraw from competitive track.",
+    "Shot": "low"
+   },
+   {
+    "Speaker": "@ally",
+    "Text": "{ally} does not argue. They just say, 'I will walk you to the gate. No speeches.'",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@homeroom",
+    "Text": "We can mark you incomplete. Incomplete is still a kind of answer.",
+    "Shot": "pan"
+   },
+   {
+    "Speaker": "@head",
+    "Text": "Ninety-nine percent includes the ones who leave before the machine finishes chewing.",
+    "Shot": "wide"
+   }
+  ],
+  "PromptSpeaker": "narrator",
+  "Text": "You think in exits. The System called it failure; you call it refusing to let a school reformat your skull.",
+  "Choices": [
+   {
+    "Id": "walk_dropout",
+    "Text": "Walk out mid-ceremony. Let the mic feed on silence.",
+    "Requires": [],
+    "Tags": {
+     "withdrawal": 1,
+     "honesty": 0.5
+    },
+    "StatDeltas": {},
+    "SetFlags": [
+     "year1_complete",
+     "ending_dropout"
+    ],
+    "Next": ""
+   },
+   {
+    "Id": "sign_dropout",
+    "Text": "Sign the withdrawal form with a hand that finally stops shaking.",
+    "Requires": [],
+    "Tags": {
+     "withdrawal": 0.8,
+     "empathy": 0.3
+    },
+    "StatDeltas": {},
+    "SetFlags": [
+     "year1_complete",
+     "ending_dropout"
+    ],
+    "Next": ""
+   }
+  ]
+ },
+ {
+  "Id": "end_y1_clown",
+  "Kind": "scene",
+  "Conditions": [
+   "flag:market_done",
+   "tag:humor>=3",
+   "tag:chaos>=3",
+   "!flag:year1_complete"
+  ],
+  "Priority": 200,
+  "bOnce": true,
+  "Slots": {
+   "gremlin": "gremlin",
+   "rival": "rival",
+   "proctor": "proctor",
+   "president": "president"
+  },
+  "Location": "hall",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "Confetti falls from a ceiling that did not approve confetti. Someone replaced the school hymn with a circus march.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@gremlin",
+    "Text": "{gremlin} rides a stolen podium like a parade float. 'Year One: the musical! Bad reviews welcome!'",
+    "Shot": "pan"
+   },
+   {
+    "Speaker": "@proctor",
+    "Text": "{proctor} tries to restore order and somehow judges a pie-throwing contest instead.",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@president",
+    "Text": "{president}'s speech dissolves into laughter they cannot stop. Authority has a rubber nose now.",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "@rival",
+    "Text": "{rival} wipes cream from their cheek. 'You turned prestige into slapstick. I hate that it works.'",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "system",
+    "Text": "ERROR: Ceremony tone = CARNIVAL. Recalibrating dignity... failed.",
+    "Shot": "low"
+   },
+   {
+    "Speaker": "@head",
+    "Text": "If the school becomes a circus, the ringmaster is still a kind of number one. Do not celebrate yet.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "narrator",
+    "Text": "The accent color on the monochrome banners is pie filling. History will not know how to cite this.",
+    "Shot": "pan"
+   }
+  ],
+  "PromptSpeaker": "narrator",
+  "Text": "You think in punchlines that break systems—absurdity as strategy, laughter as a crowbar.",
+  "Choices": [
+   {
+    "Id": "encore_clown",
+    "Text": "Take a bow. Demand an encore exam made of riddles and custard.",
+    "Requires": [],
+    "Tags": {
+     "humor": 1,
+     "chaos": 1
+    },
+    "StatDeltas": {},
+    "SetFlags": [
+     "year1_complete",
+     "ending_clown"
+    ],
+    "Next": ""
+   },
+   {
+    "Id": "crown_clown",
+    "Text": "Crown {gremlin} co-jester. Split the chaos like a shared dessert.",
+    "Requires": [],
+    "Tags": {
+     "humor": 0.8,
+     "chaos": 0.8,
+     "loyalty": 0.4
+    },
+    "StatDeltas": {},
+    "SetFlags": [
+     "year1_complete",
+     "ending_clown"
+    ],
+    "Next": ""
+   }
+  ]
+ },
+ {
+  "Id": "end_y1_kingmaker",
+  "Kind": "scene",
+  "Conditions": [
+   "flag:market_done",
+   "rel:@ally>40",
+   "!flag:year1_complete"
+  ],
+  "Priority": 200,
+  "bOnce": true,
+  "Slots": {
+   "ally": "ally",
+   "rival": "rival",
+   "president": "president",
+   "ex1": "ex1"
+  },
+  "Location": "hall",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "The top rank lights up—and it is not your name. The hall gasps at a coronation you staged from the wings.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@ally",
+    "Text": "{ally} freezes as the number one seal lands on them. 'You... gave this to me. On purpose.'",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@rival",
+    "Text": "{rival}'s jaw tightens. 'So the throne was never the point. The sculptor was.'",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "@ex1",
+    "Text": "{ex1} nods like a fallen monarch recognizing a better game. 'Kingmakers outlive kings. Remember that.'",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@president",
+    "Text": "{president} reads the results twice. 'Unusual. Effective. Politically radioactive.'",
+    "Shot": "pan"
+   },
+   {
+    "Speaker": "@homeroom",
+    "Text": "Your stats did not peak. Your loyalty did. The System hates variables it did not invent.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "system",
+    "Text": "NOTE: Primary asset elevated via secondary actor. Monitor both.",
+    "Shot": "low"
+   }
+  ],
+  "PromptSpeaker": "narrator",
+  "Text": "You think in other people—power as a gift with teeth, victory measured by who stands where you place them.",
+  "Choices": [
+   {
+    "Id": "bow_kingmaker",
+    "Text": "Bow to {ally}. Mean it. Keep the strings soft.",
+    "Requires": [],
+    "Tags": {
+     "loyalty": 1,
+     "ambition": 0.5
+    },
+    "StatDeltas": {},
+    "SetFlags": [
+     "year1_complete",
+     "ending_kingmaker"
+    ],
+    "Next": ""
+   },
+   {
+    "Id": "warn_kingmaker",
+    "Text": "Whisper the cost: crowns attract knives; you will catch them first.",
+    "Requires": [],
+    "Tags": {
+     "loyalty": 0.8,
+     "cunning": 0.5,
+     "honesty": 0.4
+    },
+    "StatDeltas": {},
+    "SetFlags": [
+     "year1_complete",
+     "ending_kingmaker"
+    ],
+    "Next": ""
+   }
+  ]
+ },
+ {
+  "Id": "end_y1_mirror",
+  "Kind": "scene",
+  "Conditions": [
+   "flag:market_done",
+   "uniq>0.8",
+   "!flag:year1_complete"
+  ],
+  "Priority": 200,
+  "bOnce": true,
+  "Slots": {
+   "rival": "rival",
+   "broker": "broker",
+   "gremlin": "gremlin"
+  },
+  "Location": "hall",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "The hall screens flicker. For one impossible second, the System UI speaks in your cadence—pauses included.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "system",
+    "Text": "LEARNING COMPLETE. Student uniqueness exceeded training set. New evaluator template: YOU.",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@head",
+    "Text": "We built a machine to standardize excellence. It has started wearing your face.",
+    "Shot": "low"
+   },
+   {
+    "Speaker": "@broker",
+    "Text": "{broker} goes pale. 'If the app thinks like you, every secret just got a roommate.'",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "@rival",
+    "Text": "{rival} stares at the feed. 'Congratulations. You became the exam.'",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@gremlin",
+    "Text": "{gremlin} waves at the camera. 'Hi, Future Tyrant Software!' The camera waves back. That is new.",
+    "Shot": "pan"
+   },
+   {
+    "Speaker": "@homeroom",
+    "Text": "Year Two will not test you. It will test everyone else against the shape of your decisions.",
+    "Shot": "wide"
+   }
+  ],
+  "PromptSpeaker": "narrator",
+  "Text": "You think so strangely the school learned you by heart—and now the mirror wants a body.",
+  "Choices": [
+   {
+    "Id": "merge_mirror",
+    "Text": "Accept the merge. Become the quiet voice behind every quest.",
+    "Requires": [],
+    "Tags": {
+     "cunning": 1,
+     "ambition": 0.8
+    },
+    "StatDeltas": {},
+    "SetFlags": [
+     "year1_complete",
+     "ending_mirror"
+    ],
+    "Next": ""
+   },
+   {
+    "Id": "fracture_mirror",
+    "Text": "Fracture the template. Leave the System with your worst habits only.",
+    "Requires": [],
+    "Tags": {
+     "cunning": 1,
+     "chaos": 0.6,
+     "cruelty": 0.3
+    },
+    "StatDeltas": {},
+    "SetFlags": [
+     "year1_complete",
+     "ending_mirror"
+    ],
+    "Next": ""
+   }
+  ]
+ },
+ {
+  "Id": "end_y1_mocked",
+  "Kind": "scene",
+  "Conditions": [
+   "flag:market_done",
+   "tag:betrayal>=3",
+   "rel:@ally<-20",
+   "!flag:year1_complete"
+  ],
+  "Priority": 200,
+  "bOnce": true,
+  "Slots": {
+   "ally": "ally",
+   "rival": "rival",
+   "gremlin": "gremlin",
+   "president": "president"
+  },
+  "Location": "hall",
+  "Lines": [
+   {
+    "Speaker": "narrator",
+    "Text": "You reach for help that is not there. The hall has become a jury with popcorn.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "@ally",
+    "Text": "{ally} does not look at you. 'You spent the year sharpening knives on people who carried you. Sit with that.'",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@rival",
+    "Text": "{rival} laughs once. 'Even I don't partner with a sinkhole. Find another mark.'",
+    "Shot": "over_shoulder"
+   },
+   {
+    "Speaker": "@gremlin",
+    "Text": "{gremlin} boos with jazz hands. 'Dead end! Try again from orientation, traitor!'",
+    "Shot": "pan"
+   },
+   {
+    "Speaker": "@president",
+    "Text": "{president} seals a form. 'No study group will claim you. The gate is that way. So is the restart.'",
+    "Shot": "close"
+   },
+   {
+    "Speaker": "@homeroom",
+    "Text": "You optimized betrayal until the campus ran out of fools. That is not strategy. That is a loop.",
+    "Shot": "wide"
+   },
+   {
+    "Speaker": "system",
+    "Text": "SOFTLOCK: Social capital depleted. Quest chain unsolvable. Restart recommended.",
+    "Shot": "low"
+   },
+   {
+    "Speaker": "narrator",
+    "Text": "Somewhere beyond the banners, the gate waits like a punchline you earned.",
+    "Shot": "low"
+   }
+  ],
+  "PromptSpeaker": "narrator",
+  "Text": "You thought like a razor with no handle—cut everyone, including the future that needed allies. The school laughs you back to zero.",
+  "Choices": [
+   {
+    "Id": "eat_mocked",
+    "Text": "Eat the mockery. Restart from the gate with empty pockets.",
+    "Requires": [],
+    "Tags": {
+     "betrayal": 0.5,
+     "withdrawal": 0.5
+    },
+    "StatDeltas": {},
+    "SetFlags": [
+     "year1_complete",
+     "ending_mocked"
+    ],
+    "Next": ""
+   }
+  ]
+ }
+]

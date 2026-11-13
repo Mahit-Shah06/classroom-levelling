@@ -39,28 +39,29 @@ FString SMainMenu::SlotLabel(const FString& Slot)
 void SMainMenu::Construct(const FArguments& Args, const FMenuActions& InActions)
 {
 	bPause = Args._bPause; Actions = InActions;
-	ChildSlot
+	ChildSlot.HAlign(HAlign_Left)
 	[
-		SNew(SBorder).BorderImage(FCoreStyle::Get().GetBrush("WhiteBrush")).BorderBackgroundColor(FLinearColor(0, 0, 0, bPause ? 0.8f : 0.4f))
+		SNew(SBox).WidthOverride(940.f)[
+		SNew(SBorder).BorderImage(FCoreStyle::Get().GetBrush("WhiteBrush")).BorderBackgroundColor(FLinearColor(0.02f, 0.03f, 0.08f, bPause ? 0.6f : 0.45f))
 		.Padding(FMargin(110, 60, 0, 60)).VAlign(VAlign_Center).HAlign(HAlign_Left)
 		[
 			SNew(SVerticalBox)
 			+ SVerticalBox::Slot().AutoHeight()
-			[ SNew(STextBlock).Text(FText::FromString(TEXT("CLASSROOM"))).Font(MenuFont("Bold", 58)).ColorAndOpacity(FLinearColor::White) ]
+			[ SNew(STextBlock).Text(FText::FromString(TEXT("CLASSROOM"))).Font(MenuFont("Bold", 58)).ColorAndOpacity(FLinearColor::White).ShadowOffset(FVector2D(2, 2)) ]
 			+ SVerticalBox::Slot().AutoHeight().Padding(0, -16, 0, 0)
-			[ SNew(STextBlock).Text(FText::FromString(TEXT("LEVELLING"))).Font(MenuFont("Light", 58)).ColorAndOpacity(FLinearColor(0.6f, 0.6f, 0.6f)) ]
+			[ SNew(STextBlock).Text(FText::FromString(TEXT("LEVELLING"))).Font(MenuFont("Light", 58)).ColorAndOpacity(FLinearColor(1.f, 0.72f, 0.18f)).ShadowOffset(FVector2D(2, 2)) ]
 			+ SVerticalBox::Slot().AutoHeight().Padding(0, 4, 0, 28)
-			[ SNew(STextBlock).Text(FText::FromString(TEXT("99% placement rate. Your evaluation is always on."))).Font(MenuFont("Italic", 14)).ColorAndOpacity(FLinearColor(0.75f, 0.75f, 0.75f)) ]
+			[ SNew(STextBlock).Text(FText::FromString(TEXT("99% placement rate. Your evaluation is always on."))).Font(MenuFont("Italic", 14)).ColorAndOpacity(FLinearColor(0.55f, 0.85f, 1.f)).ShadowOffset(FVector2D(1, 1)) ]
 			+ SVerticalBox::Slot().FillHeight(1.f)
 			[ SNew(SBox).WidthOverride(720.f).MaxDesiredHeight(620.f)[ SNew(SScrollBox) + SScrollBox::Slot()[ SAssignNew(List, SVerticalBox) ] ] ]
-		]
+		]]
 	];
 	ShowMain();
 }
 
 void SMainMenu::Header(const FString& Title)
 {
-	List->AddSlot().AutoHeight().Padding(0, 10, 0, 6)[ SNew(STextBlock).Font(MenuFont("Bold", 14)).ColorAndOpacity(FLinearColor(0.55f, 0.55f, 0.55f)).Text(FText::FromString(Title.ToUpper())) ];
+	List->AddSlot().AutoHeight().Padding(0, 10, 0, 6)[ SNew(STextBlock).Font(MenuFont("Bold", 14)).ColorAndOpacity(FLinearColor(1.f, 0.72f, 0.18f)).Text(FText::FromString(Title.ToUpper())) ];
 }
 
 void SMainMenu::Note(const FString& Text)
@@ -71,7 +72,7 @@ void SMainMenu::Note(const FString& Text)
 void SMainMenu::Item(const TFunction<FString()>& Label, const TFunction<void(int32)>& OnAdjust, bool bEnabled)
 {
 	TSharedRef<SButton> B = SNew(SButton)
-		.ButtonColorAndOpacity(FLinearColor(0.05f, 0.05f, 0.05f, 0.85f))
+		.ButtonColorAndOpacity(FLinearColor(0.02f, 0.30f, 0.42f, 0.92f))
 		.ContentPadding(FMargin(18, 9))
 		.IsEnabled(bEnabled)
 		.OnClicked_Lambda([OnAdjust]() { Sfx("ui_select"); OnAdjust(1); return FReply::Handled(); })

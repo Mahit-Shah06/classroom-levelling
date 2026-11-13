@@ -124,7 +124,7 @@ void AClassroomLevellingPlayerController::BeginPlay()
 				static int32 N = 0;
 				if (N++ == 0) { NewGame(); return; }
 				static const FName Tour[] = { "gym", "field", "library", "dorm", "garden", "station", "store" };
-				UE_LOG(LogTemp, Log, TEXT("Autotest tick %d busy=%d awaiting=%d pawn=%s menu=%d"), N, Story->IsBusy(), Story->IsAwaitingChoice(), GetPawn() ? *GetPawn()->GetActorLocation().ToCompactString() : TEXT("none"), Menu.IsValid());
+				UE_LOG(LogTemp, Log, TEXT("Autotest tick %d busy=%d awaiting=%d pawn=%s menu=%d moveIgnored=%d lookIgnored=%d"), N, Story->IsBusy(), Story->IsAwaitingChoice(), GetPawn() ? *GetPawn()->GetActorLocation().ToCompactString() : TEXT("none"), Menu.IsValid(), IsMoveInputIgnored(), IsLookInputIgnored());
 				if (N >= 12 && !Story->IsBusy())
 				{
 					const int32 T = N - 12;
@@ -216,9 +216,10 @@ void AClassroomLevellingPlayerController::ShowMenu(bool bPause)
 	GEngine->GameViewport->AddViewportWidgetContent(Menu.ToSharedRef(), 50);
 	Story->bBlocked = true;
 	Story->SetHidden(true);
+	if (AHubWorld* Hub = AHubWorld::Get(this)) Hub->SetGrayscale(false, 0.8f); // menus are in full colour
 	if (Hud.IsValid()) Hud->SetVisibility(EVisibility::Collapsed);
 	SetShowMouseCursor(true);
-	SetIgnoreMoveInput(true); SetIgnoreLookInput(true);
+	if (!IsMoveInputIgnored()) SetIgnoreMoveInput(true); if (!IsLookInputIgnored()) SetIgnoreLookInput(true);
 	FInputModeUIOnly M; M.SetWidgetToFocus(Menu); SetInputMode(M);
 	Menu->FocusFirst();
 	if (!bPause)
@@ -238,7 +239,7 @@ void AClassroomLevellingPlayerController::HideMenu()
 void AClassroomLevellingPlayerController::ApplyPlayerBody()
 {
 	const UNarrativeSubsystem* N = GetGameInstance()->GetSubsystem<UNarrativeSubsystem>();
-	if (ACharacter* C = Cast<ACharacter>(GetPawn())) ANPCStandIn::ApplyBody(C->GetMesh(), N && N->PlayerGender == TEXT("f"), 0.75f);
+	if (ACharacter* C = Cast<ACharacter>(GetPawn())) ANPCStandIn::ApplyBody(C->GetMesh(), N && N->PlayerGender == TEXT("f"), FLinearColor(0.95f, 0.72f, 0.30f)); // gold: the player stands out
 }
 
 // Shared by New Game and Load: close menus, hand control to the player.
@@ -254,8 +255,9 @@ void AClassroomLevellingPlayerController::EnterPlay()
 	if (!Hud.IsValid() && GEngine && GEngine->GameViewport) { SAssignNew(Hud, SGameHud); GEngine->GameViewport->AddViewportWidgetContent(Hud.ToSharedRef(), 5); }
 	if (Hud.IsValid()) Hud->SetVisibility(EVisibility::HitTestInvisible);
 	if (UGameAudio* Au = UGameAudio::Get(this)) Au->PlayMusic(this, "music_hub");
+	if (AHubWorld* Hub = AHubWorld::Get(this)) Hub->SetGrayscale(true, 3.f); // slow fade into the B/W world
 	SetShowMouseCursor(false);
-	SetIgnoreMoveInput(false); SetIgnoreLookInput(false);
+	ResetIgnoreInputFlags(); // counters: fully unlock
 	SetInputMode(FInputModeGameOnly());
 	LastArea = NAME_None;
 }
@@ -297,9 +299,10 @@ void AClassroomLevellingPlayerController::TogglePause()
 		HideMenu();
 		SetPause(false);
 		Story->bBlocked = false;
+		if (AHubWorld* Hub = AHubWorld::Get(this)) Hub->SetGrayscale(true, 2.f);
 		if (Hud.IsValid()) Hud->SetVisibility(EVisibility::HitTestInvisible);
 		if (Story->IsBusy()) Story->SetHidden(false);
-		else { SetShowMouseCursor(false); SetIgnoreMoveInput(false); SetIgnoreLookInput(false); SetInputMode(FInputModeGameOnly()); }
+		else { SetShowMouseCursor(false); ResetIgnoreInputFlags(); SetInputMode(FInputModeGameOnly()); }
 	}
 	else ShowMenu(true);
 }

@@ -42,6 +42,7 @@ public:
 	void EndCutscene(APlayerController* PC);
 	void SetTalking(FName NPC, bool bTalking);
 	void MenuOrbit(APlayerController* PC, bool bOn);
+	void SetGrayscale(bool bGray, float Seconds); // menus = colour, gameplay = B/W
 
 	ACameraActor* Camera() const { return Cam; }
 
@@ -55,6 +56,8 @@ private:
 	void Cyl(int32 Tone, const FVector& Base, float Diameter, float Height);
 	void Room(const FVector& Center, const FVector2D& Size, float H, int32 DoorSide); // DoorSide 0..3 = -X,+X,-Y,+Y
 	void AddArea(FName Name, const FVector& Center, const FVector2D& Size);
+	// Generated (Rodin) prop, instanced; scaled to Height with its base on Loc. False if the model isn't imported.
+	bool Prop(FName Id, const FVector& Loc, float Yaw, float Height, float CullDist = 9000.f);
 	void SpawnCast();
 	void RefreshMarkers();
 	ANPCStandIn* StandIn(FName Id) const;
@@ -63,11 +66,14 @@ private:
 	UPROPERTY() TArray<TObjectPtr<UInstancedStaticMeshComponent>> Cyls;
 	UPROPERTY() TArray<TObjectPtr<UInstancedStaticMeshComponent>> Spheres;
 	UPROPERTY() TArray<FHubArea> Areas;
+	UPROPERTY() TMap<FName, TObjectPtr<UInstancedStaticMeshComponent>> Props;
 	UPROPERTY() TMap<FName, TObjectPtr<ANPCStandIn>> Actors;
 	UPROPERTY() TObjectPtr<ACameraActor> Cam;
 
 	float MarkerT = 0.f, OrbitT = 0.f, PanT = 0.f;
 	bool bOrbit = false, bPan = false;
 	FName Rearm;
+	float Gray = 0.f, GrayTarget = 0.f, GrayTime = 2.5f;
+	UPROPERTY() TObjectPtr<class APostProcessVolume> Post;
 	FVector PanFrom, PanTo, PanLook;
 };
