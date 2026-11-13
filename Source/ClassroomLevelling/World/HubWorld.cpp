@@ -91,7 +91,7 @@ void AHubWorld::BeginPlay()
 		S.bOverride_ColorContrast = true; S.ColorContrast = FVector4(1, 1, 1, 1);
 		S.bOverride_VignetteIntensity = true; S.VignetteIntensity = 0.3f;
 		S.bOverride_MotionBlurAmount = true; S.MotionBlurAmount = 0.f; // cleaner cuts + cheaper
-		S.bOverride_AutoExposureBias = true; S.AutoExposureBias = 0.3f;
+		S.bOverride_AutoExposureBias = true; S.AutoExposureBias = 0.6f;
 		// Print-like finish: grain, soft bloom and a slight toe so the B/W reads as film stock, not a grey filter.
 		S.bOverride_FilmGrainIntensity = true; S.FilmGrainIntensity = 0.f;
 		S.bOverride_BloomIntensity = true; S.BloomIntensity = 0.45f;
