@@ -37,3 +37,4 @@
 - Proposed mechanic: the AI director predicts the player's choices; staying unpredictable at key "tests" (low prediction hit-rate) unlocks the distinct endings.
 - Title: "Classroom Levelling" (user, 2026-11-13).
 - Platform: PC only for now (Pocket Powerhouse skipped). NVIDIA award dropped (no RTX hardware).
+- Clarified (user): chess is NOT the theme. B/W palette is only a nod (the COTE protagonist plays chess). Core: the player enrols in an elite merit-ranked school, levels up, and makes insane decisions to win.

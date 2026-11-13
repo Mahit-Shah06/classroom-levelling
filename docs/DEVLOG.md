@@ -43,3 +43,5 @@ Newest last. Every session: append what was decided/done/blocked.
 - Open: pure grayscale vs grayscale + 1 accent; Windows 10/11 build (UE can't package Windows from a Linux host -> need a Windows PC).
 - Colour: grayscale for now; the accent becomes a tweakable material/post-process parameter (decide later). User has a Windows PC for Windows packaging.
 - UE download in progress (5.5/30 GB). Git: first local commit made.
+- Windows packaging: needs Unreal on Windows (dual boot, 162 GB BitLocker partition with Valorant). The external SSD is ext4, which Windows can't read. Plan: build on Linux first, decide on Windows near the end. Repo: public (user).
+- GitHub repo created: public, classroom-levelling (title stays "Classroom Levelling").
