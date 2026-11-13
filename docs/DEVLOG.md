@@ -54,3 +54,6 @@ Newest last. Every session: append what was decided/done/blocked.
 - Build: `Engine/Build/BatchFiles/Linux/Build.sh ClassroomLevellingEditor Linux Development -Project=$PWD/ClassroomLevelling.uproject` -> Succeeded (2 min).
 - 2026-11-13: The user confirmed the session runs on the jam's $25 Claude API credits (about $21 left), so I'll keep token use low. Plan: use Groq (shared $50 credit with Cursor) through GROQ_API_KEY in .env for bulk content generation. Cursor credits only work inside the Cursor IDE.
 - Glass Box: the repo is already public (Mahit-Shah06/classroom-levelling). Keep small, descriptive commits plus this log as the evidence trail.
+- 2026-11-13: The user redeemed all three perks: Tripo, Rodin and Cursor. The $50 credit is Cursor/xAI Grok (not Groq), and the dashboard says it "applies to Cursor usage".
+- Keys go in .env (gitignored). Template in .env.example. The user writes the keys themselves, so they never go through chat.
+- Crash safety (16 threads, 30 GB RAM, 8 GB swap, systemd-oomd active): shader compiling now leaves 4 threads free (6 while in-game), and UBT runs at most 10 parallel compiles (~/.config/Unreal Engine/UnrealBuildTool/BuildConfiguration.xml). Temps are fine (GPU 54C, CPU 60C).
