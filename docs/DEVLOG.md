@@ -52,3 +52,5 @@ Newest last. Every session: append what was decided/done/blocked.
 - Exam/depth design logged (adaptive exams, NPC interpretation, philosophy arc, hesitation tracking, villain target).
 - UE 5.7.4 extracted to /media/.../UE/5.7.4 (zip deleted). Created C++ project ClassroomLevelling from the TP_ThirdPerson template (renamed module + class redirects). The template files were read-only -> chmod u+w.
 - Build: `Engine/Build/BatchFiles/Linux/Build.sh ClassroomLevellingEditor Linux Development -Project=$PWD/ClassroomLevelling.uproject` -> Succeeded (2 min).
+- 2026-11-13: The user confirmed the session runs on the jam's $25 Claude API credits (about $21 left), so I'll keep token use low. Plan: use Groq (shared $50 credit with Cursor) through GROQ_API_KEY in .env for bulk content generation. Cursor credits only work inside the Cursor IDE.
+- Glass Box: the repo is already public (Mahit-Shah06/classroom-levelling). Keep small, descriptive commits plus this log as the evidence trail.
