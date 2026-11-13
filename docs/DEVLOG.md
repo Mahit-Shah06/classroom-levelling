@@ -45,3 +45,7 @@ Newest last. Every session: append what was decided/done/blocked.
 - UE download in progress (5.5/30 GB). Git: first local commit made.
 - Windows packaging: needs Unreal on Windows (dual boot, 162 GB BitLocker partition with Valorant). The external SSD is ext4, which Windows can't read. Plan: build on Linux first, decide on Windows near the end. Repo: public (user).
 - GitHub repo created: public, classroom-levelling (title stays "Classroom Levelling").
+- World bible round 1 answers logged in DESIGN.md.
+- Round 2 answers logged.
+- User approved: offline AI-authored content + local director; real-player comparison server last (free tier) if time; core loop first, then chapters.
+- UE 5.7.4 zip downloaded. Deps were already installed. Extracting to /media/.../UE/5.7.4 (background); zip auto-deleted from ~/Downloads on success.

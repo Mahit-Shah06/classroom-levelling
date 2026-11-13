@@ -38,3 +38,30 @@
 - Title: "Classroom Levelling" (user, 2026-11-13).
 - Platform: PC only for now (Pocket Powerhouse skipped). NVIDIA award dropped (no RTX hardware).
 - Clarified (user): chess is NOT the theme. B/W palette is only a nod (the COTE protagonist plays chess). Core: the player enrols in an elite merit-ranked school, levels up, and makes insane decisions to win.
+
+## World bible Q&A round 1 (user, 2026-11-13)
+- Setting: modern Japan-like city.
+- Protagonist: blank silent player.
+- Tone: dark psychological scheming (COTE-like) + unhinged absurd comedy (One Piece-like); the chaos shows in the art, models and environments too.
+- Levelling: Solo Leveling-style system and access to new areas/abilities, but NOT overpowered. Levelling costs a heavy psychological toll.
+- The System = the AI. It evaluates the player constantly and issues quests based on their decisions. Quests get harder over time. Its goal is to force everyone into the same canon ending by putting the player in ridiculous situations.
+- Distinct ending: earned by taking stray, ridiculous decisions entirely off the expected path. No "right" answer; the ending can be very bad or very good (mostly good). It describes the player's thinking style and is based on how different they are from other players.
+- Average/low-risk players -> canon ending.
+- Button-mashers / rushers -> dead end: relationships ruined, under-levelled, stuck on a quest they can't beat (effectively softlocked).
+
+## World bible Q&A round 2 (user, 2026-11-13)
+- Uniqueness is measured against BOTH a built-in "average player" profile and real aggregate player data (needs a server: open question on cost).
+- Dead end: the player is mocked at a dead end (no one helps them because they ignored everyone) and must restart from the beginning.
+- AI runtime: user wants max capability with zero CPU/GPU/money cost; any AI provider is fine (OpenAI no longer required). Proposed: AI writes the content during dev, plus a lightweight local director (scoring/prediction logic) at runtime.
+- Length: as long as possible. Build the core loop first, then add content until the deadline.
+- User approved: offline AI-authored content + local director; real-player comparison server last (free tier) if time; core loop first, then chapters.
+
+## World bible Q&A round 3 (user, 2026-11-13)
+- Ranking: close to COTE. Classes compete; the player levels both solo AND with their class. Premise: "how would an average student survive in a COTE-like school?" Guardrail: original names, cast and point system; nothing lifted from COTE's terms, characters or plot.
+- Stats: Intellect, Charisma, Physique, Sanity (+ more TBD).
+- Cast: as many as possible (start with a core set, add per chapter).
+- Story branches on decisions; skeleton TBD.
+- Stats: Intellect, Charisma, Physique, Sanity, Cunning, Reputation, Funds, Luck. Each is a GENERAL stat aggregating several sub-stats; sub-stat changes roll up into it. Stats drive how NPCs act toward the player.
+- Canon ending: "Puppet at the top". Player reaches #1 by betrayal or obedience to the System; wins alone/hated. The same ending gets slight twists based on behaviour.
+- Structure: all three. Chapters = special exams, inside a day-by-day calendar, with a free-roam school hub + quest board.
+- Secret endings (all approved): The Director (seize the AI, rewrite the school), The Ghost (invisible puppeteer, forgotten), The Revolutionary (abolish the ranking), The Dropout (walk away), The Clown (pure chaos, the school becomes a circus), The Kingmaker (puts an NPC at #1), The Mirror (the AI learned from you; you become the System).
