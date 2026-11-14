@@ -162,7 +162,7 @@ bool AHubWorld::Prop(FName Id, const FVector& Loc, float Yaw, float Height, floa
 	if (!Found)
 	{
 		const FString N = Id.ToString();
-		UStaticMesh* M = LoadObject<UStaticMesh>(nullptr, *FString::Printf(TEXT("/Game/Generated/%s/%s/StaticMeshes/%s.%s"), *N, *N, *N, *N), nullptr, LOAD_NoWarn | LOAD_Quiet);
+		UStaticMesh* M = LoadObject<UStaticMesh>(nullptr, *FString::Printf(TEXT("/Game/Props/%s/%s.%s"), *N, *N, *N), nullptr, LOAD_NoWarn | LOAD_Quiet);
 		UInstancedStaticMeshComponent* C = nullptr;
 		if (M)
 		{
@@ -197,7 +197,7 @@ void AHubWorld::Build()
 	Box(3, FVector(-3000, 0, 1), FVector(1400, 40000, 2));                       // road
 	for (int32 i = -20; i <= 20; ++i) Box(0, FVector(-3000, i * 1000.f, 3), FVector(30, 400, 2)); // lane marks
 	Box(0, FVector(-1600, 0, 8), FVector(1200, 40000, 16));                      // sidewalk
-	if (!Prop("bus_stop", FVector(-2000, 1500, 16), 90, 300)) { Box(2, FVector(-2050, 1500, 260), FVector(400, 900, 20)); Box(2, FVector(-1900, 1500, 130), FVector(20, 900, 260)); Box(1, FVector(-2050, 1500, 50), FVector(120, 700, 20)); }
+	if (!Prop("bus_stop", FVector(-2100, 2300, 16), 90, 300)) { Box(2, FVector(-2050, 1500, 260), FVector(400, 900, 20)); Box(2, FVector(-1900, 1500, 130), FVector(20, 900, 260)); Box(1, FVector(-2050, 1500, 50), FVector(120, 700, 20)); }
 	 Cyl(3, FVector(-2200, 2100, 0), 20, 300); Box(0, FVector(-2200, 2100, 300), FVector(10, 160, 80)); // bench + sign
 	AddArea("station", FVector(-1700, 1500, 16), FVector2D(1400, 2000));
 	for (int32 i = 0; i < 70; ++i) // skyline beyond the road and around the campus
@@ -210,8 +210,15 @@ void AHubWorld::Build()
 		case 2: P = FVector(R.FRandRange(-3000.f, 19000.f), (R.FRand() < 0.5f ? -1.f : 1.f) * R.FRandRange(14500.f, 19000.f), 0); break;
 		default: P = FVector(R.FRandRange(17500.f, 22000.f), R.FRandRange(-16000.f, 16000.f), 0);
 		}
-		Box(R.FRand() < 0.6f ? 3 : 2, P + FVector(0, 0, Hh * 0.5f), FVector(R.FRandRange(900.f, 2200.f), R.FRandRange(900.f, 2200.f), Hh));
+		const FVector Sz(R.FRandRange(900.f, 2200.f), R.FRandRange(900.f, 2200.f), Hh);
+		static const FName Towers[] = { "city_tower_a", "city_tower_b", "city_tower_c" };
+		if (!Prop(Towers[i % 3], P, (i % 4) * 90.f, Hh, 80000)) Box(R.FRand() < 0.6f ? 3 : 2, P + FVector(0, 0, Hh * 0.5f), Sz);
 	}
+	Prop("city_bus", FVector(-2750, 1500, 2), 0, 320, 20000);
+	for (int32 i = 0; i < 6; ++i) Prop("car_sedan", FVector(i % 2 ? -3300 : -2700, -9000 + i * 2900.f + (i >= 3 ? 2500 : 0), 2), i % 2 ? 180 : 0, 150, 14000);
+	Prop("founder_statue", FVector(1000, 900, 0), -90, 420, 15000);
+	Prop("founder_statue", FVector(1000, -900, 0), -90, 420, 15000);
+	Prop("clock_tower", FVector(9000, 1300, 0), -90, 2200, 60000);
 
 	// ---- Perimeter wall + gate ----
 	const float WallH = 300.f;
@@ -250,6 +257,7 @@ void AHubWorld::Build()
 		if (!Prop("tree_stylised", FVector(X, Y, 0), i * 53.f, 600, 16000)) { Cyl(3, FVector(X, Y, 0), 50, 320); Spheres[0]->AddInstance(FTransform(FRotator::ZeroRotator, FVector(X, Y, 420), FVector(2.6f)), true); }
 		if (!Prop("bench", FVector(X, Y * 0.62f, 0), Y > 0 ? 180 : 0, 90)) { Box(2, FVector(X, Y * 0.62f, 45), FVector(260, 70, 20)); Box(3, FVector(X, Y * 0.62f, 20), FVector(200, 50, 40)); }
 	}
+	for (int32 i = 0; i < 4; ++i) Prop("trash_bin", FVector(1700 + (i / 2) * 1600.f, (i % 2 ? 1 : -1) * 560.f, 0), 0, 95);
 	AddArea("courtyard", FVector(2600, 900, 0), FVector2D(3000, 2600));
 
 	// ---- Main building: corridor + hall, classroom, office ----
@@ -260,12 +268,14 @@ void AHubWorld::Build()
 	for (int32 i = -5; i <= 5; ++i) if (FMath::Abs(i) > 1) if (!Prop("locker_row", FVector(5010, i * 640.f, 10), 90, 200)) Box(1, FVector(5000, i * 640.f, 100), FVector(50, 300, 200)); // lockers
 	for (int32 i = -3; i <= 3; i += 2) Prop("potted_plant", FVector(5550, i * 900.f, 10), 0, 120);
 	Prop("trophy_case", FVector(5550, 3300, 10), 180, 220);
+	Prop("notice_board", FVector(5590, 1350, 10), -90, 190); Prop("notice_board", FVector(5590, -1350, 10), -90, 190);
+	Prop("trash_bin", FVector(5030, 320, 10), 90, 95);
 	for (int32 i = -3; i <= 3; ++i) Box(3, FVector(4935, i * 1000.f + 500.f, 260), FVector(10, 500, 140)); // facade windows
 	AddArea("corridor", FVector(5300, -1600, 0), FVector2D(600, 3000));
 
 	Room(FVector(6900, -2700, 0), FVector2D(2600, 2200), H + 100, 0); // hall
 	Box(3, FVector(7900, -2700, 50), FVector(500, 1600, 100)); if (!Prop("podium", FVector(7800, -2700, 100), -90, 130)) Box(1, FVector(7750, -2700, 160), FVector(80, 160, 120));
-	for (int32 r = 0; r < 5; ++r) for (int32 c = 0; c < 8; ++c) Box(2, FVector(6100 + r * 175.f, -3500 + c * 220.f, 45), FVector(80, 80, 90));
+	for (int32 r = 0; r < 5; ++r) for (int32 c = 0; c < 8; ++c) if (!Prop("hall_chair", FVector(6100 + r * 175.f, -3500 + c * 220.f, 10), 90, 90)) Box(2, FVector(6100 + r * 175.f, -3500 + c * 220.f, 45), FVector(80, 80, 90));
 	AddArea("hall", FVector(7350, -2700, 0), FVector2D(1600, 1600));
 
 	Room(FVector(6600, 0, 0), FVector2D(2000, 1800), H, 0); // classroom
@@ -273,13 +283,16 @@ void AHubWorld::Build()
 	for (int32 r = 0; r < 4; ++r) for (int32 c = 0; c < 5; ++c)
 	{
 		const FVector D(5850 + r * 240.f, -700 + c * 350.f, 10);
-		if (!Prop("desk", D, 0, 76)) { Box(1, D + FVector(0, 0, 65), FVector(110, 160, 8)); Box(2, D + FVector(0, 0, 27), FVector(100, 140, 74)); }
-		if (!Prop("chair", D + FVector(-90, 0, 0), 0, 90)) Box(3, D + FVector(-110, 0, 35), FVector(60, 60, 90));
+		if (!Prop("desk", D, 90, 76)) { Box(1, D + FVector(0, 0, 65), FVector(110, 160, 8)); Box(2, D + FVector(0, 0, 27), FVector(100, 140, 74)); }
+		if (!Prop("chair", D + FVector(-90, 0, 0), 90, 90)) Box(3, D + FVector(-110, 0, 35), FVector(60, 60, 90));
 	}
+	Prop("teacher_desk", FVector(7250, 520, 10), -90, 110);
 	AddArea("classroom", FVector(7150, 0, 0), FVector2D(1400, 1400));
 
 	Room(FVector(6600, 2600, 0), FVector2D(2000, 1800), H, 0); // office
-	Box(3, FVector(7000, 2600, 40), FVector(200, 600, 80)); for (int32 i = 0; i < 4; ++i) if (!Prop("bookshelf", FVector(7520, 1900 + i * 450.f, 10), -90, 260)) Box(1, FVector(7500, 1900 + i * 450.f, 150), FVector(120, 400, 300));
+	if (!Prop("teacher_desk", FVector(7000, 2600, 10), -90, 115)) Box(3, FVector(7000, 2600, 40), FVector(200, 600, 80));
+	Prop("potted_plant", FVector(5750, 1850, 10), 0, 130); Prop("notice_board", FVector(6600, 3440, 10), 0, 190);
+	for (int32 i = 0; i < 4; ++i) if (!Prop("bookshelf", FVector(7520, 1900 + i * 450.f, 10), -90, 260)) Box(1, FVector(7500, 1900 + i * 450.f, 150), FVector(120, 400, 300));
 	AddArea("office", FVector(6400, 2600, 0), FVector2D(1400, 1400));
 
 	// ---- Cafeteria pavilion ----
@@ -295,34 +308,44 @@ void AHubWorld::Build()
 	Box(1, Top - FVector(0, 0, 300), FVector(1800, 1800, 600));
 	for (int32 i = 0; i < 24; ++i) { const float Hh = (i + 1) * 25.f; Box(1, FVector(2600, -2540 - i * 40.f, Hh * 0.5f), FVector(400, 40, Hh)); }
 	Box(0, Top + FVector(-900, 0, 60), FVector(20, 1800, 120)); Box(0, Top + FVector(900, 0, 60), FVector(20, 1800, 120)); Box(0, Top + FVector(0, -900, 60), FVector(1800, 20, 120));
-	Cyl(3, Top + FVector(500, -500, 0), 200, 250);
+	if (!Prop("water_tank", Top + FVector(500, -500, 0), 0, 330)) Cyl(3, Top + FVector(500, -500, 0), 200, 250);
+	Prop("bench", Top + FVector(-600, 300, 0), 90, 90);
 	AddArea("rooftop", Top, FVector2D(1400, 1400));
 
 	// ---- Convenience store (east, by the gate) ----
 	Room(FVector(1600, 9600, 0), FVector2D(1600, 1400), 360, 2);
-	for (int32 i = 0; i < 3; ++i) Box(1, FVector(1300 + i * 300.f, 9800, 90), FVector(80, 700, 180)); // shelves
-	Box(3, FVector(2200, 9200, 55), FVector(200, 500, 110)); Box(0, FVector(1600, 8890, 330), FVector(800, 20, 60)); // counter + sign
+	for (int32 i = 0; i < 3; ++i) for (int32 k = 0; k < 2; ++k) if (!Prop("store_shelf", FVector(1150 + i * 340.f, 9650 + k * 330.f, 10), 90, 190)) { if (!k) Box(1, FVector(1300 + i * 300.f, 9800, 90), FVector(80, 700, 180)); } // shelves
+	if (!Prop("store_counter", FVector(2150, 9250, 10), -90, 120)) Box(3, FVector(2200, 9200, 55), FVector(200, 500, 110));
+	Prop("vending_machine", FVector(1000, 8960, 0), 0, 200);
+	Box(0, FVector(1600, 8890, 330), FVector(800, 20, 60)); // sign
 	AddArea("store", FVector(1600, 9400, 0), FVector2D(1200, 1000));
 
 	// ---- Library (east) ----
 	Room(FVector(5600, 9800, 0), FVector2D(2800, 2600), 520, 2);
 	for (int32 r = 0; r < 6; ++r) for (int32 k = -2; k <= 2; ++k) if (!Prop("bookshelf", FVector(4700 + r * 380.f, 10400 + k * 240.f, 0), 0, 240)) { if (k == 0) Box(3, FVector(4700 + r * 380.f, 10400, 130), FVector(60, 1200, 260)); } // stacks
-	for (int32 t = 0; t < 3; ++t) { Box(0, FVector(4800 + t * 700.f, 9100, 75), FVector(400, 200, 10)); Box(2, FVector(4800 + t * 700.f, 9100, 37), FVector(360, 160, 74)); }
+	for (int32 t = 0; t < 3; ++t)
+	{
+		const FVector T(4800 + t * 700.f, 9100, 10);
+		if (!Prop("library_table", T, 90, 105)) { Box(0, T + FVector(0, 0, 65), FVector(400, 200, 10)); Box(2, T + FVector(0, 0, 27), FVector(360, 160, 74)); }
+		Prop("chair", T + FVector(-120, -190, 0), 180, 90); Prop("chair", T + FVector(120, 190, 0), 0, 90);
+	}
 	AddArea("library", FVector(5600, 9200, 0), FVector2D(2000, 1200));
 
 	// ---- Gym (north-east) ----
 	Room(FVector(11500, 6000, 0), FVector2D(4200, 3400), 700, 0);
 	Box(0, FVector(11500, 6000, 6), FVector(3000, 1800, 2)); // court lines
 	for (int32 s = -1; s <= 1; s += 2) if (!Prop("basketball_hoop", FVector(11500 + s * 1650.f, 6000, 0), s > 0 ? 180 : 0, 400)) { Cyl(3, FVector(11500 + s * 1650.f, 6000, 0), 20, 380); Box(0, FVector(11500 + s * 1600.f, 6000, 380), FVector(10, 180, 120)); }
-	for (int32 r = 0; r < 4; ++r) Box(2, FVector(11500, 7450 + r * 90.f, 30 + r * 60.f), FVector(3600, 90, 60 + r * 120.f)); // bleachers
+	if (Prop("bleachers", FVector(10300, 7400, 0), 0, 260)) { Prop("bleachers", FVector(11500, 7400, 0), 0, 260); Prop("bleachers", FVector(12700, 7400, 0), 0, 260); }
+	else for (int32 r = 0; r < 4; ++r) Box(2, FVector(11500, 7450 + r * 90.f, 30 + r * 60.f), FVector(3600, 90, 60 + r * 120.f)); // bleachers
 	AddArea("gym", FVector(10400, 6000, 0), FVector2D(1600, 2000));
 
 	// ---- Sports field + track (north-west) ----
 	Box(2, FVector(11500, -6000, 2), FVector(6400, 4400, 4));   // track
 	Box(1, FVector(11500, -6000, 4), FVector(5400, 3400, 4));   // infield
 	Box(0, FVector(11500, -6000, 6), FVector(20, 3400, 2));     // halfway line
-	for (int32 s = -1; s <= 1; s += 2) { Box(0, FVector(11500 + s * 2600.f, -6000, 120), FVector(40, 700, 240)); }
-	for (int32 r = 0; r < 3; ++r) Box(2, FVector(11500, -8450 - r * 90.f, 30 + r * 60.f), FVector(4000, 90, 60 + r * 120.f));
+	for (int32 s = -1; s <= 1; s += 2) if (!Prop("goal_post", FVector(11500 + s * 2600.f, -6000, 4), s > 0 ? -90 : 90, 250, 16000)) Box(0, FVector(11500 + s * 2600.f, -6000, 120), FVector(40, 700, 240));
+	if (Prop("bleachers", FVector(10300, -8400, 0), 180, 260, 16000)) { Prop("bleachers", FVector(11500, -8400, 0), 180, 260, 16000); Prop("bleachers", FVector(12700, -8400, 0), 180, 260, 16000); }
+	else for (int32 r = 0; r < 3; ++r) Box(2, FVector(11500, -8450 - r * 90.f, 30 + r * 60.f), FVector(4000, 90, 60 + r * 120.f));
 	AddArea("field", FVector(10000, -6000, 4), FVector2D(2000, 2000));
 
 	// ---- Dorm (west) ----
@@ -332,9 +355,13 @@ void AHubWorld::Build()
 
 	// ---- Garden (south-west) ----
 	Cyl(3, FVector(2200, -9300, 0), 1200, 8); // pond
-	for (int32 i = 0; i < 10; ++i) { const float X = 900 + (i % 5) * 600.f, Y = -10600 + (i / 5) * 2600.f; Box(2, FVector(X, Y, 60), FVector(400, 120, 120)); } // hedges
-	for (int32 i = 0; i < 6; ++i) Cyl(1, FVector(3500 + (i % 2) * 400.f, -9800 + (i / 2) * 400.f, 0), 30, 280); // gazebo posts
-	Box(0, FVector(3700, -9400, 290), FVector(700, 1100, 30));
+	for (int32 i = 0; i < 10; ++i) { const float X = 900 + (i % 5) * 600.f, Y = -10600 + (i / 5) * 2600.f; if (!Prop("hedge", FVector(X, Y, 0), 0, 130)) Box(2, FVector(X, Y, 60), FVector(400, 120, 120)); } // hedges
+	if (!Prop("gazebo", FVector(3700, -9400, 0), 0, 480, 16000))
+	{
+		for (int32 i = 0; i < 6; ++i) Cyl(1, FVector(3500 + (i % 2) * 400.f, -9800 + (i / 2) * 400.f, 0), 30, 280); // gazebo posts
+		Box(0, FVector(3700, -9400, 290), FVector(700, 1100, 30));
+	}
+	for (int32 i = 0; i < 3; ++i) Prop("bench", FVector(1500 + i * 700.f, -8000, 0), 0, 90);
 	AddArea("garden", FVector(2400, -8900, 0), FVector2D(2400, 1600));
 
 	// Small props fade out with distance (low-spec).

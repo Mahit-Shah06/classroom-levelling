@@ -32,11 +32,12 @@ One human directing AI agents; nothing in the repo predates the jam. The full st
 |---|---|
 | Claude Code (Opus 5.5, Fable 5.2) | all C++, tools, build and packaging scripts |
 | Grok via Cursor CLI (`tools/gen.sh`) | storylets, exams, endings, the student and staff pool |
-| Hyper3D Rodin (`tools/assets.py`) | 18 prop models |
+| Hyper3D Rodin Gen-2.5 (`tools/assets.py`, `tools/chars.py`) | 37 prop models and all 39 character models |
+| Blender 4.2, headless (`tools/prep_prop.py`, `tools/rig_char.py`) | mesh clean-up and automatic skinning of the generated characters to the UE mannequin skeleton |
 | Piper TTS | runtime character voices |
 | `tools/gen_audio.py` | procedurally synthesised music, ambience and sound effects |
 | `tools/sim.py` | simulated players used to tune how often each ending fires |
-| Unreal Engine 5.7.4 | engine, mannequins and animations from the Third Person template |
+| Unreal Engine 5.7.4 | engine, mannequin skeleton and animations from the Third Person template |
 
 ## Build
 - Linux dev: `tools/setup_content.sh && tools/setup_piper.sh`, then `./play.sh`.

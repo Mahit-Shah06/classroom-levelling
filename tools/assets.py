@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import os
+import subprocess
 import sys
 import threading
 import time
@@ -20,8 +21,8 @@ ENV_PATH = REPO_ROOT / ".env"
 OUT_DIR = REPO_ROOT / "Assets" / "Generated"
 
 STYLE = (
-    "stylised school game asset, low-poly, game-ready, clean topology, "
-    "soft pastel colours with clean flat textures, no text, no logos, simple readable silhouette"
+    "stylised game asset matching an anime-inspired school game, clean simple shapes, "
+    "clean flat colours, no text, no logos, simple readable silhouette, single object"
 )
 
 # id -> (provider, prompt)
@@ -80,7 +81,30 @@ ASSETS: dict[str, tuple[str, str]] = {
     "street_lamp": ("rodin", f"modern campus street lamp post, {STYLE}"),
     "fountain": ("rodin", f"round stone courtyard fountain, {STYLE}"),
     "trophy_case": ("rodin", f"school trophy display cabinet with trophies, {STYLE}"),
+    # set dressing that replaces the blockout boxes
+    "hall_chair": ("rodin", f"single folding auditorium chair, {STYLE}"),
+    "teacher_desk": ("rodin", f"large wooden teacher's office desk with a desk lamp and stacked papers, {STYLE}"),
+    "library_table": ("rodin", f"long wooden library reading table with two green reading lamps, {STYLE}"),
+    "store_shelf": ("rodin", f"convenience store shelf unit stocked with snacks and drinks, {STYLE}"),
+    "store_counter": ("rodin", f"convenience store checkout counter with a cash register, {STYLE}"),
+    "bleachers": ("rodin", f"section of school sports bleachers, four rows of benches, {STYLE}"),
+    "goal_post": ("rodin", f"football soccer goal with net, {STYLE}"),
+    "hedge": ("rodin", f"neatly trimmed rectangular garden hedge, {STYLE}"),
+    "gazebo": ("rodin", f"wooden garden gazebo pavilion with a tiled roof, {STYLE}"),
+    "water_tank": ("rodin", f"rooftop cylindrical water tank on a metal stand, {STYLE}"),
+    "city_bus": ("rodin", f"city bus, side doors, {STYLE}"),
+    "car_sedan": ("rodin", f"compact sedan car, {STYLE}"),
+    "trash_bin": ("rodin", f"outdoor park trash bin, {STYLE}"),
+    "notice_board": ("rodin", f"school corridor cork notice board on legs with pinned blank papers, {STYLE}"),
+    "founder_statue": ("rodin", f"bronze statue of a robed scholar holding a book on a stone pedestal, {STYLE}"),
+    "city_tower_a": ("rodin", f"tall modern glass office skyscraper building, {STYLE}"),
+    "city_tower_b": ("rodin", f"mid-rise concrete apartment block building with balconies, {STYLE}"),
+    "city_tower_c": ("rodin", f"slim modern residential tower building with a rooftop antenna, {STYLE}"),
+    "clock_tower": ("rodin", f"school clock tower, brick with a white clock face and a pointed roof, {STYLE}"),
 }
+
+SRC_DIR = OUT_DIR / "src"  # raw Rodin output (20 MB each, gitignored); tools/prep_prop.py shrinks it into OUT_DIR
+PROP_EXTRA = {"tier": "Gen-2.5-Medium"}
 
 TRIPO_BASE = "https://api.tripo3d.ai/v2/openapi"
 RODIN_BASE = "https://hyperhuman.deemos.com/api/v2"
@@ -90,6 +114,15 @@ POLL_TIMEOUT_S = 60 * 20
 HTTP_TIMEOUT_S = 120
 
 _log_lock = threading.Lock()
+
+
+def run_blender(*args: str) -> subprocess.CompletedProcess:
+    """Headless Blender, strictly one at a time (also across processes).
+    A dozen parallel instances wedged the desktop's gvfs FUSE mount, which Blender scans at startup, and hung for good."""
+    import fcntl
+    with open(REPO_ROOT / "Saved" / "blender.lock", "w") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        return subprocess.run(["blender", "-b", "--python", *args], capture_output=True, text=True, timeout=900, check=False)
 
 
 def log(msg: str) -> None:
@@ -225,7 +258,7 @@ def generate_tripo(api_key: str, asset_id: str, prompt: str, dest: Path) -> None
 
 # --- Hyper3D Rodin ---------------------------------------------------------
 
-def rodin_submit(api_key: str, prompt: str) -> tuple[str, str]:
+def rodin_submit(api_key: str, prompt: str, extra: dict[str, str] | None = None) -> tuple[str, str]:
     """Returns (task_uuid, subscription_key)."""
     fields = {
         "prompt": prompt,
@@ -234,6 +267,7 @@ def rodin_submit(api_key: str, prompt: str) -> tuple[str, str]:
         "quality": "medium",
         "tier": "Sketch",
     }
+    fields.update(extra or {})
     body, content_type = multipart_encode(fields)
     data = http_json(
         "POST",
@@ -353,9 +387,9 @@ def rodin_download(api_key: str, task_uuid: str, dest: Path) -> None:
     http_download(str(url), dest)
 
 
-def generate_rodin(api_key: str, asset_id: str, prompt: str, dest: Path) -> None:
+def generate_rodin(api_key: str, asset_id: str, prompt: str, dest: Path, extra: dict[str, str] | None = None) -> None:
     log(f"[{asset_id}] rodin submit")
-    task_uuid, sub_key = rodin_submit(api_key, prompt)
+    task_uuid, sub_key = rodin_submit(api_key, prompt, extra)
     log(f"[{asset_id}] rodin poll uuid={task_uuid}")
     rodin_poll(api_key, sub_key)
     log(f"[{asset_id}] rodin download -> {dest.name}")
@@ -371,7 +405,7 @@ def run_one(
     tripo_key: str,
     rodin_key: str,
 ) -> tuple[str, str]:
-    dest = OUT_DIR / f"{asset_id}.glb"
+    dest = OUT_DIR / f"{asset_id}.fbx"
     if dest.is_file() and dest.stat().st_size > 0:
         log(f"[{asset_id}] skip (exists)")
         return asset_id, "skipped"
@@ -380,7 +414,10 @@ def run_one(
         if provider == "tripo":
             generate_tripo(tripo_key, asset_id, prompt, dest)
         elif provider == "rodin":
-            generate_rodin(rodin_key, asset_id, prompt, dest)
+            raw = SRC_DIR / f"{asset_id}.glb"
+            if not raw.is_file():
+                generate_rodin(rodin_key, asset_id, prompt, raw, PROP_EXTRA)
+            run_blender(str(REPO_ROOT / "tools" / "prep_prop.py"), "--", str(raw), str(dest), str(raw.with_suffix(".png")))
         else:
             raise RuntimeError(f"unknown provider {provider}")
 
@@ -412,17 +449,15 @@ def main() -> int:
     env = load_env(ENV_PATH)
     tripo_key = env.get("TRIPO_API_KEY", "").strip()
     rodin_key = env.get("RODIN_API_KEY", "").strip()
-    if not tripo_key:
-        raise SystemExit("TRIPO_API_KEY missing in .env")
     if not rodin_key:
         raise SystemExit("RODIN_API_KEY missing in .env")
 
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    SRC_DIR.mkdir(parents=True, exist_ok=True)
     log(f"output dir: {OUT_DIR}")
     log(f"assets: {len(ASSETS)} (concurrent)")
 
     results: dict[str, str] = {}
-    with ThreadPoolExecutor(max_workers=len(ASSETS)) as pool:
+    with ThreadPoolExecutor(max_workers=6) as pool:
         futs = {
             pool.submit(run_one, aid, prov, prompt, tripo_key, rodin_key): aid
             for aid, (prov, prompt) in ASSETS.items()

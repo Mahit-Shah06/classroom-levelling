@@ -36,3 +36,8 @@ ThirdParty/Piper/
 Content/Characters/
 Content/Input/
 Content/LevelPrototyping/
+
+# Model pipeline intermediates (raw Rodin output, mannequin export, processed FBX); the products are Content/Props and Content/Chars
+Assets/
+Content/Generated/
+__pycache__/

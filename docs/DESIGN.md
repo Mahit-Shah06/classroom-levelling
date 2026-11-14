@@ -137,3 +137,8 @@
 - Forecast: the System predicts each choice from tag history blended with the average profile (weight = total / (total + 4)). Conditions available to content: flag, stat, rel, tag, uniq, pred (forecast hit rate), share:<tag> (tag's share of all behaviour), rush (share of unread choices), level, rank.
 - Ending rules live in tools/tune_endings.py (run it after editing; check with tools/sim.py). Order: dead end (rush or betrayal) > Director (pred < 0.25) > Clown > Revolutionary > Kingmaker > Ghost > Dropout > Mirror (very predictable AND very atypical) > canon Puppet.
 - Ending screen labels: canon = Theatrical Cut, hidden = Director's Cut, dead end = Cut from the film.
+
+## Models (2026-11-15)
+- Every character (39) and prop (37) is a Rodin Gen-2.5 model. Characters are original designs, auto-skinned in Blender to the UE mannequin skeleton and driven by the template AnimBP; the mannequin mesh is only a fallback if a model is missing.
+- Imported to /Game/Chars/<id> and /Game/Props/<id>. Unnamed background students use extra_m1-3 / extra_f1-3; the player uses player_m / player_f.
+- Look (user, restated): menus in colour, gameplay black and white with grey accents, smooth fade between them.

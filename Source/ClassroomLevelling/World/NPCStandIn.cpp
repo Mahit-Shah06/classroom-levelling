@@ -54,9 +54,16 @@ ANPCStandIn::ANPCStandIn()
 	Talk->SetVisibility(false);
 }
 
-void ANPCStandIn::ApplyBody(USkeletalMeshComponent* Mesh, bool bFemale, const FLinearColor& Tint)
+void ANPCStandIn::ApplyBody(USkeletalMeshComponent* Mesh, bool bFemale, const FLinearColor& Tint, FName Model)
 {
 	if (!Mesh) return;
+	// A generated character (tools/rig_char.py, skinned to the mannequin skeleton) replaces the tinted mannequin when present.
+	if (!Model.IsNone())
+		if (USkeletalMesh* SK = LoadObject<USkeletalMesh>(nullptr, *FString::Printf(TEXT("/Game/Chars/%s/%s.%s"), *Model.ToString(), *Model.ToString(), *Model.ToString()), nullptr, LOAD_NoWarn | LOAD_Quiet))
+		{
+			Mesh->SetSkeletalMeshAsset(SK);
+			return;
+		}
 	if (USkeletalMesh* SK = LoadObject<USkeletalMesh>(nullptr, bFemale ? GQuinn : GManny)) Mesh->SetSkeletalMeshAsset(SK);
 	for (int32 i = 0; i < Mesh->GetNumMaterials(); ++i)
 		if (UMaterialInstanceDynamic* MID = Mesh->CreateDynamicMaterialInstance(i))
@@ -72,7 +79,8 @@ void ANPCStandIn::Init(FName InId, const FString& Name, bool bStaff, bool bFemal
 	const uint32 H = GetTypeHash(InId);
 	FLinearColor Tint = bStaff ? Suits[H % 3] : FLinearColor(0.06f, 0.10f, 0.30f); // navy uniform
 	if (InId.IsNone()) Tint = FLinearColor::MakeFromHSV8((uint8)FMath::RandRange(0, 255), 120, (uint8)FMath::RandRange(110, 210));
-	ApplyBody(GetMesh(), bFemale, Tint);
+	// Named cast use their own generated model; background students share six generic ones.
+	ApplyBody(GetMesh(), bFemale, Tint, InId.IsNone() ? FName(*FString::Printf(TEXT("extra_%s%d"), bFemale ? TEXT("f") : TEXT("m"), FMath::RandRange(1, 3))) : InId);
 	SetActorScale3D(FVector(Height / 180.f));
 	Tag->SetText(FText::FromString(Name));
 	Tag->SetVisibility(!Name.IsEmpty());

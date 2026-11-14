@@ -274,7 +274,10 @@ void AClassroomLevellingPlayerController::HideMenu()
 void AClassroomLevellingPlayerController::ApplyPlayerBody()
 {
 	const UNarrativeSubsystem* N = GetGameInstance()->GetSubsystem<UNarrativeSubsystem>();
-	if (ACharacter* C = Cast<ACharacter>(GetPawn())) ANPCStandIn::ApplyBody(C->GetMesh(), N && N->PlayerGender == TEXT("f"), FLinearColor(0.95f, 0.72f, 0.30f)); // gold: the player stands out
+	const bool bF = N && N->PlayerGender == TEXT("f");
+	FString Model = bF ? TEXT("player_f") : TEXT("player_m");
+	FParse::Value(FCommandLine::Get(), TEXT("body="), Model); // dev: preview any generated character as the player
+	if (ACharacter* C = Cast<ACharacter>(GetPawn())) ANPCStandIn::ApplyBody(C->GetMesh(), bF, FLinearColor(0.95f, 0.72f, 0.30f), FName(*Model)); // gold: the player stands out
 }
 
 // Shared by New Game and Load: close menus, hand control to the player.
